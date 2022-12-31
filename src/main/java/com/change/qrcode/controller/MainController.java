@@ -41,7 +41,7 @@ public class MainController {
         model.addAttribute("github",github);
         model.addAttribute("qrcode",qrcode);
 
-        return "qrcode";
+        return "pet";
     }
 
     @GetMapping("/deneme")
