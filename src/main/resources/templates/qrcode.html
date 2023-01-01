@@ -13,11 +13,6 @@
     <img th:src="${'data:image/png;base64,' + qrcode}" alt="" height="250" width="250">
 </div>
 
-<div style="width:40%;display: inline-block;">
-    <h3>Qr Code as an Image</h3>
-    <p>Data : <span th:text="${github}"></span></p>
-    <img th:src="@{/img/QRCode.png}" height="250" width="250"/>
-</div>
 <p>Note : You can Change the background and foreground color of the QR code in QRCodeGenerator Class</p>
 
 </body>
