@@ -3,6 +3,7 @@ package com.change.qrcode.security.service;
 import com.change.qrcode.model.Role;
 import com.change.qrcode.model.User;
 import com.change.qrcode.repository.UserRepository;
+import com.change.qrcode.util.CurrentUser;
 import dto.UserRegistrationDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -44,9 +45,12 @@ public class UserServiceImpl implements UserService{
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 	
 		User user = userRepository.findByUsername(username);
+		CurrentUser.setCurrentUser(user);
+
 		if(user == null) {
 			throw new UsernameNotFoundException("Invalid username or password.");
 		}
+
 		return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), mapRolesToAuthorities(user.getRoles()));
 	}
 	
