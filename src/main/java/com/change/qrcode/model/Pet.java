@@ -24,4 +24,7 @@ public class Pet {
     @Column(name = "image_data")
     private byte[] imageData;
 
+    @ManyToOne
+    @JoinColumn(name="user_id")
+    private User user;
 }

@@ -45,6 +45,11 @@ public class AdminController {
 
         Pet newPet = new Pet();
 
+        newPet.setIsRecorded(Boolean.FALSE);
+        newPet.setTextContent("");
+        newPet.setUser(null);
+        newPet.setImageData(null);
+
         byte[] image = new byte[0];
         try {
             Pet savedPet = petRepository.save(newPet);

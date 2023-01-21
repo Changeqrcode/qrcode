@@ -1,11 +1,10 @@
 package com.change.qrcode.security.service;
 
+import com.change.qrcode.dto.UserRegistrationDto;
 import com.change.qrcode.model.Role;
 import com.change.qrcode.model.User;
+import com.change.qrcode.repository.RoleRepository;
 import com.change.qrcode.repository.UserRepository;
-import com.change.qrcode.util.CurrentUser;
-import dto.UserRegistrationDto;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -26,17 +25,20 @@ public class UserServiceImpl implements UserService{
 	
 
 	private BCryptPasswordEncoder passwordEncoder;
+
+	private RoleRepository roleRepository;
 	
-	public UserServiceImpl(UserRepository userRepository, @Lazy BCryptPasswordEncoder passwordEncoder) {
+	public UserServiceImpl(UserRepository userRepository, @Lazy BCryptPasswordEncoder passwordEncoder, RoleRepository roleRepository) {
 		super();
 		this.userRepository = userRepository;
 		this.passwordEncoder = passwordEncoder;
+		this.roleRepository = roleRepository;
 	}
 
 	@Override
 	public User save(UserRegistrationDto registrationDto) {
 		User user = new User(registrationDto.getUsername(),
-				passwordEncoder.encode(registrationDto.getPassword()), Arrays.asList(new Role("ROLE_USER")));
+				passwordEncoder.encode(registrationDto.getPassword()), Arrays.asList(roleRepository.findByName("ROLE_USER")));
 		
 		return userRepository.save(user);
 	}
@@ -45,10 +47,9 @@ public class UserServiceImpl implements UserService{
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 	
 		User user = userRepository.findByUsername(username);
-		CurrentUser.setCurrentUser(user);
 
 		if(user == null) {
-			throw new UsernameNotFoundException("Invalid username or password.");
+			throw new UsernameNotFoundException("Girilen kullanıcı adı veya şifre hatalı.");
 		}
 
 		return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), mapRolesToAuthorities(user.getRoles()));

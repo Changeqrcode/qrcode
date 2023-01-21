@@ -16,8 +16,8 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @Order(1)
-@EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
+//@EnableWebSecurity
+//@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class AdminSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Autowired
@@ -43,8 +43,10 @@ public class AdminSecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
+		http.authorizeRequests().antMatchers("/", "/pet/**", "/registration/**").permitAll();
 
-		http.csrf().disable().authorizeRequests().antMatchers("/").permitAll()
+		http.antMatcher("/admin/**")
+				.authorizeRequests().anyRequest().hasRole("ADMIN")
 				.and()
 				.formLogin()
 				.loginPage("/admin/login")
@@ -54,7 +56,7 @@ public class AdminSecurityConfig extends WebSecurityConfigurerAdapter {
 				.and()
 				.logout()
 				.logoutUrl("/admin/logout")
-				.logoutSuccessUrl("/admin/login?logout");
+				.logoutSuccessUrl("/admin/login");
 	}
 
 }

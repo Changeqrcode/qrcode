@@ -14,6 +14,11 @@
 </head>
 
 <body style="    background-color: coral;">
+<div class="container text-center mt-3" style="width: 100%;">
+  <form method="get" th:action="@{/user/edit/pet/{id}(id = ${pet.id})}">
+    <button class="btn btn-primary" type="submit">Sahip Girişi</button>
+  </form>
+</div>
 <div class="container text-center">
   <div class="row text-center mt-5 ">
     <h1 class="text-center shadow-sm p-3" style="color: whitesmoke;
@@ -27,27 +32,20 @@
 
       <div class="col">
         <div class="form-floating">
-                      <textarea th:unless="${pet.isRecorded}" class="form-control" placeholder="Lütfen buraya bilgileri giriniz." id="floatingTextarea"
-                                style="height: 400px;" name="content"></textarea>
-                      <textarea th:if="${pet.isRecorded}" class="form-control" placeholder="Lütfen buraya bilgileri giriniz." id="floatingTextarea2"
-                                style="height: 400px;" name="content" disabled
-                                th:text="${pet.textContent}">
-                      </textarea>
+          <textarea th:if="${pet.isRecorded}" class="form-control" placeholder="Lütfen buraya bilgileri giriniz." id="floatingTextarea"
+                    style="height: 400px; background-color: white;" name="content" disabled
+                    th:text="${pet.textContent}">
+          </textarea>
           <label for="floatingTextarea">Bilgiler</label>
         </div>
-        <button th:unless="${pet.isRecorded}" type="submit" class="btn btn btn-primary mt-2" style="width: 100%;">Kaydet</button>
       </div>
 
       <div class="col">
 
         <div class="mb-3">
-          <label for="formFile" class="form-label text-white" style="font-size: large; font-weight: bold;
-                      letter-spacing: 1px;">Resim Yükleme</label>
-          <input th:unless="${pet.isRecorded}" class="form-control" name="image" type="file" id="formFile" accept="image/*">
-          <input th:if="${pet.isRecorded}" class="form-control" name="image" type="file" id="formFile2" accept="image/*" disabled>
+          <label class="form-label text-white" style="font-size: large; font-weight: bold;
+                      letter-spacing: 1px;">Resim</label>
         </div>
-
-        <img th:unless="${pet.isRecorded}" id="uploadImage" src="../img/main.jpg" class="img-fluid img-thumbnail">
         <img th:if="${pet.isRecorded}" id="uploadImage2" th:src="@{${image}}" class="img-fluid img-thumbnail">
       </div>
 

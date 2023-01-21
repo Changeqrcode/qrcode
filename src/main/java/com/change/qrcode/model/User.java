@@ -7,6 +7,7 @@ import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -22,6 +23,9 @@ public class User {
     private String username;
 
     private String password;
+
+    @OneToMany(mappedBy="user")
+    private Set<Pet> pets;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(

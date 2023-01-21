@@ -14,6 +14,11 @@
 </head>
 
 <body style="    background-color: coral;">
+<div class="container text-center mt-3" style="width: 100%;">
+  <form method="post" th:action="@{/admin/logout}">
+    <button class="btn btn-primary" type="submit">Hesaptan Çıkış</button>
+  </form>
+</div>
 <div class="container text-center">
   <div class="row text-center mt-5 ">
     <h1 class="text-center shadow-sm p-3" style="color: whitesmoke;
@@ -21,11 +26,6 @@
                 border: 5px solid white;">
       Change QR Code Admin Panel
     </h1>
-    <div align="center">
-      <form th:action="@{/admin/logout}" method="post">
-        <input type="submit" value="Logout" />
-      </form>
-    </div>
   </div>
 
   <div class="row mt-2">

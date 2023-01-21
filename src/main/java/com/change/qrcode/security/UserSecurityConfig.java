@@ -13,7 +13,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Configuration
 @Order(2)
+//@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class UserSecurityConfig extends WebSecurityConfigurerAdapter {
+    /*
     @Autowired
     private UserService userService;
 
@@ -35,10 +37,13 @@ public class UserSecurityConfig extends WebSecurityConfigurerAdapter {
         auth.authenticationProvider(authenticationProvider2());
     }
 
+
+     */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
-        http.csrf().disable().authorizeRequests().antMatchers("/").permitAll()
+        http.antMatcher("/user/**")
+                .authorizeRequests().anyRequest().hasRole("USER")
                 .and()
                 .formLogin()
                 .loginPage("/user/login")
