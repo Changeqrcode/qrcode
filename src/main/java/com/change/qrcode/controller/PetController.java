@@ -33,8 +33,8 @@ public class PetController {
             return "redirect:/registration/" + p.getId();
         }
 
-        if(p.getImageData() != null){
-            encoded = Base64.getEncoder().encodeToString(p.getImageData());
+        if(false/*p.getImageData() != null*/){
+            encoded = Base64.getEncoder().encodeToString(null/*p.getImageData()*/);
             encoded = "data:image/png;base64," + encoded;
         }
         else {

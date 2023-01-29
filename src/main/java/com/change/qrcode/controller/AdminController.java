@@ -48,7 +48,6 @@ public class AdminController {
         newPet.setIsRecorded(Boolean.FALSE);
         newPet.setTextContent("");
         newPet.setUser(null);
-        newPet.setImageData(null);
 
         byte[] image = new byte[0];
         try {

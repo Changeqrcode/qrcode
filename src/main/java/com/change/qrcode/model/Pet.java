@@ -5,6 +5,7 @@ import lombok.Setter;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -23,11 +24,10 @@ public class Pet {
     @Column(name = "is_recorded")
     private Boolean isRecorded;
 
-    @Lob
-    @Column(name = "image_data")
-    private byte[] imageData;
-
     @ManyToOne
     @JoinColumn(name="user_id")
     private User user;
+
+    @OneToMany(mappedBy="pet")
+    private Set<UploadImage> images;
 }
