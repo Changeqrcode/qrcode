@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.Base64;
+import java.util.UUID;
 
 @Controller
 @RequestMapping("/pet")
@@ -23,7 +24,7 @@ public class PetController {
     }
 
     @GetMapping("/{id}")
-    public String get(Model model, @PathVariable Long id) {
+    public String get(Model model, @PathVariable UUID id) {
         String encoded;
         Pet p = petRepository.findById(id).orElseThrow();
 
@@ -37,7 +38,7 @@ public class PetController {
             encoded = "data:image/png;base64," + encoded;
         }
         else {
-            encoded = ".../img/empty.png";
+            encoded = "../img/empty.png";
         }
 
         if (p.getTextContent() == null){

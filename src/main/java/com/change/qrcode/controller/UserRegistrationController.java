@@ -11,6 +11,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
+
 @Controller
 @RequestMapping("/registration")
 public class UserRegistrationController {
@@ -30,7 +32,7 @@ public class UserRegistrationController {
 	}
 
 	@GetMapping("/{id}")
-	public String showRegistrationForm(Model model, @PathVariable Long id) {
+	public String showRegistrationForm(Model model, @PathVariable UUID id) {
 		Pet p = petRepository.findById(id).orElseThrow();
 		UserRegistrationDto userDto = new UserRegistrationDto("","","", false);
 		String anyError = null;
@@ -49,7 +51,7 @@ public class UserRegistrationController {
 	@PostMapping("/{id}")
 	public String registerUserAccount(Model model,
 									  @ModelAttribute("userDto") UserRegistrationDto userRegistrationDto,
-									  @PathVariable Long id) {
+									  @PathVariable UUID id) {
 
 		Boolean isExistAccount = userRegistrationDto.getIsExistAccount();
 		Pet entity = petRepository.findById(id).orElseThrow();

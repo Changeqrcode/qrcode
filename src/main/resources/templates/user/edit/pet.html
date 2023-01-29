@@ -13,7 +13,7 @@
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
 </head>
 
-<body style="    background-color: coral;">
+<body style="    background-color: #d8d7d5;">
 <div class="container text-center mt-3" style="width: 100%;">
     <form method="post" th:action="@{/user/logout}">
         <button class="btn btn-primary" type="submit">Hesaptan Çıkış</button>
@@ -23,37 +23,41 @@
   <div class="row text-center mt-5 ">
     <h1 class="text-center shadow-sm p-3" style="color: whitesmoke;
                 border-radius: 1rem;
-                border: 5px solid white;">
+                border: 5px solid white;
+                background-color: #4e73de;">
       Change QR Code
     </h1>
   </div>
   <form method="post" th:action="@{/user/uploadData/{id}(id = ${pet.id})}" enctype="multipart/form-data">
-  <div class="row mt-2">
+      <div class="row mt-2">
 
-      <div class="col">
-        <div class="form-floating">
-                      <textarea class="form-control" placeholder="Lütfen buraya bilgileri giriniz." id="floatingTextarea"
-                                style="height: 400px;" name="content"
-                                th:text="${pet.textContent}">
-                      </textarea>
+          <div class="col">
+            <div class="form-floating">
+                          <textarea class="form-control" placeholder="Lütfen buraya bilgileri giriniz." id="floatingTextarea"
+                                    style="height: 400px;" name="content"
+                                    th:text="${pet.textContent}">
+                          </textarea>
 
-          <label for="floatingTextarea">Bilgiler</label>
-        </div>
-        <button type="submit" class="btn btn btn-primary mt-2" style="width: 100%;">Kaydet</button>
+              <label for="floatingTextarea">Bilgiler</label>
+            </div>
+          </div>
+
+
       </div>
+      <div class="row mt-2">
+          <div class="col">
+              <div class="mb-3">
+                  <input class="form-control" name="image" type="file" id="formFile" accept="image/*" style="width: 50%;">
+              </div>
+              <img id="uploadImage" th:src="@{${image}}" class="img-fluid img-thumbnail" width="200px" height="auto">
+          </div>
 
-      <div class="col">
-
-        <div class="mb-3">
-          <label for="formFile" class="form-label text-white" style="font-size: large; font-weight: bold;
-                      letter-spacing: 1px;">Resim Yükleme</label>
-          <input class="form-control" name="image" type="file" id="formFile" accept="image/*">
-        </div>
-
-          <img id="uploadImage" th:src="@{${image}}" class="img-fluid img-thumbnail">
       </div>
-
-  </div>
+      <div class="row justify-content-center mt-2">
+          <div class="col">
+              <button type="submit" class="btn btn btn-primary mt-2" style="width: 50%;">Kaydet</button>
+          </div>
+      </div>
   </form>
 
 </div>

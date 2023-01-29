@@ -13,6 +13,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.Base64;
+import java.util.UUID;
 
 @Controller
 @RequestMapping("/user")
@@ -35,7 +36,7 @@ public class UserController {
     }
 
     @GetMapping("/edit/pet/{id}")
-    public String petEdit(HttpServletRequest httpServletRequest, Model model, @PathVariable Long id) throws ServletException {
+    public String petEdit(HttpServletRequest httpServletRequest, Model model, @PathVariable UUID id) throws ServletException {
         String encoded;
         Pet p = petRepository.findById(id).orElseThrow();
 
@@ -65,7 +66,7 @@ public class UserController {
     public String uploadImage(Model model,
                               @RequestParam("content") String text,
                               @RequestParam("image") MultipartFile file,
-                              @PathVariable Long id) throws IOException {
+                              @PathVariable UUID id) throws IOException {
         Pet p = petRepository.findById(id).orElseThrow();
         p.setTextContent(text);
         p.setImageData(file.getBytes());
