@@ -1,7 +1,7 @@
 package com.change.qrcode.controller;
 
-import com.change.qrcode.model.Pet;
-import com.change.qrcode.repository.PetRepository;
+import com.change.qrcode.model.QR;
+import com.change.qrcode.repository.QRRepository;
 import com.change.qrcode.util.QRCodeGenerator;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -15,10 +15,10 @@ import java.util.Base64;
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
-    PetRepository petRepository;
+    QRRepository QRRepository;
 
-    public AdminController(PetRepository petRepository) {
-        this.petRepository = petRepository;
+    public AdminController(QRRepository QRRepository) {
+        this.QRRepository = QRRepository;
     }
 
     @GetMapping("/login")
@@ -41,18 +41,18 @@ public class AdminController {
     @PostMapping("/generateQRCode")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public String generateQRCode(Model model){
-        String url="http://localhost:8080/pet/";
+        String url="http://localhost:8080/qr/";
 
-        Pet newPet = new Pet();
+        QR newQR = new QR();
 
-        newPet.setIsRecorded(Boolean.FALSE);
-        newPet.setTextContent("");
-        newPet.setUser(null);
+        newQR.setIsRecorded(Boolean.FALSE);
+        newQR.setTextContent("");
+        newQR.setUser(null);
 
         byte[] image = new byte[0];
         try {
-            Pet savedPet = petRepository.save(newPet);
-            url += savedPet.getId();
+            QR savedQR = QRRepository.save(newQR);
+            url += savedQR.getId();
 
             // Generate and Return Qr Code in Byte Array
             image = QRCodeGenerator.getQRCodeImage(url,250,250);

@@ -9,14 +9,15 @@
         integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
 
   <!-- Custom styles for this template-->
+  <link rel="stylesheet" href="/css/styles.css">
   <link href="../css/sb-admin-2.min.css" rel="stylesheet">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
 </head>
 
 <body style="    background-color: #d8d7d5;">
 <div class="container text-center mt-3" style="width: 100%;">
-  <form method="get" th:action="@{/user/edit/pet/{id}(id = ${pet.id})}">
-    <button class="btn btn-primary"  type="submit">Sahip Girişi</button>
+  <form method="get" th:action="@{/user/edit/qr/{id}(id = ${qr.id})}">
+    <button class="btn btn-primary"  type="submit">Kullanıcı Girişi</button>
   </form>
 </div>
 <div class="container text-center">
@@ -28,14 +29,14 @@
       Change QR Code
     </h1>
   </div>
-  <form method="post" th:action="@{/uploadData/{id}(id = ${pet.id})}" enctype="multipart/form-data">
+  <form method="post" th:action="@{/uploadData/{id}(id = ${qr.id})}" enctype="multipart/form-data">
     <div class="row mt-2">
 
         <div class="col">
           <div class="form-floating">
             <textarea class="form-control" placeholder="Lütfen buraya bilgileri giriniz." id="floatingTextarea"
                       style="height: 400px; background-color: white;" name="content" disabled
-                      th:text="${pet.textContent}">
+                      th:text="${qr.textContent}">
             </textarea>
             <label for="floatingTextarea">Bilgiler</label>
           </div>
@@ -44,8 +45,18 @@
     </div>
     <div class="row mt-2">
       <div class="col">
-
-        <img id="uploadImage" th:src="${image}" class="img-fluid img-thumbnail" width="200px" height="auto">
+        <div class="app mb-3">
+          <div id="queued-form" class="mt-2">
+            <div class="header">
+              <h3>Resimler</h3>
+            </div>
+            <div class="queued-div">
+              <div th:each="image: ${images}" class="image">
+                <img th:src="${image}" alt="image">
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </form>

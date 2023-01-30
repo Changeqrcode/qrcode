@@ -3,12 +3,10 @@ package com.change.qrcode.model;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.util.Collection;
 import java.util.Set;
-import java.util.UUID;
 
 @Entity
 @Table(name = "util_user")
@@ -25,7 +23,7 @@ public class User {
     private String password;
 
     @OneToMany(mappedBy="user")
-    private Set<Pet> pets;
+    private Set<QR> QRS;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(

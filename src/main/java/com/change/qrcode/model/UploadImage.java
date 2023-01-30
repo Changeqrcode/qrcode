@@ -20,6 +20,6 @@ public class UploadImage {
     private byte[] imageData;
 
     @ManyToOne
-    @JoinColumn(name="pet_id")
-    private Pet pet;
+    @JoinColumn(name="qr_id")
+    private QR QR;
 }

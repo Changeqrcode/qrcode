@@ -9,10 +9,10 @@ import java.util.Set;
 import java.util.UUID;
 
 @Entity
-@Table(name = "pet")
+@Table(name = "qr")
 @Getter
 @Setter
-public class Pet {
+public class QR {
     @Id
     @GeneratedValue()
     @Type(type="org.hibernate.type.UUIDCharType")
@@ -28,6 +28,6 @@ public class Pet {
     @JoinColumn(name="user_id")
     private User user;
 
-    @OneToMany(mappedBy="pet")
+    @OneToMany(mappedBy= "QR")
     private Set<UploadImage> images;
 }
