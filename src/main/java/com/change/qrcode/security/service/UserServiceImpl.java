@@ -37,8 +37,8 @@ public class UserServiceImpl implements UserService{
 
 	@Override
 	public User save(UserRegistrationDto registrationDto) {
-		User user = new User(registrationDto.getUsername(),
-				passwordEncoder.encode(registrationDto.getPassword()), Arrays.asList(roleRepository.findByName("ROLE_USER")));
+		User user = new User(registrationDto.getRegisterUsername(),
+				passwordEncoder.encode(registrationDto.getRegisterPassword()), Arrays.asList(roleRepository.findByName("ROLE_USER")));
 		
 		return userRepository.save(user);
 	}

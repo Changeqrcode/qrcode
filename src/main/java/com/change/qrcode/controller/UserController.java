@@ -41,6 +41,12 @@ public class UserController {
         return "user/home";
     }
 
+    @PostMapping("/logout/{id}")
+    public String logout(HttpServletRequest httpServletRequest, @PathVariable UUID id) throws ServletException {
+        httpServletRequest.logout();
+        return "redirect:/qr/" + id;
+    }
+
     @GetMapping("/edit/qr/{id}")
     public String qrEdit(HttpServletRequest httpServletRequest, Model model, @PathVariable UUID id) throws ServletException {
         List<String> encodeds = new ArrayList<>();

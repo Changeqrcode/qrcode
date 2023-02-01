@@ -9,30 +9,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 @Order(2)
 //@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class UserSecurityConfig extends WebSecurityConfigurerAdapter {
-    /*
-    @Autowired
-    private UserService userService;
-
-    @Bean
-    public BCryptPasswordEncoder passwordEncoder2() {
-        return new BCryptPasswordEncoder();
-    }
-
-    @Bean
-    public DaoAuthenticationProvider authenticationProvider2() {
-        DaoAuthenticationProvider auth = new DaoAuthenticationProvider();
-        auth.setUserDetailsService(userService);
-        auth.setPasswordEncoder(passwordEncoder2());
-        return auth;
-    }
-
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.authenticationProvider(authenticationProvider2());
-    }
-
-
-     */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 

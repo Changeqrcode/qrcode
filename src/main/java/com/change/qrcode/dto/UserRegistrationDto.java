@@ -10,14 +10,15 @@ import lombok.Setter;
 public class UserRegistrationDto {
 	private String username;
 	private String password;
+	private String registerUsername;
+	private String registerPassword;
 	private String checkPassword;
 
-	private Boolean isExistAccount;
-
-	public UserRegistrationDto(String username, String password, String checkPassword, Boolean isExistAccount) {
+	public UserRegistrationDto(String username, String password, String registerUsername, String registerPassword, String checkPassword) {
 		this.username = username;
 		this.password = password;
+		this.registerUsername = registerUsername;
+		this.registerPassword = registerPassword;
 		this.checkPassword = checkPassword;
-		this.isExistAccount = isExistAccount;
 	}
 }

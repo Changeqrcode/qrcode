@@ -17,7 +17,7 @@
 
 <body style="    background-color: #d8d7d5;">
 <div class="container text-center mt-3" style="width: 100%;">
-    <form method="post" th:action="@{/user/logout}">
+    <form method="post" th:action="@{/user/logout/{id}(id = ${qr.id})}">
         <button class="btn btn-primary" type="submit">Hesaptan Çıkış</button>
     </form>
 </div>
@@ -94,7 +94,13 @@
         input = document.querySelector(".input-div input"),
         serverMessage = document.querySelector(".server-message"),
         errorCount = 0,
-        errorMesage = "<div> <p>Aşağıda isimleri bulunan resimlerin boyutları 2MB'dan fazladır!!!</p> ";
+        allowedFileCount = 6,
+        allowedSizePerFile = 2097152,
+        isNumberOfFileExceedError = false,
+        numberOfFileExceedErrorMesage = "<p> Sadece 6 tane resim yükleyebilirsiniz.</p> <p>Lütfen başka resimler yükleyebilmek için yüklenen resimlerden bazılarını siliniz.</p>",
+        sizePerFileErrorMessage = "<p>Aşağıda isimleri bulunan resimlerin boyutları 2MB'dan fazladır!!!</p>",
+        errorFileNames = "",
+        errorMesage = "";
 
     for(let i=0; i<serverImages.length; i++){
         urltoFile( 'server-encoded-image'+i+'.png','image/png',serverImages[i])
@@ -108,20 +114,29 @@
         const files = input.files
         serverMessage.innerHTML = ""
         errorCount = 0
+        isNumberOfFileExceedError = false
+        errorFileNames = ""
+        errorMesage = ""
 
-        for(let i=0; i<files.length; i++){
-            if(files[i].size > 100000){//2097152
-                errorCount++;
-                errorMesage += "<p>" + files[i].name + "</p>"
-            }else{
-                imagesArray.push(files[i])
+        if(allowedFileCount < (files.length + imagesArray.length)){
+            isNumberOfFileExceedError = true;
+            errorMesage = "<div>" + numberOfFileExceedErrorMesage + "</div>";
+            serverMessage.innerHTML = errorMesage;
+        }else{
+            for(let i=0; i<files.length; i++){
+                if(files[i].size > allowedSizePerFile){
+                    errorCount++;
+                    errorFileNames += "<p>" + files[i].name + "</p>"
+                }else{
+                    imagesArray.push(files[i])
+                }
+            }
+
+            if(errorCount > 0){
+                errorMesage = "<div>" + sizePerFileErrorMessage + errorFileNames + "</div>";
+                serverMessage.innerHTML = errorMesage;
             }
         }
-
-        if(errorCount > 0){
-            serverMessage.innerHTML = errorMesage + "</div>"
-        }
-
         displayImages()
     })
 
@@ -147,13 +162,11 @@
                             <span onclick="deleteImage(${index})">&times;</span>
                         </div>`
         })
-        console.log(imagesArray)
         queuedDiv.innerHTML = images
     }
 
     function deleteImage(index) {
         imagesArray.splice(index, 1)
-        console.log("after delete ", imagesArray)
         displayImages()
     }
 
@@ -182,7 +195,6 @@
             console.log(error)
         }
 
-        console.log(input.files)
         return true;
     })
 </script>
