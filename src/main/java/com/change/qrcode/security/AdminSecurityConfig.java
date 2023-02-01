@@ -13,7 +13,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Configuration
 @Order(1)
-//@EnableWebSecurity
 //@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class AdminSecurityConfig extends WebSecurityConfigurerAdapter {
 
@@ -37,6 +36,8 @@ public class AdminSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.authenticationProvider(authenticationProvider());
     }
+
+
 	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
