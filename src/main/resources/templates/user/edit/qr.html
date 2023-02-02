@@ -144,11 +144,32 @@
         e.preventDefault();
         const files = e.dataTransfer.files
 
-        for(let i=0; i<files.length; i++){
-            if(!files[i].type.match("image")) continue
+        serverMessage.innerHTML = ""
+        errorCount = 0
+        isNumberOfFileExceedError = false
+        errorFileNames = ""
+        errorMesage = ""
 
-            if(imagesArray.every(image => image.name !== files[i].name)){
-                imagesArray.push(files[i])
+        if(allowedFileCount < (files.length + imagesArray.length)){
+            isNumberOfFileExceedError = true;
+            errorMesage = "<div>" + numberOfFileExceedErrorMesage + "</div>";
+            serverMessage.innerHTML = errorMesage;
+        }else{
+            for(let i=0; i<files.length; i++){
+                if(files[i].size > allowedSizePerFile){
+                    errorCount++;
+                    errorFileNames += "<p>" + files[i].name + "</p>"
+                }else{
+                    if(!files[i].type.match("image")) continue
+                    if(imagesArray.every(image => image.name !== files[i].name)){
+                        imagesArray.push(files[i])
+                    }
+                }
+            }
+
+            if(errorCount > 0){
+                errorMesage = "<div>" + sizePerFileErrorMessage + errorFileNames + "</div>";
+                serverMessage.innerHTML = errorMesage;
             }
         }
         displayImages()
