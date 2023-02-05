@@ -31,16 +31,18 @@
 
 			<div class="card o-hidden border-0 shadow-lg my-5">
 				<div class="card-body p-2">
-					HATA
+					Erişim Reddedildi
 				</div>
 
 				<!-- error message -->
-				<div th:if="${errorMessage != null}" style="margin: 10px;">
+				<div style="margin: 10px;">
 					<div class="alert alert-danger">
-						<p th:text="${errorMessage.statusCode}"></p>
-						<p th:text="${errorMessage.timestamp}"></p>
-						<p th:text="${errorMessage.description}"></p>
-						<p th:text="${errorMessage.message}"></p>
+						<h2>Neden Bu Sayfayı Alıyorum?</h2>
+						<p>1.Oturumunuzu daha önceden sonlandırmış olabilirsiniz.</p>
+						<p>2.Oturumunuz aynı tarayıcıda bir başka kullanıcıyla giriş yaptığınız için sonlanmış olabilir.</p>
+						<p>3.Aynı tarayıcıda bir başka kullanıcıyla oturumunuz açık kalmış olabilir.</p>
+						<p>EK: Bir kullanıcının oturumunu sonlandırmak için hesaptan çıkış yap demeniz veya tarayıcıyı kapatmanız gerekir</p>
+						<p>Not: Unutmayın !!! Güvenlik nedeniyle tek tarayıcıdan aynı anda sadece 1 kullanıcı giriş yapabilir.</p>
 					</div>
 				</div>
 			</div>

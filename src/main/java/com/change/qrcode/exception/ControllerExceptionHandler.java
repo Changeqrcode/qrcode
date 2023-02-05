@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Date;
 
@@ -19,7 +20,7 @@ public class ControllerExceptionHandler {
     private ErrorMessageRepository errorMessageRepository;
 
     @ExceptionHandler(Exception.class)
-    public String globalExceptionHandler(Exception ex, WebRequest request ){
+    public ModelAndView globalExceptionHandler(Exception ex, WebRequest request ){
         items = ex.getClass().getName().split("\\.");
         ErrorMessage message = new ErrorMessage(
                 items[items.length-1].substring(0, 1).toLowerCase() + items[items.length-1].substring(1),
@@ -30,6 +31,9 @@ public class ControllerExceptionHandler {
 
         errorMessageRepository.saveAndFlush(message);
 
-        return "error";
+        ModelAndView m = new ModelAndView();
+        m.setViewName("error");
+        m.addObject("errorMessage", message);
+        return m;
     }
 }

@@ -51,7 +51,7 @@ public class AdminController {
 
         byte[] image = new byte[0];
         try {
-            QR savedQR = QRRepository.save(newQR);
+            QR savedQR = QRRepository.saveAndFlush(newQR);
             url += savedQR.getId();
 
             // Generate and Return Qr Code in Byte Array

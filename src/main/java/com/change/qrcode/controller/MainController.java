@@ -16,4 +16,9 @@ public class MainController {
 		return "redirect:admin/login";
 	}
 
+	@GetMapping("/accessDenied")
+	public String error403() {
+		return "/accessDenied";
+	}
+
 }

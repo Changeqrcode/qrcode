@@ -90,13 +90,13 @@ public class UserController {
                 UploadImage image = new UploadImage();
                 image.setQR(p);
                 image.setImageData(f.getBytes());
-                uploadImageRepository.save(image);
+                uploadImageRepository.saveAndFlush(image);
             }
 
         }
 
 
-        QRRepository.save(p);
+        QRRepository.saveAndFlush(p);
 
         return "redirect:/qr/" + p.getId();
     }

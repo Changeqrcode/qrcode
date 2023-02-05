@@ -40,7 +40,7 @@ public class UserServiceImpl implements UserService{
 		User user = new User(registrationDto.getRegisterUsername(),
 				passwordEncoder.encode(registrationDto.getRegisterPassword()), Arrays.asList(roleRepository.findByName("ROLE_USER")));
 		
-		return userRepository.save(user);
+		return userRepository.saveAndFlush(user);
 	}
 
 	@Override
