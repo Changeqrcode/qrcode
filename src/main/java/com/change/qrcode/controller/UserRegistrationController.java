@@ -4,6 +4,7 @@ import com.change.qrcode.dto.UserRegistrationDto;
 import com.change.qrcode.model.QR;
 import com.change.qrcode.model.User;
 import com.change.qrcode.repository.QRRepository;
+import com.change.qrcode.repository.RoleRepository;
 import com.change.qrcode.repository.UserRepository;
 import com.change.qrcode.security.service.UserService;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -18,8 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.NoSuchElementException;
-import java.util.UUID;
+import java.util.*;
 
 @Controller
 @RequestMapping("/registration")
@@ -33,13 +33,15 @@ public class UserRegistrationController {
 	private BCryptPasswordEncoder passwordEncoder;
 
 	private AuthenticationProvider authenticationProvider;
+	private RoleRepository roleRepository;
 
-	public UserRegistrationController(UserService userService, com.change.qrcode.repository.QRRepository QRRepository, UserRepository userRepository, BCryptPasswordEncoder passwordEncoder, AuthenticationProvider authenticationProvider) {
+	public UserRegistrationController(UserService userService, com.change.qrcode.repository.QRRepository QRRepository, UserRepository userRepository, BCryptPasswordEncoder passwordEncoder, AuthenticationProvider authenticationProvider, RoleRepository roleRepository) {
 		this.userService = userService;
 		this.QRRepository = QRRepository;
 		this.userRepository = userRepository;
 		this.passwordEncoder = passwordEncoder;
 		this.authenticationProvider = authenticationProvider;
+		this.roleRepository = roleRepository;
 	}
 
 	@GetMapping("/{id}")
@@ -58,70 +60,71 @@ public class UserRegistrationController {
 		}
 
 	}
-	
-	@PostMapping("/{id}")
-	public String registerUserAccount(HttpServletRequest request,
-									  Model model,
-									  @ModelAttribute("userDto") UserRegistrationDto userRegistrationDto,
-									  @PathVariable UUID id) {
 
-		Boolean isExistAccount;
-		QR entity = QRRepository.findById(id).orElseThrow();
-		model.addAttribute("anyError", null);
+	@RequestMapping(value = "/new", method = RequestMethod.POST)
+	public @ResponseBody Map<String, Object> registerUser(HttpServletRequest request,
+													 @RequestParam("username") String username,
+													 @RequestParam("password") String password,
+													 @RequestParam("checkPassword") String checkPassword,
+													 @RequestParam("id") String id) {
+		Map<String, Object> data = new HashMap<>();
 
-		User u = userRepository.findByUsername(userRegistrationDto.getUsername());
-		if(u != null && passwordEncoder.matches(userRegistrationDto.getPassword(), u.getPassword())){
-			entity.setUser(u);
-			entity.setIsRecorded(Boolean.TRUE);
-			QRRepository.saveAndFlush(entity);
-
-			UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(userRegistrationDto.getUsername(), userRegistrationDto.getPassword());
-
-			// Authenticate the user
-			Authentication authentication = authenticationProvider.authenticate(authRequest);
-			SecurityContext securityContext = SecurityContextHolder.getContext();
-			securityContext.setAuthentication(authentication);
-
-			// Create a new session and add the security context.
-			HttpSession session = request.getSession(true);
-			session.setAttribute("SPRING_SECURITY_CONTEXT", securityContext);
-
-			return "redirect:/user/edit/qr/" + id;
-		}else {
-			model.addAttribute("anyError", "Girilen kullanıcı adı veya şifre hatalı.");
-			model.addAttribute("qr", entity);
-			return "registration";
-		}
-
-	}
-
-	@PostMapping("new/{id}")
-	public String registerNewUserAccount(HttpServletRequest request,
-									  Model model,
-									  @ModelAttribute("userDto") UserRegistrationDto userRegistrationDto,
-									  @PathVariable UUID id) {
-
-		QR entity = QRRepository.findById(id).orElseThrow();
-		model.addAttribute("anyError", null);
-		if(userRepository.findByUsername(userRegistrationDto.getRegisterUsername()) != null){
-			model.addAttribute("anyError", "Girilen kullanıcı ismi zaten mevcut.\n" +
-					"Başka bir kullanıcı ismi giriniz.\n" +
-					" Var olan bir hesabınızı bağlamak istiyorsanız seçeneği işaretlemeyi unutmayınız!!");
-			model.addAttribute("qr", entity);
-			return "registration";
+		QR entity = QRRepository.findById(UUID.fromString(id)).orElseThrow();
+		data.put("isError", false);
+		if(userRepository.findByUsername(username) != null){
+			data.put("isError", true);
+			data.put("errorMessage", "Girilen kullanıcı ismi zaten mevcut." +
+					" Başka bir kullanıcı ismi giriniz." +
+					" Var olan bir hesabınızı bağlamak istiyorsanız normal giriş yapınız!!");
+			return data;
 		}else{
-			if(!userRegistrationDto.getRegisterPassword().equals(userRegistrationDto.getCheckPassword())){
-				model.addAttribute("anyError", "Girilen şifreler birbiriyle uyuşmamaktadır.");
-				model.addAttribute("qr", entity);
-				return "registration";
+			if(!password.equals(checkPassword)){
+				data.put("isError", true);
+				data.put("errorMessage", "Girilen şifreler birbiriyle uyuşmamaktadır.");
+				return data;
 			}
 
-			User u = userService.save(userRegistrationDto);
+			User newUser = new User();
+			newUser.setUsername(username);
+			newUser.setPassword(passwordEncoder.encode(password));
+			newUser.setRoles(Arrays.asList(roleRepository.findByName("ROLE_USER")));
+			User u = userService.save(newUser);
+
 			entity.setUser(u);
 			entity.setIsRecorded(Boolean.TRUE);
 			QRRepository.saveAndFlush(entity);
 
-			UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(userRegistrationDto.getRegisterUsername(), userRegistrationDto.getRegisterPassword());
+			UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(username, password);
+
+			// Authenticate the user
+			Authentication authentication = authenticationProvider.authenticate(authRequest);
+			SecurityContext securityContext = SecurityContextHolder.getContext();
+			securityContext.setAuthentication(authentication);
+
+			// Create a new session and add the security context.
+			HttpSession session = request.getSession(true);
+			session.setAttribute("SPRING_SECURITY_CONTEXT", securityContext);
+			return data;
+		}
+	}
+
+	@RequestMapping(value = "/login", method = RequestMethod.POST)
+	public @ResponseBody Map<String, Object> loginUser(HttpServletRequest request,
+													 @RequestParam("username") String username,
+													 @RequestParam("password") String password,
+													 @RequestParam("id") String id) {
+		Map<String, Object> data = new HashMap<>();
+
+		QR entity = QRRepository.findById(UUID.fromString(id)).orElseThrow();
+		data.put("isError", false);
+
+		User u = userRepository.findByUsername(username);
+		if(u != null && passwordEncoder.matches(password, u.getPassword())){
+			entity.setUser(u);
+			entity.setIsRecorded(Boolean.TRUE);
+			QRRepository.saveAndFlush(entity);
+
+			UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(username, password);
 
 			// Authenticate the user
 			Authentication authentication = authenticationProvider.authenticate(authRequest);
@@ -132,9 +135,11 @@ public class UserRegistrationController {
 			HttpSession session = request.getSession(true);
 			session.setAttribute("SPRING_SECURITY_CONTEXT", securityContext);
 
-			return "redirect:/user/edit/qr/" + id;
+			return data;
+		}else {
+			data.put("isError", true);
+			data.put("errorMessage", "Girilen kullanıcı adı veya şifre hatalı.");
+			return data;
 		}
-
-
 	}
 }
