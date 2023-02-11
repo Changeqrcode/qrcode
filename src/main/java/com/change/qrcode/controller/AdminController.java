@@ -41,7 +41,7 @@ public class AdminController {
     @PostMapping("/generateQRCode")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public String generateQRCode(Model model){
-        String url="http://changeqr.com/qr/";
+        String url="http://localhost:8080/qr/";
 
         QR newQR = new QR();
 
