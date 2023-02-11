@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -48,13 +49,17 @@ public class UserController {
     }
 
     @GetMapping("/edit/qr/{id}")
-    public String qrEdit(HttpServletRequest httpServletRequest, Model model, @PathVariable UUID id) throws ServletException {
+    public String qrEdit(HttpServletRequest httpServletRequest,
+                         Model model,
+                         RedirectAttributes redirectAttributes,
+                         @PathVariable UUID id) throws ServletException {
         List<String> encodeds = new ArrayList<>();
         QR p = QRRepository.findById(id).orElseThrow();
 
         if(!p.getUser().getUsername().equals(SecurityContextHolder.getContext().getAuthentication().getName()) ){
             httpServletRequest.logout();
-            return "redirect:/user/edit/qr/" + id;
+            redirectAttributes.addFlashAttribute("loginError", "Girilen kullanıcı bu qr kodun sahibi değildir.");
+            return "redirect:/qr/" + id;
         }
 
         List<UploadImage> images = uploadImageRepository.findByQRId(p.getId());
@@ -71,14 +76,16 @@ public class UserController {
 
         model.addAttribute("qr", p);
         model.addAttribute("images", encodeds);
+
         return "user/edit/qr";
     }
 
     @PostMapping("/uploadData/{id}")
     public String uploadImage(Model model,
+                              HttpServletRequest httpServletRequest,
                               @RequestParam("content") String text,
                               @RequestParam("images") MultipartFile[] files,
-                              @PathVariable UUID id) throws IOException {
+                              @PathVariable UUID id) throws IOException, ServletException {
         QR p = QRRepository.findById(id).orElseThrow();
         p.setTextContent(text);
         p.setIsRecorded(true);
@@ -97,6 +104,8 @@ public class UserController {
 
 
         QRRepository.saveAndFlush(p);
+
+        httpServletRequest.logout();
 
         return "redirect:/qr/" + p.getId();
     }

@@ -119,17 +119,13 @@
 		$("#form-registration-data").submit(function(event) {
 			event.preventDefault();
 			const id = $("#id-text").text();
-			console.log(id);
 			let formData = $("#form-registration-data").serialize();
 			formData += "&id=" + id;
-			console.log(formData)
 			$.ajax({
 				type: "POST",
 				url: "/registration/new",
 				data: formData,
 				success: function(response) {
-					console.log(response)
-					console.log("Form data submitted successfully.");
 					if(response.isError != false){
 						$("#error-message").css("display", "block");
 						$("#error-message").text(response.errorMessage);
@@ -140,7 +136,6 @@
 				},
 				error: function(error) {
 					console.log(error)
-					console.error("Error submitting form data:", error);
 				}
 			});
 		});
@@ -149,17 +144,13 @@
 		$("#form-login-data").submit(function(event) {
 			event.preventDefault();
 			const id = $("#id-text").text();
-			console.log(id);
 			let formData = $("#form-login-data").serialize();
 			formData += "&id=" + id;
-			console.log(formData)
 			$.ajax({
 				type: "POST",
 				url: "/registration/login",
 				data: formData,
 				success: function(response) {
-					console.log(response)
-					console.log("Form data submitted successfully.");
 					if(response.isError != false){
 						$("#error-message").css("display", "block");
 						$("#error-message").text(response.errorMessage);
@@ -170,7 +161,6 @@
 				},
 				error: function(error) {
 					console.log(error)
-					console.error("Error submitting form data:", error);
 				}
 			});
 		});

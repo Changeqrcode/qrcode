@@ -31,6 +31,10 @@
   </div>
   <form method="post" th:action="@{/uploadData/{id}(id = ${qr.id})}" enctype="multipart/form-data">
     <div class="row mt-2">
+        <!-- error message -->
+        <div th:if="${error != null && !error.isEmpty()}">
+          <div class="alert alert-danger" th:text="${error}"></div>
+        </div>
 
         <div class="col">
           <div class="form-floating">

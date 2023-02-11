@@ -37,7 +37,7 @@
                                     </div>
                                     <form th:action="@{/user/login}" method="post" class="user" >
                                         <!-- error message -->
-                                        <div th:if="${param.error}">
+                                        <div th:if="${param.error != null}">
                                             <div class="alert alert-danger">Girilen kullanıcı adı veya şifre hatalı.</div>
                                         </div>
 

@@ -7,6 +7,7 @@ import com.change.qrcode.repository.UploadImageRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -28,9 +29,14 @@ public class QRController {
     }
 
     @GetMapping("/{id}")
-    public String get(Model model, @PathVariable UUID id) {
+    public String get(Model model,
+                      @ModelAttribute("loginError") String loginError,
+                      @PathVariable UUID id) {
+
         List<String> encodeds = new ArrayList<>();
         QR p = QRRepository.findById(id).orElseThrow();
+
+        model.addAttribute("error", "");
 
         if(p.getIsRecorded() == null || p.getIsRecorded() == false){
 
@@ -47,6 +53,10 @@ public class QRController {
 
         if (p.getTextContent() == null){
             p.setTextContent("");
+        }
+
+        if (loginError != null && !loginError.isEmpty()){
+            model.addAttribute("error", loginError);
         }
 
         model.addAttribute("qr", p);
