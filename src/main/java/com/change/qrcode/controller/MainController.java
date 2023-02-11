@@ -18,7 +18,7 @@ public class MainController {
 
 	@GetMapping("/accessDenied")
 	public String error403() {
-		return "/accessDenied";
+		return "accessDenied";
 	}
 
 }
