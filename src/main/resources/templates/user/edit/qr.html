@@ -93,12 +93,10 @@
         inputDiv = document.querySelector(".input-div"),
         input = document.querySelector(".input-div input"),
         serverMessage = document.querySelector(".server-message"),
-        errorCount = 0,
         allowedFileCount = 6,
-        allowedSizePerFile = 2097152,
+        allowedSizePerFile = 102400,
         isNumberOfFileExceedError = false,
         numberOfFileExceedErrorMesage = "<p> Sadece 6 tane resim yükleyebilirsiniz.</p> <p>Lütfen başka resimler yükleyebilmek için yüklenen resimlerden bazılarını siliniz.</p>",
-        sizePerFileErrorMessage = "<p>Aşağıda isimleri bulunan resimlerin boyutları 2MB'dan fazladır!!!</p>",
         errorFileNames = "",
         errorMesage = "";
 
@@ -110,42 +108,45 @@
             });
     }
 
-    input.addEventListener("change", () => {
+    var maxHeight = 300; // Set the desired maximum size
+
+    input.addEventListener("change", async () => {
         const files = input.files
         serverMessage.innerHTML = ""
-        errorCount = 0
         isNumberOfFileExceedError = false
         errorFileNames = ""
         errorMesage = ""
 
+        console.log(files)
         if(allowedFileCount < (files.length + imagesArray.length)){
             isNumberOfFileExceedError = true;
             errorMesage = "<div>" + numberOfFileExceedErrorMesage + "</div>";
             serverMessage.innerHTML = errorMesage;
         }else{
             for(let i=0; i<files.length; i++){
-                if(files[i].size > allowedSizePerFile){
-                    errorCount++;
-                    errorFileNames += "<p>" + files[i].name + "</p>"
-                }else{
-                    imagesArray.push(files[i])
-                }
-            }
 
-            if(errorCount > 0){
-                errorMesage = "<div>" + sizePerFileErrorMessage + errorFileNames + "</div>";
-                serverMessage.innerHTML = errorMesage;
+                if(files[i].size > allowedSizePerFile){
+
+                    let tempImage = new Image();
+                    tempImage.src = await fileToDataUri(files[i]);
+
+                    // compressing the uplodaded image
+                    tempImage.addEventListener("load", async () => {
+                        await reduceSizeOfImage(tempImage, i)
+                    });
+                }else{
+                    imagesArray.push(files[i]);
+                }
             }
         }
         displayImages()
     })
 
-    inputDiv.addEventListener("drop", (e) => {
+    inputDiv.addEventListener("drop", async (e) => {
         e.preventDefault();
         const files = e.dataTransfer.files
 
         serverMessage.innerHTML = ""
-        errorCount = 0
         isNumberOfFileExceedError = false
         errorFileNames = ""
         errorMesage = ""
@@ -156,20 +157,19 @@
             serverMessage.innerHTML = errorMesage;
         }else{
             for(let i=0; i<files.length; i++){
-                if(files[i].size > allowedSizePerFile){
-                    errorCount++;
-                    errorFileNames += "<p>" + files[i].name + "</p>"
-                }else{
-                    if(!files[i].type.match("image")) continue
-                    if(imagesArray.every(image => image.name !== files[i].name)){
-                        imagesArray.push(files[i])
-                    }
-                }
-            }
 
-            if(errorCount > 0){
-                errorMesage = "<div>" + sizePerFileErrorMessage + errorFileNames + "</div>";
-                serverMessage.innerHTML = errorMesage;
+                if(files[i].size > allowedSizePerFile){
+
+                    let tempImage = new Image();
+                    tempImage.src = await fileToDataUri(files[i]);
+
+                    // compressing the uplodaded image
+                    tempImage.addEventListener("load", async () => {
+                        await reduceSizeOfImage(tempImage, i)
+                    });
+                }else{
+                    imagesArray.push(files[i]);
+                }
             }
         }
         displayImages()
@@ -218,6 +218,57 @@
 
         return true;
     })
+
+    function fileToDataUri(file) {
+        return new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.addEventListener("load", () => {
+                resolve(reader.result);
+            });
+            reader.readAsDataURL(file);
+        });
+    }
+
+    async function reduceSizeOfImage(tempImage, index){
+        // Set the desired quality
+        let qualityFactor = 1;
+
+        // Get the original image size
+        let originalWidth = tempImage.width;
+        let originalHeight = tempImage.height;
+
+
+        // Calculate the new size
+        let newHeight = (maxHeight > originalHeight) ? originalHeight : maxHeight;
+        let newWidth = (newHeight * originalWidth) / originalHeight;
+
+        var canvas = document.createElement('canvas');
+        var ctx = canvas.getContext('2d');
+
+        // Resize the canvas
+        canvas.width = newWidth;
+        canvas.height = newHeight;
+
+        // Draw the image on the canvas
+        ctx.drawImage(tempImage, 0, 0, newWidth, newHeight);
+
+        let dataURL = canvas.toDataURL('image/jpeg', qualityFactor);
+        let editedFile = await urltoFile( 'client-encoded-image'+index+'.jpeg','image/jpeg', dataURL);
+        console.log("after resize size", editedFile.size)
+        console.log("after resize quality", qualityFactor)
+
+        while(editedFile.size > allowedSizePerFile){
+            qualityFactor -= 0.1
+            dataURL = canvas.toDataURL('image/jpeg', qualityFactor);
+            editedFile = await urltoFile( 'client-encoded-image'+index+'.jpeg','image/jpeg', dataURL);
+            console.log("after resize size", editedFile.size)
+            console.log("after resize quality", qualityFactor)
+        }
+
+        imagesArray.push(editedFile)
+        displayImages()
+    }
+
 </script>
 
 </body>
