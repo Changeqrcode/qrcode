@@ -22,12 +22,16 @@ public class ControllerExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ModelAndView globalExceptionHandler(Exception ex, WebRequest request ){
         items = ex.getClass().getName().split("\\.");
+
         ErrorMessage message = new ErrorMessage(
                 items[items.length-1].substring(0, 1).toLowerCase() + items[items.length-1].substring(1),
                 HttpStatus.INTERNAL_SERVER_ERROR.value(),
                 new Date(),
                 ex.getMessage(),
-                request.getDescription(true));
+                request.getDescription(true),
+                ex.getStackTrace().toString(),
+                ex.getLocalizedMessage(),
+                ex.getCause().toString());
 
         errorMessageRepository.saveAndFlush(message);
 
