@@ -21,6 +21,9 @@ public class QR {
     @Column(name = "text_content")
     private String textContent;
 
+    @Column(name = "links")
+    private String links;
+
     @Column(name = "is_recorded")
     private Boolean isRecorded;
 

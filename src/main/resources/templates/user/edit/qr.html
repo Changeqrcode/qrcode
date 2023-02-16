@@ -13,6 +13,17 @@
     <link href="/css/sb-admin-2.min.css" rel="stylesheet">
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="https://kit.fontawesome.com/3188dfded8.js" crossorigin="anonymous"></script>
+    <style>
+        .deleteLink{
+            color: red;
+            float:right;
+        }
+
+        .myLinks{
+            padding-left: calc(var(--bs-gutter-x) * .5);
+        }
+    </style>
 </head>
 
 <body style="    background-color: #d8d7d5;">
@@ -36,7 +47,7 @@
           <div class="col">
             <div class="form-floating">
                           <textarea class="form-control" placeholder="Lütfen buraya bilgileri giriniz." id="floatingTextarea"
-                                    style="height: 400px;" name="content"
+                                    style="height: 400px; color: black; font-size: 1.5rem;" name="content"
                                     th:text="${qr.textContent}">
                           </textarea>
 
@@ -44,6 +55,21 @@
             </div>
           </div>
 
+
+      </div>
+      <div class="row mt-2">
+          <h2>Linkler</h2>
+          <div class="input-group mb-3">
+              <input id="link-content" type="text" class="form-control" placeholder="Lütfen link giriniz." aria-describedby="button-addon2">
+              <input id="upload-links" type="hidden" name="uploadLinks">
+              <span th:text="${links}" style="display: none;" id="saved-links"></span>
+              <button class="btn btn-primary" type="button" id="button-addon2" onclick="addLink()">Ekle</button>
+          </div>
+
+          <ul id="link-list" class="list-group myLinks">
+              <li class="list-group-item">
+              </li>
+          </ul>
 
       </div>
       <div class="row mt-2">
@@ -98,7 +124,13 @@
         isNumberOfFileExceedError = false,
         numberOfFileExceedErrorMesage = "<p> Sadece 6 tane resim yükleyebilirsiniz.</p> <p>Lütfen başka resimler yükleyebilmek için yüklenen resimlerden bazılarını siliniz.</p>",
         errorFileNames = "",
-        errorMesage = "";
+        errorMesage = "",
+        savedLinks = $("#saved-links").text(),
+        linksArray = savedLinks.split(","),
+        uploadLinks = savedLinks;
+
+
+    displaySavedLinks()
 
     for(let i=0; i<serverImages.length; i++){
         urltoFile( 'server-encoded-image'+i+'.png','image/png',serverImages[i])
@@ -117,7 +149,6 @@
         errorFileNames = ""
         errorMesage = ""
 
-        console.log(files)
         if(allowedFileCount < (files.length + imagesArray.length)){
             isNumberOfFileExceedError = true;
             errorMesage = "<div>" + numberOfFileExceedErrorMesage + "</div>";
@@ -254,20 +285,65 @@
 
         let dataURL = canvas.toDataURL('image/jpeg', qualityFactor);
         let editedFile = await urltoFile( 'client-encoded-image'+index+'.jpeg','image/jpeg', dataURL);
-        console.log("after resize size", editedFile.size)
-        console.log("after resize quality", qualityFactor)
+
 
         while(editedFile.size > allowedSizePerFile){
             qualityFactor -= 0.1
             dataURL = canvas.toDataURL('image/jpeg', qualityFactor);
             editedFile = await urltoFile( 'client-encoded-image'+index+'.jpeg','image/jpeg', dataURL);
-            console.log("after resize size", editedFile.size)
-            console.log("after resize quality", qualityFactor)
+
         }
 
         imagesArray.push(editedFile)
         displayImages()
     }
+
+    function addLink() {
+        let linksDiv = document.querySelector("#link-list");
+        let li = document.createElement('li');
+        let linkContent = document.querySelector("#link-content");
+        li.className = 'list-group-item'
+
+        if(linkContent.value === ''){
+            alert("Boş link giremezsiniz.")
+        }else{
+            let newLink = `<a href="${linkContent.value}">
+                    ${linkContent.value}
+                  </a>
+                  <i class="fa-sharp fa-solid fa-xmark deleteLink" onclick="deleteLink(${linksArray.length})"></i>`
+            linksArray.push(linkContent.value)
+            uploadLinks = linksArray.toString()
+            $("#upload-links").val(uploadLinks)
+            li.innerHTML = newLink
+            linksDiv.appendChild(li);
+        }
+
+
+    }
+
+    function displaySavedLinks() {
+        let linksDiv = document.querySelector("#link-list");
+        let displayLinks= '';
+
+        for(let i=0; i<linksArray.length; i++){
+            displayLinks += `<li class="list-group-item">
+                          <a href="${linksArray[i]}">
+                            ${linksArray[i]}
+                          </a>
+                          <i class="fa-sharp fa-solid fa-xmark deleteLink" onclick="deleteLink(${i})"></i>
+                       </li>`
+        }
+        linksDiv.innerHTML = displayLinks;
+    }
+
+
+    function deleteLink(index) {
+        linksArray.splice(index, 1)
+        uploadLinks = linksArray.toString()
+        $("#upload-links").val(uploadLinks)
+        displaySavedLinks()
+    }
+
 
 </script>
 

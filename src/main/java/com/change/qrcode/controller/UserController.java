@@ -70,12 +70,17 @@ public class UserController {
             }
         }
 
+        if(p.getLinks() == null || p.getLinks().isEmpty()){
+            p.setLinks("Bu bir deneme linkidir. Link eklediğinizde böyle gözükecektir. Okuduktan sonra bu linki siliniz.");
+        }
+
         if (p.getTextContent() == null){
             p.setTextContent("");
         }
 
         model.addAttribute("qr", p);
         model.addAttribute("images", encodeds);
+        model.addAttribute("links", p.getLinks());
 
         return "user/edit/qr";
     }
@@ -84,10 +89,12 @@ public class UserController {
     public String uploadImage(Model model,
                               HttpServletRequest httpServletRequest,
                               @RequestParam("content") String text,
+                              @RequestParam("uploadLinks") String links,
                               @RequestParam("images") MultipartFile[] files,
                               @PathVariable UUID id) throws IOException, ServletException {
         QR p = QRRepository.findById(id).orElseThrow();
         p.setTextContent(text);
+        p.setLinks(links);
         p.setIsRecorded(true);
 
         uploadImageRepository.deleteAllByQRId(p.getId());

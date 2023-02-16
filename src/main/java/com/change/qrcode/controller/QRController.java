@@ -51,6 +51,10 @@ public class QRController {
             }
         }
 
+        if(p.getLinks() == null){
+            p.setLinks("");
+        }
+
         if (p.getTextContent() == null){
             p.setTextContent("");
         }
@@ -61,6 +65,7 @@ public class QRController {
 
         model.addAttribute("qr", p);
         model.addAttribute("images", encodeds);
+        model.addAttribute("links", p.getLinks());
 
         return "qr/qr";
     }
