@@ -33,13 +33,11 @@
   </form>
 </div>
 <div class="container text-center">
-  <div class="row text-center mt-5 ">
-    <h1 class="text-center shadow-sm p-3" style="color: whitesmoke;
-                border-radius: 1rem;
-                border: 5px solid white;
-                background-color: #4e73de;">
-      Change QR Code
-    </h1>
+  <div class="row text-center mt-5 justify-content-center" style="border-radius: 1rem;
+                                            border: 5px solid white;
+                                            background-color: white;">
+      <img src="../img/userLoginLogo.jpg" style="height: auto;
+                                                 width: 15%;">
   </div>
   <form method="post" th:action="@{/uploadData/{id}(id = ${qr.id})}" enctype="multipart/form-data">
     <div class="row mt-2">
@@ -50,17 +48,17 @@
 
         <div class="col">
           <div class="form-floating">
-            <textarea class="form-control" placeholder="Lütfen buraya bilgileri giriniz." id="floatingTextarea"
+            <textarea class="form-control" id="floatingTextarea"
                       style="height: 400px; background-color: white; color: black; font-size: 1.5rem;" name="content" disabled
                       th:text="${qr.textContent}">
             </textarea>
-            <label for="floatingTextarea">Bilgiler</label>
+            <label for="floatingTextarea">BİLGİLER/INFO</label>
           </div>
         </div>
 
     </div>
     <div class="row mt-2" th:if="${links != null && links != ''}">
-      <h2>Linkler</h2>
+      <h2>LİNKLER/LINKS</h2>
 
       <span th:text="${links}" style="display: none;" id="saved-links"></span>
       <ul id="link-list" class="list-group myLinks">
@@ -75,7 +73,7 @@
         <div class="app mb-3">
           <div id="queued-form" class="mt-2">
             <div class="header">
-              <h3>Resimler</h3>
+              <h3>RESİMLER/IMAGES</h3>
             </div>
             <div class="queued-div">
               <div th:each="image: ${images}" class="image">
@@ -103,11 +101,15 @@
     let displayLinks= '';
 
     for(let i=0; i<linksArray.length; i++){
+      let linkContent = linksArray[i]
+      let href = linkContent
+      if(linkContent.includes('@')){
+        href = 'mailto:' + href;
+      }
       displayLinks += `<li class="list-group-item">
-                          <a href="${linksArray[i]}">
-                            ${linksArray[i]}
+                          <a href="${href}">
+                            ${linkContent}
                           </a>
-                          <i class="fa-sharp fa-solid fa-xmark deleteLink" onclick="deleteLink(${i})"></i>
                        </li>`
     }
     linksDiv.innerHTML = displayLinks;
