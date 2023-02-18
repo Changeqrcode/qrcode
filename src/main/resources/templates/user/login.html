@@ -12,7 +12,7 @@
     <title>Change QR Kullanıcı Giriş</title>
 
     <!-- Custom styles for this template-->
-    <link href="../css/sb-admin-2.css" rel="stylesheet">
+    <link href="/css/sb-admin-2.css" rel="stylesheet">
 
 </head>
 
@@ -35,7 +35,7 @@
                                     <div class="text-center">
                                         <h1 class="h4 text-gray-900 mb-4">Kullanıcı Girişine Hoş Geldiniz!</h1>
                                     </div>
-                                    <form th:action="@{/user/login}" method="post" class="user" >
+                                    <form th:action="@{/user/login/qr/{id}(id = ${id})}" method="post" class="user" >
                                         <!-- error message -->
                                         <div th:if="${param.error != null}">
                                             <div class="alert alert-danger">Girilen kullanıcı adı veya şifre hatalı.</div>

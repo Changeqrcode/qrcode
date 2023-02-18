@@ -48,20 +48,12 @@ public class AdminSecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.authorizeRequests().antMatchers("/", "/qr/**", "/registration/**").permitAll();
+		http.authorizeRequests().antMatchers("/", "/qr/**",
+				"/registration/**","/admin/login/**",
+				"/admin/logout").permitAll();
 
 		http.antMatcher("/admin/**")
 				.authorizeRequests().anyRequest().hasRole("ADMIN")
-				.and()
-				.formLogin()
-				.loginPage("/admin/login")
-				.loginProcessingUrl("/admin/login")
-				.defaultSuccessUrl("/admin/home")
-				.permitAll()
-				.and()
-				.logout()
-				.logoutUrl("/admin/logout")
-				.logoutSuccessUrl("/admin/login")
 				.and()
 				.exceptionHandling().accessDeniedHandler(accessDeniedHandler());
 	}

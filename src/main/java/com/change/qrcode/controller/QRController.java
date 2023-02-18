@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
@@ -30,8 +32,9 @@ public class QRController {
 
     @GetMapping("/{id}")
     public String get(Model model,
+                      HttpServletRequest httpServletRequest,
                       @ModelAttribute("loginError") String loginError,
-                      @PathVariable UUID id) {
+                      @PathVariable UUID id) throws ServletException {
 
         List<String> encodeds = new ArrayList<>();
         QR p = QRRepository.findById(id).orElseThrow();

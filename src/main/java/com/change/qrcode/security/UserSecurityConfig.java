@@ -19,19 +19,11 @@ public class UserSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
+        http.authorizeRequests().antMatchers("/user/login/qr/**",
+                "/user/logout/qr/**").permitAll();
 
         http.antMatcher("/user/**")
                 .authorizeRequests().anyRequest().hasRole("USER")
-                .and()
-                .formLogin()
-                .loginPage("/user/login")
-                .loginProcessingUrl("/user/login")
-                .defaultSuccessUrl("/user/home")
-                .permitAll()
-                .and()
-                .logout()
-                .logoutUrl("/user/logout")
-                .logoutSuccessUrl("/user/login")
                 .and()
                 .exceptionHandling().accessDeniedHandler(accessDeniedHandler);
     }

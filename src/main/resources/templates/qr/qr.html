@@ -28,7 +28,7 @@
 
 <body style="    background-color: #d8d7d5;">
 <div class="container text-center mt-3" style="width: 100%;">
-  <form method="get" th:action="@{/user/edit/qr/{id}(id = ${qr.id})}">
+  <form method="get" th:action="@{/user/login/qr/{id}(id = ${qr.id})}">
     <button class="btn btn-primary"  type="submit">Kullanıcı Girişi</button>
   </form>
 </div>
@@ -36,7 +36,7 @@
   <div class="row text-center mt-5 justify-content-center" style="border-radius: 1rem;
                                             border: 5px solid white;
                                             background-color: white;">
-      <img src="../img/userLoginLogo.jpg" style="height: auto;
+      <img src="/img/mainQRPageLogo.jpg" style="height: auto;
                                                  width: 15%;">
   </div>
   <form method="post" th:action="@{/uploadData/{id}(id = ${qr.id})}" enctype="multipart/form-data">
