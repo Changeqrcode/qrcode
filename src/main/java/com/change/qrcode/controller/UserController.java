@@ -114,7 +114,6 @@ public class UserController {
         QR p = QRRepository.findById(id).orElseThrow();
 
         if(!p.getUser().getUsername().equals(SecurityContextHolder.getContext().getAuthentication().getName()) ){
-            httpServletRequest.logout();
             redirectAttributes.addFlashAttribute("loginError", "Girilen kullanıcı bu qr kodun sahibi değildir.");
             return "redirect:/qr/" + id;
         }
