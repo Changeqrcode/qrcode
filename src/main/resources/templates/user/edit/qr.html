@@ -140,7 +140,7 @@
             });
     }
 
-    var maxHeight = 300; // Set the desired maximum size
+    var maxHeight = 1000; // Set the desired maximum size
 
     input.addEventListener("change", async () => {
         const files = input.files
@@ -269,15 +269,19 @@
         let originalHeight = tempImage.height;
 
 
+        // Calculate the new size
+        let newHeight = (maxHeight > originalHeight) ? originalHeight : maxHeight;
+        let newWidth = (newHeight * originalWidth) / originalHeight;
+
         var canvas = document.createElement('canvas');
         var ctx = canvas.getContext('2d');
 
         // Resize the canvas
-        canvas.width = originalWidth;
-        canvas.height = originalHeight;
+        canvas.width = newWidth;
+        canvas.height = newHeight;
 
         // Draw the image on the canvas
-        ctx.drawImage(tempImage, 0, 0, originalWidth, originalHeight);
+        ctx.drawImage(tempImage, 0, 0, newWidth, newHeight);
 
         let dataURL = canvas.toDataURL('image/jpeg', qualityFactor);
         let editedFile = await urltoFile( 'client-encoded-image'+index+'.jpeg','image/jpeg', dataURL);
