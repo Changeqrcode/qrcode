@@ -64,6 +64,7 @@ public class UserRegistrationController {
 	@RequestMapping(value = "/new", method = RequestMethod.POST)
 	public @ResponseBody Map<String, Object> registerUser(HttpServletRequest request,
 													 @RequestParam("username") String username,
+													 @RequestParam("email") String email,
 													 @RequestParam("password") String password,
 													 @RequestParam("checkPassword") String checkPassword,
 													 @RequestParam("id") String id) {
@@ -88,6 +89,7 @@ public class UserRegistrationController {
 			newUser.setUsername(username);
 			newUser.setPassword(passwordEncoder.encode(password));
 			newUser.setRoles(Arrays.asList(roleRepository.findByName("ROLE_USER")));
+			newUser.setEmail(email);
 			User u = userService.save(newUser);
 
 			entity.setUser(u);

@@ -3,168 +3,705 @@
 
 <head>
 
-	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	<meta name="description" content="">
-	<meta name="author" content="">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
 
-	<title>Change QR Admin Giriş</title>
+    <title>Change QR Admin Giriş</title>
 
-	<!-- Custom styles for this template-->
-	<link href="../css/sb-admin-2.css" rel="stylesheet">
+    <!-- Custom styles for this template-->
+    <link href="../css/sb-admin-2.css" rel="stylesheet">
 
-	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
-		  integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
-			integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
-			crossorigin="anonymous"> </script>
-	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+            crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css" integrity="sha512-3pIirOrwegjM6erE5gPSwkUzO+3cTjpnV9lexlNZqvupR64iZBnOOTiiLPb9M36zpMScbmUNIcHUqKD47M719g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js" integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
 
 
 </head>
+<style>
+    .popup {
+        display: none;
+        position: fixed;
+        padding: 10px;
+        top: 30%;
+        left: 20%;
+        right: 20%;
+        bottom: 30%;
+        background: #FFF;
+        z-index: 20;
+        box-shadow: 0px 0px 0px 9999px rgba(0, 0, 0, 0.5);
+        min-height: 50vh;
+        overflow: auto;
+    }
+
+    .consent {
+        display: flex;
+        flex-direction: row;
+        gap: 20px;
+        justify-content: center;
+        align-content: center;
+    }
+
+    .consent a {
+        text-decoration: #1c294e;
+    }
+
+    .hide-msg{
+        display: none;
+    }
+    .show-msg{
+        display: block;
+    }
+    #show-tag:hover{
+        cursor: pointer;
+    }
+
+</style>
 
 <body style="background-color: #d8d7d5;">
 
 <div class="container">
 
-	<!-- Outer Row -->
-	<div class="row justify-content-center">
+    <!-- Outer Row -->
+    <div class="row justify-content-center">
 
-		<div class="col-xl-10 col-lg-12 col-md-9">
+        <div class="col-xl-10 col-lg-12 col-md-9">
 
-			<div class="card o-hidden border-0 shadow-lg my-5">
-				<div class="card-body p-0">
-					<!-- Nested Row within Card Body -->
-					<div class="row">
-						<div class="col-lg-6 d-none d-lg-block bg-user-login-image" ></div>
-						<div class="col-lg-6">
-							<div class="p-5">
-								<div class="text-center">
-									<h1 class="h4 text-gray-900 mb-4">QR Code İle Kullanıcı Kaydetmeye</h1>
-									<h1 class="h4 text-gray-900 mb-4">Hoş Geldiniz!</h1>
-								</div>
+            <div class="card o-hidden border-0 shadow-lg my-5">
+                <div class="card-body p-0">
+                    <!-- Nested Row within Card Body -->
+                    <div class="row">
+                        <div class="col-lg-6 d-none d-lg-block bg-user-login-image"></div>
+                        <div class="col-lg-6">
+                            <div class="p-5">
+                                <div class="text-center">
+                                    <h1 class="h4 text-gray-900 mb-4">QR Code İle Kullanıcı Kaydetmeye</h1>
+                                    <h1 class="h4 text-gray-900 mb-4">Hoş Geldiniz!</h1>
+                                </div>
 
-								<span th:text="${qr.id}" id="id-text" style="display: none;"></span>
-									<!-- error message -->
-									<div id="error-message" class="alert alert-danger" style="display: none;"></div>
+                                <span th:text="${qr.id}" id="id-text" style="display: none;"></span>
+                                <!-- error message -->
+                                <div id="error-message" class="alert alert-danger" style="display: none;"></div>
 
-									<div >
-										<ul class="nav nav-tabs" id="myTab" role="tablist">
-											<li class="nav-item" role="presentation">
-												<button class="nav-link active" id="hasAccount-tab" data-bs-toggle="tab" data-bs-target="#hasAccount-tab-pane" type="button" role="tab" aria-controls="hasAccount-tab-pane" aria-selected="true">Giriş</button>
-											</li>
-											<li class="nav-item" role="presentation">
-												<button class="nav-link" id="registerAccount-tab" data-bs-toggle="tab" data-bs-target="#registerAccount-tab-pane" type="button" role="tab" aria-controls="registerAccount-tab-pane" aria-selected="false">Yeni Kullanıcı Oluştur</button>
-											</li>
-										</ul>
-										<div class="tab-content" id="myTabContent">
 
-											<div class="tab-pane fade show active mt-2" id="hasAccount-tab-pane" role="tabpanel" aria-labelledby="hasAccount-tab" tabindex="0">
-												<form id="form-login-data" method="post" class="user">
-													<div class="form-group">
-														<input type="text" class="form-control form-control-user"
-															   id="username" name="username" placeholder="Kullanıcı Adı Giriniz">
-													</div>
-													<div class="form-group">
-														<input type="password" class="form-control form-control-user"
-															   id="password" name="password" placeholder="Şifre Giriniz">
-													</div>
+                                <div>
+                                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link active" id="hasAccount-tab" data-bs-toggle="tab"
+                                                    data-bs-target="#hasAccount-tab-pane" type="button" role="tab"
+                                                    aria-controls="hasAccount-tab-pane" aria-selected="true">Giriş
+                                            </button>
+                                        </li>
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link" id="registerAccount-tab" data-bs-toggle="tab"
+                                                    data-bs-target="#registerAccount-tab-pane" type="button" role="tab"
+                                                    aria-controls="registerAccount-tab-pane" aria-selected="false">Yeni
+                                                Kullanıcı Oluştur
+                                            </button>
+                                        </li>
+                                    </ul>
+                                    <div class="tab-content" id="myTabContent">
 
-													<button type="submit" name="login-submit" id="login-submit" class="btn btn-primary btn-user btn-block" style="background-color: #4e73de!important;">
-														QR Code İle Hesabı Bağla
-													</button>
-												</form>
-											</div>
-											<div class="tab-pane fade mt-2" id="registerAccount-tab-pane" role="tabpanel" aria-labelledby="registerAccount-tab" tabindex="0">
-												<form id="form-registration-data" method="post" class="user">
-													<div class="form-group">
-														<input type="text" class="form-control form-control-user"
-															   id="username2" name="username" placeholder="Yeni Kullanıcı Adını Giriniz">
-													</div>
-													<div class="form-group">
-														<input type="password" class="form-control form-control-user"
-															   id="password2" name="password" placeholder="Şifre Giriniz">
-													</div>
+                                        <div class="tab-pane fade show active mt-2" id="hasAccount-tab-pane"
+                                             role="tabpanel" aria-labelledby="hasAccount-tab" tabindex="0">
+                                            <form id="form-login-data" method="post" class="user">
+                                                <div class="form-group">
+                                                    <input type="text" class="form-control form-control-user"
+                                                           id="username" name="username"
+                                                           placeholder="Kullanıcı Adı Giriniz">
+                                                </div>
+                                                <div class="form-group">
+                                                    <input type="password" class="form-control form-control-user"
+                                                           id="password" name="password" placeholder="Şifre Giriniz">
+                                                </div>
 
-													<div class="form-group">
-														<input type="password" class="form-control form-control-user"
-															   id="checkPassword" name="checkPassword" placeholder="Şifreyi Tekrar Giriniz">
-													</div>
+                                                <button type="submit" name="login-submit" id="login-submit"
+                                                        class="btn btn-primary btn-user btn-block"
+                                                        style="background-color: #4e73de!important;">
+                                                    QR Code İle Hesabı Bağla
+                                                </button>
+                                                <a th:href="@{/registration/password/forgot}">Şifremi Unuttum</a>
+                                            </form>
+                                        </div>
+                                        <div class="tab-pane fade mt-2" id="registerAccount-tab-pane" role="tabpanel"
+                                             aria-labelledby="registerAccount-tab" tabindex="0">
+                                            <form id="form-registration-data" method="post" class="user">
+                                                <div class="form-group">
+                                                    <input type="text" class="form-control form-control-user"
+                                                           id="username2" name="username"
+                                                           placeholder="Yeni Kullanıcı Adını Giriniz">
+                                                </div>
+                                                <div class="form-group">
+                                                    <input type="email" class="form-control form-control-user"
+                                                           id="email" name="email" placeholder="Email" required>
+                                                </div>
+                                                <div class="form-group">
+                                                    <input type="password" class="form-control form-control-user"
+                                                           id="password2" name="password" placeholder="Şifre Giriniz">
+                                                </div>
+                                                <div class="form-group">
+                                                    <input type="password" class="form-control form-control-user"
+                                                           id="checkPassword" name="checkPassword"
+                                                           placeholder="Şifreyi Tekrar Giriniz">
+                                                </div>
+                                                <section class="consent">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input kvkk-checked" type="checkbox" value=""
+                                                               id="flexCheckChecked"  >
+                                                    </div>
+                                                    <a id="show-tag"><span id="kvvk-span" style="font-weight: bold; color: #4e73de; ">K.V.K.K</span> metnini okudum onayladim</a>
+                                                </section>
+                                                <button type="submit" name="login-submit" id="login-submit2"
+                                                        class="btn btn-primary btn-user btn-block"
+                                                        style="background-color: #4e73de!important;">
+                                                    Yeni Kullanıcı Oluştur Ve QR Code İle Hesabı Bağla
+                                                </button>
 
-													<button type="submit" name="login-submit" id="login-submit2" class="btn btn-primary btn-user btn-block" style="background-color: #4e73de!important;">
-														Yeni Kullanıcı Oluştur Ve QR Code İle Hesabı Bağla
-													</button>
-												</form>
-											</div>
-										</div>
+                                            </form>
+                                        </div>
+                                    </div>
 
-									</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-		</div>
+        </div>
 
-	</div>
+    </div>
 
 </div>
+<!-- KVKK METNI   -->
+<div class="popup" id="popup">
+    <div>
+        <div>
+            <h4>Changeqr.com Hüküm ve Koşulları</h4>
+            <p>Bu Hüküm ve Koşullar, 'Alıcı' ve 'Kullanıcı' hak ve yükümlülüklerini etkiler ve Changeqr'nin
+                ('Tedarikçi') ürünleri, Changeqr web sitesi aracılığıyla Alıcıya sunmasına ilişkin koşulları
+                belirler.</p>
+            <p>1. Changeqr Web Sitesini Kullanarak Yapılan Satın Almalar
+                Alıcı ile Tedarikçi arasındaki sözleşmenin temeli aşağıdaki şekilde oluşturulmuştur:
+                "Alıcı", Changeqr web sitesinde ödeme noktasında sipariş sürecini tamamlayarak bir Changeqr "Kullanıcı
+                Hesabı" ve/veya "Ürünler" için çevrimiçi sipariş verir.
+                Teslimat ve Paketleme ücretleri alınabilir ve sipariş sırasında geçerli olan tekliflere bağlıdır.
+                'Alıcı', sipariş edilen Ürünlerin ayrıntılarını içeren bir sipariş onayı alacaktır. Bu bir sipariş
+                teyidi değildir ve 'Tedarikçi' tarafından 'Alıcılar' siparişinin kabul edildiği anlamına gelmez.
+                "Ürünler"in gönderilmesinin ardından, "Alıcı" veya onun tayin ettiği "Kullanıcı", "Ürünler" ile birlikte
+                bir sipariş ve sevkiyat onayı alır. Siparişin kabulü ve 'Tedarikçi' ile 'Alıcı' arasındaki sözleşmenin
+                tamamlanması, sipariş edilen Ürünlerin sevkıyatı ile gerçekleşir. İstisnalar, 'Tedarikçinin' siparişi
+                kabul etmediğini veya 'Alıcının' siparişini iptal ettiğini 'Alıcıya' bildirmesini içerir.
+                Bir "Kullanıcı Hesabı" ve/veya "Ürünler" için ödeme yapmadan önce "Alıcı"nın "Tedarikçi" "Gizlilik
+                Politikası" da dahil olmak üzere "Şartlar ve Koşulları" kabul ettiğini onaylaması gerekir.</p>
+            <p>1.1 Çevrimiçi Ödemeler
+                Changeqr ürünleri 'Alıcı' tarafından satın alınabilir ve 'Tedarikçi' e-ticaret ödeme sistemi
+                aracılığıyla işlenecektir. Bu ödeme yöntemi, "Alıcı"nın güvenliğini sağlar, çünkü "Alıcının" kredi/banka
+                kartı bilgilerinin güvenliğinin tüm sorumluluğunu üye işyeri hizmet tesisi üstlenir.
+                Siparişin kabulünün işlenmesi ve 'Tedarikçi' ile 'Alıcı' arasındaki sözleşmenin tamamlanması ancak
+                siparişin kabul edilmesinden ve kredi/banka kartı işleminin üye iş yeri servisi tarafından
+                doğrulanmasından sonra gerçekleşecektir.
+                Sipariş edilen "Ürünler", normalde "Sipariş Onayından" sonraki 5 iş günü içinde gönderilecektir. 'Özel
+                siparişler', yani sipariş üzerine yapılan ürünler söz konusu olduğunda, normalde 'Sipariş Onayı'ndan
+                sonraki 10 iş günü içerisinde sevkiyat gerçekleşir.</p>
+            <p>2. Ödeme
+                "Alıcı" siparişinin toplam maliyeti, "Kullanıcı Hesabı" kaydının "Fiyatı" ve/veya sipariş edilen
+                "Ürünler" artı "Alıcı"nın sipariş verdiği sırada belirtilen teslimat ve paketleme ücretleridir.
+                Çoğu kredi ve banka kartından ödeme kabul edilebilir.
+                Kredi/banka kartı ödemesi, 'Alıcı' sipariş verdiğinde ve 'Tedarikçi' siparişi onayladığında işleme
+                alınacaktır.
+                Tüm kart ödemeleri, "Alıcıların" satın alma maliyetine dahil olan bir komisyon ücreti karşılığında
+                "Tedarikçinin" Satıcı Hizmetleri Tesisi sağlayıcısı tarafından işlenir.</p>
+            <p>3. Teslimat
+                Teslimat, 'Alıcı' tarafından sipariş sırasında belirtilen ve 'Tedarikçi' 'Sipariş Onayı'nda ayrıntılı
+                olarak belirtilen adrese yapılacaktır.
+                Ürünlerin teslimatı, genellikle sipariş onayı e-postasının tarihinden itibaren 5 iş günü içinde
+                etkilenir. 'Kişiye özel' veya sipariş üzerine yapılan 'Ürünler' için teslimat süresi uzayacaktır.
+                "Tedarikçi", teslimatın gecikmesinden kaynaklanan herhangi bir kayıptan "Alıcı"ya karşı sorumlu
+                olmayacaktır.
+                'Alıcının' siparişi için geçerli teslimat ücretleri, satın alma sırasında ve 'Alıcıdan' siparişini
+                onaylaması istendiğinde belirtilecektir.</p>
+            <p>4. Ücretlendirme ve Fiyatlandırma
+                Sipariş edilen 'Kullanıcı Hesabı' ve/veya 'Ürünler' için ödenmesi gereken Ücretler ve Fiyatlar Changeqr
+                Web Sitesinde ayrıntılı olarak açıklanmıştır. Yanlışlıkla ayrıntılı Ücretler ve Fiyatlar yanlışsa,
+                'Tedarikçi' sevkıyattan önce 'Alıcı'ya bildirimde bulunmak kaydıyla, 'Tedarikçi' o ürünü 'Alıcı'ya
+                belirtilen fiyattan tedarik etmekle yükümlü değildir.
+                Web sitesinde belirtilen tüm fiyatlara cari oran üzerinden KDV dahildir.
+                "Tedarikçinin" kontrolü dışındaki koşullar nedeniyle, ödenecek KDV oranındaki herhangi bir değişiklik de
+                dahil olmak üzere "Fiyatlar"ın değiştirilmesi gerekirse, "Alıcı" bilgilendirilecek ve siparişi
+                değiştirilen "Fiyat" üzerinden yeniden teyit etmesi talep edilecektir.</p>
+            <p>5. Ürün Bulunabilirliği ve Durumu
+                Changeqr web sitesinde görüntülenen "Kullanıcı Hesabı" kaydının ve/veya "Ürünlerin" satın alınması,
+                müsaitlik durumuna bağlıdır ve "Tedarikçi"nin "Kullanıcı" tedarik edememesi durumunda "Tedarikçi"
+                Alıcıya karşı sorumlu olmayacaktır. Hesap' kaydı ve/veya 'Ürünler' 'Alıcı'ya.
+                "Sipariş Onayı"ndan sonra bir "Ürün"ün mevcut olmaması durumunda müşteriye aşağıdaki seçenekler sunulur:
+                alternatif ürün,değiştirilmiş teslim tarihi,Tam geri ödeme
+                "Tedarikçi", "Kişilerin" "Ürünler" veya "Hizmet" hakkındaki veya "Kullanıcı Hesabı" içindeki bilgilere
+                ilişkin farkındalığı, anlayışı veya bilgilere erişme veya bunlara göre hareket etme becerisine ilişkin
+                sorumluluk kabul etmez.
+                'Kullanıcı'nın kritik kişisel bilgileri veya tıbbi ayrıntıları kaydettiği durumlarda 'Tedarikçi',
+                'bireyler' tarafından görünürlük ve erişilebilirliğe yardımcı olmak için bir iD 'ürünleri'
+                kombinasyonunun kullanılmasını önerir.
+                "Kullanıcı", kazınmış veya basılı bilgilerin, QR kodunun ve PIN'in okunabilirliği dahil olmak üzere
+                "ürünlerinin" kullanılabilir ve okunabilir olmasını sağlamaktan sorumludur.</p>
+            <em>6. Hizmetler</em>
+            <p>6.2 Hizmet Kullanılabilirliği
+                Changeqr web sitesinin ve 'Kullanıcı Hesabının' hizmet kullanılabilirliği şunları gerektirecektir:
+                Uygun bir web tarayıcısı kullanarak internet erişimi
+                İnternet erişimi mevcudiyeti – 'Tedarikçi', 'Alıcının', 'Kullanıcının' veya 'Şahısların' internet servis
+                sağlayıcısı tarafından internet erişiminin mevcut olduğunu garanti etmez.
+                Web sitesinin mevcudiyeti - Tedarikçi, "Tedarikçinin" web sitesinin kullanılabilirliğini veya
+                erişilebilirliğini garanti etmez.
+                QR Kodu Tarama/Okuma - Bir Hızlı Referans Kodunu (QR Kodu) taramak veya okumak için 'Kullanıcı', uygun
+                bir QR okuyucu/tarayıcı Uygulaması vb. ile bir Akıllı Telefon içerebilen uygun bir cihaz
+                gerektirecektir.</p>
+            <p>6.3 Hizmet Süresi
+                Çevrimiçi bir hesaba bağlanabilen 'Tedarikçi' ürünleri satın alanların, en az 2 yıl süre ile Changeqr
+                web sitesine ve bu hesaba erişmeleri sağlanır.
+                Bu süre zarfında, sitede kullanılan veri hizmetleri (ve üyeleri) dahil olmak üzere "Şahıslar" tarafından
+                erişilen "Kullanıcı" "Kullanıcı Hesabına" ve Changeqr web sitesinin herkese açık sayfalarına erişim
+                "ücretsizdir".
+                Satın alma tarihinden 2 yıl sonra 'Tedarikçi'nin takdirine bağlı olarak 'Yeniden kayıt' yönetim
+                ücretleri geçerli olabilir. 'Yeniden kayıt', 'Kullanıcı Hesabının' aktif ve görünür kalmasını ve
+                'Kullanıcı' tarafından güncelleme ve değişiklik için erişilebilir olmasını sağlar.</p>
+            <p>6.4 Hizmet İçeriği
+                'Kullanıcı', 'Kullanıcı Hesabı' ve 'Ürün' içeriğinin tamamından sorumludur.</p>
+            <p>7. İptal
+                'Alıcı', 'Kayıt' ve/veya 'Ürünler' siparişini, ürünlerin sipariş tarihinden itibaren 24 saate kadar
+                'Tedarikçi' ile changeqrcode@gmail.com adresinden e-posta yoluyla iletişime geçerek iptal etme hakkına
+                sahiptir.
+                "Ürünler", sipariş iptalinin "Tedarikçi"ye bildirilmesinden önce "Alıcı"ya gönderilmişse, "Tedarikçi"
+                tüm "Ürünleri" aşağıdaki İade prosedürüne uygun olarak iade etmelidir.
+                "Yeniden kayıt" sırasında "Kullanıcı", "Tedarikçi" ile changeqrcode@gmail.com adresinden e-posta yoluyla
+                iletişime geçerek "Hizmet"i iptal edebilir.</p>
+            <p>8. İade
+                Herhangi bir nedenle "Alıcı"nın "Ürünleri" "Tedarikçi"ye iade etmesi gerekirse, "Alıcı" bunu teslimat
+                tarihinden itibaren 14 gün içinde yapmalıdır. Herhangi bir ürünü 'Tedarikçiye' iade etmek için aşağıdaki
+                prosedür izlenmelidir:
+                Ürünü orijinal ambalajında ​​ve orijinal durumunda saklayın;Satıcı ile temasa geçip verilen adrese ürün
+                iade edilr.Lütfen İade ile ilgili olarak aşağıdaki noktalara dikkat edin.
+                Tüm 'Ürünler' kullanılmamış ve satılmış durumda 'Tedarikçi'ye iade edilmelidir. 'Ürün' yeniden satışa
+                elverişsiz hale getirecek bir durumda iade edilirse, 'Tedarikçi' 'Fiyat'ın bir kısmını veya tamamını
+                geri ödeme hakkını saklı tutar;
+                Tedarikçi', iade edilen 'Ürünlerin' teslim alınmamasından sorumlu olmayacaktır.
+                İade edilen "Ürünler"in "Tedarikçi" tarafından alınmasından sonra, Alıcının kredi/banka kartına,
+                alınmasından itibaren 10 iş günü içinde "Fiyat"ın uygun bir oranı kredi olarak yansıtılacaktır.</p>
+            <p>9. "İlk Changeqr Kullanıcı Hesabı Kaydı"
+                Kullanıcının ilk Hesabı 'Kaydı', 'Sipariş Onayı'nda belirtildiği gibidir. Çeşitli amaçlar için
+                kullanılabilecek 'Kullanıcı Hesabı' bilgilerinin internet üzerinden görünürlüğünün sağlanması için satın
+                alınan 'Ürünlerin' Changeqr Kullanıcı Hesabına internet üzerinden kaydedilmesini sağlar.
+                'Kayıtlı' bir 'Kullanıcı Hesabı', satın alma veya yeniden kayıt sırasında 'Şartlar ve Koşullar'da
+                belirtildiği gibi veya uygun olduğu durumlarda 'Sipariş Onayı'nda belirtildiği gibi belirli bir süre
+                boyunca aktif kalacaktır. Belirtilen 'Kayıt', satın alma işleminden sonra ve yalnızca satın alınan
+                'Ürünler' veya 'Hizmetler' etkinleştirildiğinde ve Changeqr sisteminde bir 'Kullanıcı Hesabı'
+                kaydedildiğinde sağlanır.</p>
+            <p>10. Changeqr 'yeniden kayıt' ücreti
+                Changeqr 'Yeniden kayıt' gerekli olduğunda 'Kullanıcı' bilgilendirilecektir.
+                'Kullanıcı' 'Yeniden kaydolmak' isterse, o sırada geçerli olan ücret tahsil edilecektir.
+                'Yeniden kayıt' ücreti yalnızca bir yönetim ücretidir ve iade edilmez.
+                Bir 'Yeniden kayıt' ücreti ödendikten sonra, sonraki tüm hizmetler veya Changeqr kaydına erişim,
+                'Yeniden kayıt' dönemi boyunca ücretsizdir.
+                Tek bir 'Yeniden kayıt' ücreti, 'Kullanıcı' tarafından kullanımda olan önceden kaydedilmiş tüm
+                'Ürünleri' otomatik olarak kapsar.</p>
+            <p>'Kayıtlı Hesabının' aktif kalmasını sağlamak 'Kayıtlı Hesap Sahibinin' sorumluluğundadır.</p>
+            <em>YASAL UYARI</em>
+            <p>Bu Çevrimiçi Satın Alma Politikası, Yasal Bildirimlerde belirtilen şartları ve Kullanıcının Çevrimiçi
+                Satın Alma Politikasını kabul etmesini içerir ve Kullanıcının Yasal Bildirimi kabul ettiği anlamına
+                gelir.
+                Gizlilik Bildirimi
+                Changeqr'de gizliliğinizi korumaya kararlıyız. Aşağıdaki Gizlilik Politikası, bize sağladığınız
+                bilgileri nasıl kullandığımızı ve koruduğumuzu belirtir.
+                Changeqr web sitesine erişerek veya web sitesini kullanarak, aşağıda belirtilen Changeqr Gizlilik
+                Politikasının şartlarını kabul etmiş olursunuz. Bu şartları kabul etmiyorsanız, lütfen bu siteye
+                erişmeyin veya bu siteyi kullanmayın.
+                Changeqr, Gizlilik Politikasını zaman zaman tamamen kendi takdirine bağlı olarak değiştirme hakkını
+                saklı tutar. Bu siteyi kullanımınız, söz konusu kullanım sırasındaki Gizlilik Politikasının en güncel
+                versiyonuna tabi olacaktır.
+                Changeqr Sınırlı Gizlilik Politikası
+                Kişisel bilgilerin
+                Kişisel bilgilerinizi neden topluyoruz?
+                'Tedarikçi', bilgilerinizi aşağıdakiler için toplar:
+                "Tedarikçi" ürün ve hizmetleri hakkında "Alıcı"yı işlemek, sevk etmek ve bilgilendirmek için "Alıcı"
+                bilgileri. 'Alıcı' gizliliğini çok ciddiye alıyoruz ve sipariş durumunuz ile ürün ve hizmetleriniz
+                hakkında sizi bilgilendirebilmemiz için kişisel verilerinizi saklamayı talep ediyoruz. Bunu yapmamıza
+                izin vermezseniz, siparişinizin durumu veya ürünlerimizdeki veya hizmetlerimizdeki önemli değişiklikler
+                hakkında sizi bilgilendiremeyiz ve bu nedenle siparişinizi alamayız.
+                Ürünler ve hizmetler hakkında 'Kullanıcı'yı bilgilendirmeye yönelik 'Kullanıcı' bilgileri ve
+                'Kullanıcı'nın 'Kullanıcı Hesabına' girdiği bilgiler. 'Kullanıcı' gizliliğini çok ciddiye alıyoruz ve
+                sizi ürünleriniz ve hizmetleriniz hakkında bilgilendirmek ve 'Kullanıcı Hesabı' web sayfaları
+                aracılığıyla 'acil durum bilgileri' sağlamak için kişisel verilerinizi saklamamızı talep ediyoruz. Bunu
+                yapmamıza izin vermezseniz, 'acil durum bilgilerinizi' 'Kullanıcı Hesabı' web sayfalarında sunamayız ve
+                ürünlerimiz veya hizmetlerimizdeki herhangi bir değişiklik hakkında sizi bilgilendiremeyiz.
+                Hangi bilgileri topluyoruz?
+                Tipik olarak şunları topluyoruz:
+                'Alıcı' - 'Alıcı' ürünleri satın aldığında, ürün için e-posta adresi ve şifre
+                'Kullanıcı' adı ve e-posta adresi. 'Kullanıcı', 'Kullanıcı Hesabını' Etkinleştirdiğinde ve ayrıntıları
+                Changeqr'ye kaydetmek, 'Ürünler' sipariş etmek veya www.Changeqrid.com'da (“Web Sitesi”) bize kaydolmak
+                için 'Hesabım'ı kullandığında, size şu bilgiler verilecektir: adınız, e-posta adresiniz, iletişim
+                telefon numaralarınız, doğum tarihiniz, resimleriniz, belgeleriniz, 'Ürünler' seçimleriniz ve diğer
+                kişisel verileriniz gibi belirli bilgileri girme fırsatı. "Kullanıcı Hesabı"ndaki veriler "Tedarikçi"
+                tarafından saklanır, ancak "Kullanıcı" tarafından korunur, eklenir veya silinir. 'Tedarikçi' yalnızca
+                isim ve iletişim bilgilerini saklar ve 'Kullanıcı Hesabı' üzerindeki herhangi bir 'acil durum bilgisi,
+                internet sosyal medya adresleri(yönlendirilen url-internet sitesi isimleri) ve resimler' 'Kullanıcı'
+                tarafından yönetilir.
+                Ayrıca varsayılan olarak web sitemizi kullanımınızla ilgili bilgiler de (örneğin, geldiğiniz URL, IP
+                adresi, tarayıcı türünüz ve ziyaretiniz sırasında görüntülenen web sitemiz sayfaları) ("Bilgileriniz")
+                sağlayacaksınız. Bu anonim olarak saklanır ve web trafiği analizi için kullanılabilir.
+                Kişisel bilgilerinizle ne yapacağız?
+                Changeqr, Changeqr web sitesi aracılığıyla toplanan bilgilerin sorumlu kullanımının önemini kabul eder
+                ve takdir eder.
+                Topladığımız, sakladığımız ve işlediğimiz bilgiler, size Changeqr hizmetlerini sağlamak ve işimizi
+                geliştirmek amacıyla kullanılacaktır (sınırlama olmaksızın):
+                bir 'Alıcı' siparişinin yerine getirilmesi
+                acil bir durumda kişisel verilerinize erişim sağlamak için 'Kullanıcı' tarafından girilen ve tutulan
+                'Acil durum bilgileri' 'Kullanıcı Hesabı'nda saklanacaktır. Web sitesinde, 'Hesabım'ın ortak
+                alanlarındaki ayrıntılar, benzersiz URL'nizi girerken herkes tarafından görülebilir.
+                kimliğinizi doğrulamak için (örneğin, Web Sitesine döndüğünüzde);
+                size sağlanan hizmetleri iyileştirmek için Web Sitesine yaptığınız ziyaretleri kişiselleştirmek;
+                müşteri hizmetleri ve desteği sunmak;
+                içeriğinizi başkalarıyla paylaşmanızı sağlamak için, örneğin bir arkadaşınıza e-posta gönderin ve sosyal
+                ağ paylaşım işlevini kullanarak;
+                sizinle iletişim kurmak (ve bu iletişimi kişiselleştirmek);
+                hizmetlerimizin ve Web Sitesinin performansını ölçmek için web trafiği analizi yapmak.
+                bazen kayıt veya sipariş verme sırasında sağlanan bilgileri kullanarak e-posta, posta veya telefon
+                yoluyla müşterilerle iletişime geçebiliriz. Müşteriler, changeqrcode@gmail.com adresinden bizimle
+                iletişime geçebilirsiniz.
+                Bilgilerinizi sizinle iletişim kurmak için kullanmak
+                Tipik işlememize ek olarak, sizinle ilgili elimizde bulunan bilgileri aşağıdaki durumlarda sizinle
+                iletişim kurmak için kullanabiliriz:
+                web sitemizdeki veya ürünlerimizdeki değişiklikler hakkında size bilgi vermek için
+                şartlarımızdaki değişiklikleri size bildirmek için
+                Herhangi bir güvenlik endişesi konusunda size tavsiyede bulunmak için
+                yasal ve düzenleyici yükümlülüklerimize uymak
+                yasanın izin verdiği yerlerde
+                Ne kadar süre tutuyoruz?
+                Bilgilerinizi, hizmeti sağlamak ve iş amaçları için uygun denetlenebilir kayıtlara sahip olduğumuzdan
+                emin olmak için gerekenden daha uzun süre saklamayız.
+                Kişisel verilerinizi her topladığımızda veya işlediğimizde, bunları yalnızca toplanma amacı için gerekli
+                olduğu sürece saklarız. Bu saklama süresinin sonunda, verileriniz ya tamamen silinecek ya da
+                istatistiksel analiz ve iş planlaması için tanımlanamayacak bir şekilde kullanılabilmesi için örneğin
+                başka verilerle birleştirilerek anonim hale getirilecektir.
+                Siparişler - Bir sipariş verdiğinizde, yasal ve sözleşmeden doğan yükümlülüklerimizi yerine getirebilmek
+                için bize verdiğiniz kişisel verileri 10 yıl süreyle saklayacağız.
+                Kullanıcı Hesapları – 'Kullanıcı Hesabı' bilgileri, ihtiyaç duyduğunuz sürece saklanacaktır.
+                Kullanıcı Hesabını Devre Dışı Bırakma - 'Kullanıcı Hesabınızı' devre dışı bırakmak isterseniz, Changeqr
+                ile iletişime geçersiniz ve biz de hesabı devre dışı bırakabiliriz. Devre dışı bırakmak için girdiğiniz
+                verileri, kişisel verilerinizi 'Kullanıcı Hesabı'na yeniden girmenize gerek kalmadan hesabı yeniden
+                etkinleştirmenizi sağlamak için tutuyoruz.
+                Kullanıcı Hesabı Kapatma - Changeqr'nin 'Kullanıcı Hesabınızı' kapatmasını istiyorsanız, lütfen Changeqr
+                ile iletişime geçin, hesabı kapatacağız ve onunla ilişkili kişisel verileri silecek veya anonim hale
+                getireceğiz.
+                Üçüncü Şahıs Tedarikçiler - 'Üçüncü Şahıslar', verileri yalnızca ID ürünlerinin üretim süresi boyunca ve
+                en fazla 14 gün boyunca saklar.
+                Kişisel bilgilerinizi kimlerle paylaşacağız?
+                'Kullanıcılar' için, 'Kullanıcı Hesabı' Web Sitesinin tüm genel alanlarına, örneğin
+                www.Changeqr.com/sizinbenzersizidniz gibi benzersiz URL'nizi kullanarak herkes tarafından erişilebilir.
+                Şifreniz ‘Hesabınızdaki tüm verilerin ayrıntılarına erişimi korur. Şifrenizi korumanız gerekir.
+                'Kullanıcılar' istedikleri zaman 'Kullanıcı Hesaplarında' veri tutabilir, veri ekleyebilir veya
+                silebilir.
+                Changeqr'ye 'Hesabım' kaydı yapıldığında veya Changeqr web sitesinde bir sipariş verildiğinde
+                müşteriler, yukarıda açıklanan bilgilerin kullanımının 'Veri Koruma' kapsamında verilen hakların
+                herhangi birinin ihlali olarak değerlendirilmediğini onaylar. Mevzuat'.
+                Changeqr, bir Tüccar Hizmetleri Tesisi kullanır ve kredi/banka kartı ayrıntılarının kaydını tutmaz.
+                Sipariş üretimi sırasında Bilgilerin Üçüncü Kişilere Açıklanması
+                "Alıcılar" için bilgilerinizi, "Kullanıcı" kişiselleştirilmiş kimlik ürünlerini kazıyan veya yazdıran
+                onaylı üçüncü taraflara sağlıyoruz. Veriler, üretim tamamlandıktan sonra silinir.
+                Changeqr, bilgilerinizi herhangi bir üçüncü tarafa sağlamaz, satmaz veya kiralamaz, ancak toplu anonim
+                verileri istatistiksel analiz için üçüncü taraflara sağlama hakkını saklı tutar. Bu tür veriler doğası
+                gereği anonimdir ve herhangi bir belirli kişiyle ilişkilendirilemez.
+                Yasal olarak gerekli olmadıkça veya bizim için hareket eden üçüncü tarafların siparişinizi işleme
+                koymasını sağlamak için böyle bir ifşanın gerekli olduğu durumlar dışında, bilgilerinizi üçüncü
+                taraflara izinsiz ifşa etmeyiz. Bilgileri işleyen, siparişleri yerine getiren ve teslim eden, kredi
+                kartı ödemelerini işleyen ve destek hizmetleri sağlayan üçüncü taraflar, bireysel sözleşmeler kapsamında
+                bizim adımıza bunu yaparlar.
+                İş süreçlerimizi yürütmek için 3. tarafları kullanırsak. Bunun bir örneği, e-postalarımızın veya web
+                sitemizin ve veritabanımızın bulutta barındırılması olabilir. Bu bulut sağlayıcıları genellikle
+                bilgilerinize doğrudan erişime sahip olmasa da, depolama, ilgili veri koruma mevzuatı kapsamında işleme
+                olarak kabul edilir.
+                Herhangi bir yasal yükümlülüğe uymak için veya dolandırıcılıktan korunma amacıyla diğer şirket ve
+                kuruluşlarla bilgi alışverişini içeren kullanım koşullarımızı uygulamak veya uygulamak için kişisel
+                verilerinizi ifşa etme veya paylaşma yükümlülüğümüz varsa.
+                Bilgilerinizin güvenli bir şekilde toplanması ve saklanması
+                Bize sağladığınız veya sizin hakkınızda topladığımız tüm bilgiler güvenli sunucularımızda saklanır.
+                Bunun gizli bilgiler içerdiğini anlıyoruz ve bilgilerinizi korumak ve emniyete almak için bir dizi uygun
+                fiziksel, elektronik ve yönetimsel prosedür uyguladık.
+                Personelimiz, verilerinize gereken minimum erişime sahiptir ve bunların korunmasını ve güvende
+                tutulmasını sağlamak için eğitilmiştir. Ne yazık ki, internet üzerinden bilgi aktarımı tamamen güvenli
+                değildir. Kişisel verilerinizi korumak için elimizden gelenin en iyisini yapacak olsak da, bize iletilen
+                verilerinizin güvenliğini garanti edemeyiz; herhangi bir iletimin riski size aittir. Bilgilerinizi
+                aldıktan sonra, yetkisiz erişimi engellemeye çalışmak için katı prosedürler ve güvenlik özellikleri
+                kullanacağız.
+                Bilgilerinizi, hizmeti sağlamak ve iş amaçları için uygun denetlenebilir kayıtlara sahip olduğumuzdan
+                emin olmak için gerekenden daha uzun süre saklamayız.
+                Müşteri bilgilerine ve kişisel verilere yetkisiz kişilerce erişilmesini ve yasa dışı işleme, kazara
+                kayıp, imha ve hasara karşı korumak için güvenlik önlemleri alıyoruz. Bununla birlikte, müşteri
+                bilgilerini korumak için tüm makul adımları atmamıza rağmen, müşteriler hiçbir İnternet veri iletiminin
+                istenmeyen alıcıların erişimine karşı güvenli olduğunun garanti edilemeyeceğini ve bizim ihmalimizden
+                kaynaklanmadıkça müşterilerin herhangi bir güvenlik ihlalinden bizi sorumlu tutmayacağını kabul eder.
+            </p>
+            <em>HAKLARINIZ</em>
+            <p>
+                Kendi kişisel bilgilerinize erişmemizi bizden talep etme hakkına sahipsiniz. Bu bazen 'konu erişim
+                isteği' olarak bilinir. Ek olarak, bizden şunları talep etme hakkınız vardır:
+                hakkınızda tuttuğumuz tüm yanlış bilgilerin düzeltildiğini sizinle ilgili bilgiler belirli durumlarda
+                silinir kişisel bilgilerinizi belirli amaçlar için kullanmayı bırakmamız
+                'kullanıcı' ve 'kullanıcı hesabı' bilgilerinizin size taşınabilir bir biçimde sağlandığını
+                hakkınızdaki kararların tamamen otomatik yollarla alınmadığını
+                Yukarıda listelenen hakların çoğu, belirli tanımlanmış koşullarla sınırlıdır ve talebinizi her zaman
+                yerine getiremeyebiliriz. Durumun böyle olup olmadığını size söyleyeceğiz.
+                Bu haklardan herhangi birini kullanmak için bizden bir talepte bulunmayı seçerseniz, size makul olan en
+                kısa sürede ancak en geç bir ay içinde yanıt vermeyi amaçlayacağız. Herhangi bir makul taleple
+                ilgilenmek için bir ücret talep etmeyeceğiz.
+                Kişisel bilgilerinizi nasıl kullandığımızdan memnun değilseniz veya bir talebi nasıl ele aldığımızdan
+                şikayet etmek istiyorsanız, lütfen changeqrcode@gmail.com mail adresi ile temas kurunuz.
+                Bu gizlilik bildirimindeki değişiklikler
+                Gelecekte gizlilik politikamızda yapabileceğimiz herhangi bir değişiklik bu sayfada yayınlanacaktır.
+                Gizlilik politikamızdaki güncellemeleri veya değişiklikleri görmek için lütfen sık sık tekrar kontrol
+                edin.
+            </p>
+            <em>Hukuk ve Yargi Yetkisi</em>
+            <p>
+                Bu gizlilik bilgisi bildirimi TÜRKİYE CUMHURİYETİ yasalarına ve yargı yetkisine tabidir. Diğer ülkelerde
+                kullanımında tüm yükümlülük kullanıcıya aittir.
+                KİŞİSEL VERİLERİN İŞLENMESİNE İLİŞKİN AYDINLATMA METNİ
+                İşbu Aydınlatma Metni 6698 sayılı Kişisel Verilerin Korunması Kanunu (“Kanun”) kapsamında kişisel
+                verilerinin Şirket tarafından işlenmesine ilişkin olarak aydınlatılması amacıyla hazırlanmıştır.
+            </p>
+            <p>
+                1.a) Kişisel Verilerin Elde Edilme Yöntemleri ve Hukuki Sebepleri
+                Kişisel verileriniz, elektronik veya fiziki ortamda toplanmaktadır. İşbu Aydınlatma Metni’nde belirtilen
+                hukuki sebeplerle toplanan kişisel verileriniz Kanun’un 5. ve 6. maddelerinde belirtilen kişisel veri
+                işleme şartları çerçevesinde işlenebilmekte ve paylaşılabilmektedir.
+            </p>
+            <p>
+                1. b) Kişisel Verilerin İşleme Amaçları
+                Kişisel verileriniz, Kanun’un 5. ve 6. maddelerinde belirtilen kişisel veri işleme şartları çerçevesinde
+                Şirket tarafından sunulan ürün ve hizmetlerin ilgili kişilerin beğeni, kullanım alışkanlıkları ve
+                ihtiyaçlarına göre özelleştirilerek ilgili kişilere önerilmesi ve tanıtılması için gerekli olan
+                aktivitelerin planlanması ve icrası, Şirket tarafından sunulan ürün ve hizmetlerden ilgili kişileri
+                faydalandırmak için gerekli çalışmaların iş birimleri tarafından yapılması ve ilgili iş süreçlerinin
+                yürütülmesi, Şirket tarafından yürütülen ticari faaliyetlerin gerçekleştirilmesi için ilgili iş
+                birimleri tarafından gerekli çalışmaların yapılması ve buna bağlı iş süreçlerinin yürütülmesi, Şirket‘in
+                ticari ve/veya iş stratejilerinin planlanması ve icrası ve Şirket‘in ve Şirket‘le iş ilişkisi içerisinde
+                olan ilgili kişilerin hukuki, teknik ve ticari-iş güvenliğinin temini amaçlarıyla işlenmektedir.
+
+            </p>
+            <p>
+                1. c) Kişisel Verilerin Paylaşılabileceği Taraflar ve Paylaşım Amaçları
+                Kişisel verileriniz, Kanun’un 8. ve 9. maddelerinde belirtilen kişisel veri işleme şartları ve amaçları
+                çerçevesinde, Şirket tarafından sunulan ürün ve hizmetlerin ilgili kişilerin beğeni, kullanım
+                alışkanlıkları ve ihtiyaçlarına göre özelleştirilerek ilgili kişilere önerilmesi ve tanıtılması için
+                gerekli olan aktivitelerin planlanması ve icrası, Şirket tarafından sunulan ürün ve hizmetlerden ilgili
+                kişileri faydalandırmak için gerekli çalışmaların iş birimleri tarafından yapılması ve ilgili iş
+                süreçlerinin yürütülmesi, Şirket tarafından yürütülen ticari faaliyetlerin gerçekleştirilmesi için
+                ilgili iş birimleri tarafından gerekli çalışmaların yapılması ve buna bağlı iş süreçlerinin yürütülmesi,
+                Şirket‘in ticari ve/veya iş stratejilerinin planlanması ve icrası ve Şirket‘in ve Şirket‘le iş ilişkisi
+                içerisinde olan ilgili kişilerin hukuki, teknik ve ticari-iş güvenliğinin temini amaçları dahilinde
+                Şirket’in iş ortakları ve tedarikçileri ile hukuken yetkili kurum ve kuruluşlar ile hukuken yetkili özel
+                hukuk tüzel kişileriyle paylaşılabilecektir.
+
+            </p>
+            <p>
+                1. d) Veri Sahiplerinin Hakları ve Bu Hakların Kullanılması
+                Kişisel veri sahipleri olarak aşağıda belirtilen haklarınıza ilişkin taleplerinizi Veri Sahipleri
+                Tarafından Hakların Kullanılması başlığı altında belirtilen yöntemlerle Şirket’e iletmeniz durumunda
+                talepleriniz Şirketimiz tarafından mümkün olan en kısa sürede ve her halde 30 (otuz) gün içerisinde
+                değerlendirilerek sonuçlandırılacaktır.
+                Kanun’un 11. maddesi uyarınca kişisel veri sahibi olarak aşağıdaki haklara sahipsiniz:
+                • Kişisel verilerinizin işlenip işlenmediğini öğrenme,
+                • Kişisel verileriniz işlenmişse buna ilişkin bilgi talep etme,
+                • Kişisel verilerinizin işlenme amacını ve bunların amacına uygun kullanılıp kullanılmadığını öğrenme,
+                • Yurt içinde veya yurt dışında kişisel verilerinizin aktarıldığı üçüncü kişileri bilme,
+                • Kişisel verilerinizin eksik veya yanlış işlenmiş olması hâlinde bunların düzeltilmesini isteme ve bu
+                kapsamda yapılan işlemin kişisel verilerin aktarıldığı üçüncü kişilere bildirilmesini isteme,
+                • Kanun ve ilgili diğer kanun hükümlerine uygun olarak işlenmiş olmasına rağmen, işlenmesini gerektiren
+                sebeplerin ortadan kalkması hâlinde kişisel verilerinizin silinmesini veya yok edilmesini isteme ve bu
+                kapsamda yapılan işlemin kişisel verilerin aktarıldığı üçüncü kişilere bildirilmesini isteme,
+                • İşlenen verilerinizin münhasıran otomatik sistemler vasıtasıyla analiz edilmesi suretiyle kişinin
+                kendisi aleyhine bir sonucun ortaya çıkmasına itiraz etme,
+                • Kişisel verilerinizin kanuna aykırı olarak işlenmesi sebebiyle zarara uğraması hâlinde zararın
+                giderilmesini talep etme.
+                • Kanun’un 28. maddesinin 2. fıkrası veri sahiplerinin talep hakkı bulunmayan halleri sıralamış olup bu
+                kapsamda;
+                • Kişisel veri işlemenin suç işlenmesinin önlenmesi veya suç soruşturması için gerekli olması,
+                • İlgili kişinin kendisi tarafından alenileştirilmiş kişisel verilerin işlenmesi,
+                • Kişisel veri işlemenin kanunun verdiği yetkiye dayanılarak görevli ve yetkili kamu kurum ve
+                kuruluşları ile kamu kurumu niteliğindeki meslek kuruluşlarınca, denetleme veya düzenleme görevlerinin
+                yürütülmesi ile disiplin soruşturma veya kovuşturması için gerekli olması,
+                • Kişisel veri işlemenin bütçe, vergi ve mali konulara ilişkin olarak Devletin ekonomik ve mali
+                çıkarlarının korunması için gerekli olması,
+                • hallerinde verilere yönelik olarak yukarıda belirlenen haklar kullanılamayacaktır.
+                • Kanun’un 28. maddesinin 1. fıkrasına göre ise aşağıdaki durumlarda veriler Kanun kapsamı dışında
+                olacağından, veri sahiplerinin talepleri bu veriler bakımından da işleme alınmayacaktır:
+                • Kişisel verilerin, üçüncü kişilere verilmemek ve veri güvenliğine ilişkin yükümlülüklere uyulmak
+                kaydıyla gerçek kişiler tarafından tamamen kendisiyle veya aynı konutta yaşayan aile fertleriyle ilgili
+                faaliyetler kapsamında işlenmesi.
+                • Kişisel verilerin resmi istatistik ile anonim hâle getirilmek suretiyle araştırma, planlama ve
+                istatistik gibi amaçlarla işlenmesi.
+                • Kişisel verilerin millî savunmayı, millî güvenliği, kamu güvenliğini, kamu düzenini, ekonomik
+                güvenliği, özel hayatın gizliliğini veya kişilik haklarını ihlal etmemek ya da suç teşkil etmemek
+                kaydıyla, sanat, tarih, edebiyat veya bilimsel amaçlarla ya da ifade özgürlüğü kapsamında işlenmesi.
+                • Kişisel verilerin millî savunmayı, millî güvenliği, kamu güvenliğini, kamu düzenini veya ekonomik
+                güvenliği sağlamaya yönelik olarak kanunla görev ve yetki verilmiş kamu kurum ve kuruluşları tarafından
+                yürütülen önleyici, koruyucu ve istihbari faaliyetler kapsamında işlenmesi.
+                • Kişisel verilerin soruşturma, kovuşturma, yargılama veya infaz işlemlerine ilişkin olarak yargı
+                makamları veya infaz mercileri tarafından işlenmesi.
+                Veri Sahipleri Tarafından Hakların Kullanılması
+                • Veri sahipleri, yukarıda bahsi geçen hakları kullanmak için [www.changeqr.com] linkinde yer alan “
+                Kişisel Veri Sahibi Tarafından Veri Sorumlusuna Yapılacak Başvurulara ilişkin Form ”u
+                kullanabileceklerdir.
+                • Başvurular, ilgili veri sahibinin kimliğini tespit edecek belgelerle birlikte, aşağıdaki yöntemlerden
+                biri ile gerçekleştirilecektir:
+                • Formun doldurularak ıslak imzalı kopyasının elden, noter aracılığı ile veya iadeli taahhütlü mektupla
+                site sahibinin verdiği adrese iletmesi gerekmektedir.
+                • Formun 5070 sayılı Elektronik İmza Kanunu kapsamında düzenlenen güvenli elektronik imza ile
+                imzalanarak kayıtlı elektronik posta ile gönderilmesi,
+                • Kişisel Verileri Koruma Kurulu tarafından öngörülen bir yöntemin izlenmesi.
+                • Şirket, Kanun’da öngörülmüş sınırlar çerçevesinde söz konusu hakları kullanmak isteyen veri
+                sahiplerine, yine Kanun’da öngörülen şekilde azami otuz (30) gün içerisinde cevap vermektedir. Kişisel
+                veri sahipleri adına üçüncü kişilerin başvuru talebinde bulunabilmesi için veri sahibi tarafından
+                başvuruda bulunacak kişi adına noter kanalıyla düzenlenmiş özel vekâletname bulunmalıdır.
+                • Veri sahibi başvuruları kural olarak ücretsiz olarak işleme alınmakla birlikte, Kişisel Verileri
+                Koruma Kurulu tarafından öngörülen ücret tarifesi[1] üzerinden ücretlendirme yapılabilecektir.
+                • Şirket, başvuruda bulunan kişinin kişisel veri sahibi olup olmadığını tespit etmek adına ilgili
+                kişiden bilgi talep edebilir, başvuruda belirtilen hususları netleştirmek adına, kişisel veri sahibine
+                başvurusu ile ilgili soru yöneltebilir.
+
+            </p>
+            <em>AYRICA</em>
+            <p>
+                1] 10.03.2018 tarih ve 30356 sayılı Resmi Gazete’de yayınlanan “Veri Sorumlusuna Başvuru Usul ve
+                Esasları Hakkında Tebliğ” uyarınca, veri sahiplerinin başvurusuna yazılı olarak cevap verilecekse, on
+                sayfaya kadar ücret alınmaz. On sayfanın üzerindeki her sayfa için 1 Türk Lirası işlem ücreti
+                alınabilir. Başvuruya cevabın CD, flash bellek gibi bir kayıt ortamında verilmesi halinde Kurum
+                tarafından talep edilebilecek ücret kayıt ortamının maliyetini geçemez.
+            </p>
+        </div>
+    </div>
+    <a href="#" id="hide-popup">KABUL EDIYORUM</a>
+</div>
+<!-- KVKK METNI         -->
+
 
 <script>
 
-	$(document).ready(function() {
-		// registration
-		$("#form-registration-data").submit(function(event) {
-			event.preventDefault();
-			const id = $("#id-text").text();
-			let formData = $("#form-registration-data").serialize();
-			formData += "&id=" + id;
-			$.ajax({
-				type: "POST",
-				url: "/registration/new",
-				data: formData,
-				success: function(response) {
-					if(response.isError != false){
-						$("#error-message").css("display", "block");
-						$("#error-message").text(response.errorMessage);
-					} else{
-						$(location).attr("href", "http://changeqr.com/user/edit/qr/" + id);
-					}
+    $(document).ready(function () {
 
-				},
-				error: function(error) {
-					console.log(error)
-				}
-			});
-		});
+        toastr.options = {
+            "closeButton": false,
+            "debug": false,
+            "newestOnTop": false,
+            "progressBar": false,
+            "positionClass": "toast-top-right",
+            "preventDuplicates": false,
+            "onclick": null,
+            "showDuration": "500",
+            "hideDuration": "1000",
+            "timeOut": "5000",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        }
 
-		// login
-		$("#form-login-data").submit(function(event) {
-			event.preventDefault();
-			const id = $("#id-text").text();
-			let formData = $("#form-login-data").serialize();
-			formData += "&id=" + id;
-			$.ajax({
-				type: "POST",
-				url: "/registration/login",
-				data: formData,
-				success: function(response) {
-					if(response.isError != false){
-						$("#error-message").css("display", "block");
-						$("#error-message").text(response.errorMessage);
-					} else{
-						$(location).attr("href", "http://changeqr.com/user/edit/qr/" + id);
-					}
+        // function validateForm(){
+        //     let username = $("#username2").val()
+        //     let email = $("#email").val()
+        //     let pw = $("#password2").val()
+        //     let pwcheck = $("#checkPassword").val()
+        //
+        //     if(username == null || email == null ||pw == null||pwcheck == null ){
+        //         return false
+        //     }
+        //     return true
+        //
+        // }
 
-				},
-				error: function(error) {
-					console.log(error)
-				}
-			});
-		});
-	});
+        function validateForm() {
+            return $("#username2").val() && $("#email").val() && $("#password2").val() && $("#checkPassword").val();
+        }
+        // registration
+        $("#form-registration-data").submit(function (event) {
+            debugger
+            event.preventDefault();
+            const id = $("#id-text").text();
+            let pw = $("#password2").val()
+            let pwcheck = $("#checkPassword").val()
+            let formData = $("#form-registration-data").serialize();
+            formData += "&id=" + id;
+            if (!validateForm()){
+                toastr["error"]("Lütfen Gerekli Alanları Doldurunuz", "HATA")
+            }
+            if (pw !== pwcheck){
+                toastr["error"]("Girdiğiniz Şifreler Uyuşmamaktadır ", "HATA")
+            }
+            if( !($('.kvkk-checked').is(':checked'))){
+                toastr["error"]("Metni Onaylayin ", "HATA")
+                return
+            }
+            $.ajax({
+                type: "POST",
+                url: "/registration/new",
+                data: formData,
+                success: function (response) {
+                    if (response.isError != false) {
+                        $("#error-message").css("display", "block");
+                        $("#error-message").text(response.errorMessage);
+                    } else {
+                        $(location).attr("href", "http://changeqr.com/user/edit/qr/" + id);
+                    }
+
+                },
+                error: function (error) {
+                    console.log(error)
+                }
+            });
+        });
+
+        // login
+        $("#form-login-data").submit(function (event) {
+            event.preventDefault();
+            const id = $("#id-text").text();
+            let formData = $("#form-login-data").serialize();
+            formData += "&id=" + id;
+            $.ajax({
+                type: "POST",
+                url: "/registration/login",
+                data: formData,
+                success: function (response) {
+                    if (response.isError != false) {
+                        $("#error-message").css("display", "block");
+                        $("#error-message").text(response.errorMessage);
+                    } else {
+                        $(location).attr("href", "http://changeqr.com/user/edit/qr/" + id);
+                    }
+
+                },
+                error: function (error) {
+                    console.log(error)
+                }
+            });
+        });
+
+        $("#show-tag").click(function () {
+            console.log($(".popup"))
+            $(".popup").css("display", 'block')
+        });
+        $("#hide-popup").click(function () {
+            $(".popup").css("display", 'none')
+        });
+
+    });
 
 </script>
 

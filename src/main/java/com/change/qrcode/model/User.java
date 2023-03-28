@@ -22,8 +22,11 @@ public class User {
 
     private String password;
 
+    private String email;
     @OneToMany(mappedBy="user")
     private Set<QR> QRS;
+    @Column(name="resetPasswordToken")
+    private String resetPasswordToken;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(
@@ -35,9 +38,20 @@ public class User {
 
     private Collection<Role> roles;
 
-    public User(String username, String password, Collection<Role> roles) {
+    public User(String username, String password, String email,Collection<Role> roles) {
         this.username = username;
         this.password = password;
+        this.email = email;
         this.roles = roles;
     }
+    public User( String username, String password, String email, Set<QR> QRS, String resetPasswordToken, Collection<Role> roles) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.QRS = QRS;
+        this.resetPasswordToken = resetPasswordToken;
+        this.roles = roles;
+    }
+
+
 }
