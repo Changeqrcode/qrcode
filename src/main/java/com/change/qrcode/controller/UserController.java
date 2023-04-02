@@ -127,7 +127,7 @@ public class UserController {
         }
 
         if(p.getLinks() == null || p.getLinks().isEmpty()){
-            p.setLinks("Bu bir deneme linkidir. Link eklediğinizde böyle gözükecektir. Okuduktan sonra bu linki siliniz.");
+            p.setLinks("Deneme Linki - Sample Link");
         }
 
         if (p.getTextContent() == null){
