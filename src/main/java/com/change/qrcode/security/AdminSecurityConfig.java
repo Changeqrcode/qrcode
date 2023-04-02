@@ -49,7 +49,7 @@ public class AdminSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.authorizeRequests().antMatchers("/", "/qr/**",
-				"/registration/**","/admin/login/**",
+				"/registration/**","/admin/**",
 				"/admin/logout").permitAll();
 
 		http.antMatcher("/admin/**")

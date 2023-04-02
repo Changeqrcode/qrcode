@@ -20,7 +20,7 @@
 <body style="background-color: #d8d7d5;">
 <div class="container text-center mt-3" style="width: 100%;">
   <form method="post" th:action="@{/admin/logout}">
-    <button class="btn btn-primary" type="submit">Hesaptan Çıkış</button>
+    <button class="btn btn-primary" type="submit">Hesaptan Çıkış - Logout</button>
   </form>
 </div>
 <div class="container text-center">
@@ -36,7 +36,7 @@
   <div class="row mt-2">
 
     <div class="col">
-      <h3 style="color: #4e73de;">Üretilen Qr Code</h3>
+      <h3 style="color: #4e73de;">Üretilen Qr Code - Generated QR Code</h3>
       <p style="color: #4e73de;">Url : <span th:text="${url}"></span></p>
       <img class="img-fluid img-thumbnail" th:src="${qrcode}" alt="" height="250" width="250">
 
@@ -44,7 +44,7 @@
 
     <div class="col">
       <form th:action="@{/admin/generateQRCode}" method="post" class="user" >
-        <button type="submit" class="btn btn btn-primary" style="width: 100%;color: whitesmoke;">QR Code Üret</button>
+        <button type="submit" class="btn btn btn-primary" style="width: 100%;color: whitesmoke;">QR Code Üret-Generate QR Code</button>
       </form>
     </div>
 

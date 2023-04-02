@@ -27,7 +27,7 @@ public class EmailSenderService {
 
         mailSender.send(message);
     }
-    public void sendMimeEmail(String recipientEmail, String link)
+    public void sendMimeEmail(String recipientEmail, String link ,String username)
             throws MessagingException, UnsupportedEncodingException {
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message);
@@ -35,14 +35,21 @@ public class EmailSenderService {
         helper.setFrom("contact@shopme.com", "Change QR Admin");
         helper.setTo(recipientEmail);
 
-        String subject = "Sifrenizi yenileme linkiniz hazir";
+        String subject = username + " Icin Sifrenizi yenileme linkiniz hazir - " + "Your reset link is ready for the user " + username;
 
-        String content = "<p>Merhabalar,</p>"
+        String content = "<p>Merhabalar, </p> <span>" + username + "</span>"
                 + "<p>Sifrenizi yenilemek istediniz.</p>"
                 + "<p>Sifrenizi yenilemek icin linke tiklayiniz</p>"
                 + "<p><a href=\"" + link + "\">Sifremi Degistir</a></p>"
                 + "<br>"
-                + "<p>Bu talebi siz olusturmadiysaniz bu maili silebilirsiniz.</p>";
+                + "<p>Bu talebi siz olusturmadiysaniz bu maili silebilirsiniz .</p>"
+                + "<p> --- </p>"
+                +"<p>Hello</p>  <span>" + username + "</span>"
+                + "<p>You have wanted to change your password</p>"
+                + "<p>Please click to the link to change your password </p>"
+                + "<p><a href=\"" + link + "\">Change Password</a></p>"
+                + "<br>"
+                + "<p>If you did not create this request, you can delete this e-mail. </p>";
 
         helper.setSubject(subject);
 

@@ -52,11 +52,16 @@ public  @ResponseBody Map<String, Object>  processForgotPasswordForm(HttpServlet
     Map<String, Object> data = new HashMap<>();
     //sendMail();
     String token = RandomString.make(30);
+    User user = userRepository.findByEmail(email);
+    if (user == null){
+        data.put("isError",true);
+    }
+
     data.put("isError",false);
     try {
         userManager.UpdateResetPasswordToken(token,email);
         String resetPasswordLink = Utilities.getSiteUrl(request) + "/registration/password/reset_password?token="+ token;
-        emailSenderService.sendMimeEmail(email,resetPasswordLink);
+        emailSenderService.sendMimeEmail(email,resetPasswordLink,user.getUsername());
         System.out.println("-------------------------"+resetPasswordLink);
     } catch (Exception e) {
         data.put("isError",true);
@@ -114,7 +119,7 @@ public  @ResponseBody Map<String, Object>  processForgotPasswordForm(HttpServlet
         User user = userManager.GetByResetPasswordToken(token);
         if (user == null || !password.equals(checkPassword)){
             data.put("isError",true);
-            data.put("errorMsg","Sifreniz Guncellenirken Hata Olustu");
+            data.put("errorMsg","Sifreniz Guncellenirken Hata Olustu - Failed While Updating Password");
 
         }
         if(user !=null){

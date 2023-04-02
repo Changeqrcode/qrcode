@@ -572,13 +572,20 @@ pre code {
 
 @media (min-width: 992px) {
   .container, .container-sm, .container-md, .container-lg {
-    max-width: 960px;
+    max-width: 1000px;
   }
+  .bg-user-login-image {
+    height: 400px;
+  }
+
 }
 
 @media (min-width: 1200px) {
   .container, .container-sm, .container-md, .container-lg, .container-xl {
     max-width: 1140px;
+  }
+  .bg-user-login-image {
+    height: 500px;
   }
 }
 
@@ -10868,10 +10875,11 @@ a:focus {
 }
 
 .bg-user-login-image {
-  background: url("../img/userLoginLogo.jpg");
+  
+  background: url("../img/mainQRPageLogo.jpg");
   background-position: center;
   background-size: cover;
-  height: 400px;
+  height: 500px;
 }
 
 

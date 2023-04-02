@@ -84,8 +84,8 @@
                         <div class="col-lg-6">
                             <div class="p-5">
                                 <div class="text-center">
-                                    <h1 class="h4 text-gray-900 mb-4">QR Code İle Kullanıcı Kaydetmeye</h1>
-                                    <h1 class="h4 text-gray-900 mb-4">Hoş Geldiniz!</h1>
+                                    <h1 class="h4 text-gray-900 mb-4">Kullanıcı Girişine - Welcome To </h1>
+                                    <h1 class="h4 text-gray-900 mb-4">Hoş Geldiniz!- Login Page</h1>
                                 </div>
 
                                 <span th:text="${qr.id}" id="id-text" style="display: none;"></span>
@@ -98,14 +98,13 @@
                                         <li class="nav-item" role="presentation">
                                             <button class="nav-link active" id="hasAccount-tab" data-bs-toggle="tab"
                                                     data-bs-target="#hasAccount-tab-pane" type="button" role="tab"
-                                                    aria-controls="hasAccount-tab-pane" aria-selected="true">Giriş
+                                                    aria-controls="hasAccount-tab-pane" aria-selected="true">Giriş-Login
                                             </button>
                                         </li>
                                         <li class="nav-item" role="presentation">
                                             <button class="nav-link" id="registerAccount-tab" data-bs-toggle="tab"
                                                     data-bs-target="#registerAccount-tab-pane" type="button" role="tab"
-                                                    aria-controls="registerAccount-tab-pane" aria-selected="false">Yeni
-                                                Kullanıcı Oluştur
+                                                    aria-controls="registerAccount-tab-pane" aria-selected="false">Kullanıcı Oluştur-New User
                                             </button>
                                         </li>
                                     </ul>
@@ -117,11 +116,11 @@
                                                 <div class="form-group">
                                                     <input type="text" class="form-control form-control-user"
                                                            id="username" name="username"
-                                                           placeholder="Kullanıcı Adı Giriniz">
+                                                           placeholder="Kullanıcı Adı Giriniz - Enter Username">
                                                 </div>
                                                 <div class="form-group">
                                                     <input type="password" class="form-control form-control-user"
-                                                           id="password" name="password" placeholder="Şifre Giriniz">
+                                                           id="password" name="password" placeholder="Şifre Giriniz- Enter Password">
                                                 </div>
 
                                                 <button type="submit" name="login-submit" id="login-submit"
@@ -129,7 +128,7 @@
                                                         style="background-color: #4e73de!important;">
                                                     QR Code İle Hesabı Bağla
                                                 </button>
-                                                <a th:href="@{/registration/password/forgot}">Şifremi Unuttum</a>
+                                                <a th:href="@{/registration/password/forgot}">Şifremi Unuttum?-Forgot Password?</a>
                                             </form>
                                         </div>
                                         <div class="tab-pane fade mt-2" id="registerAccount-tab-pane" role="tabpanel"
@@ -138,7 +137,7 @@
                                                 <div class="form-group">
                                                     <input type="text" class="form-control form-control-user"
                                                            id="username2" name="username"
-                                                           placeholder="Yeni Kullanıcı Adını Giriniz">
+                                                           placeholder="Yeni Kullanıcı Adını Giriniz - Username">
                                                 </div>
                                                 <div class="form-group">
                                                     <input type="email" class="form-control form-control-user"
@@ -146,24 +145,25 @@
                                                 </div>
                                                 <div class="form-group">
                                                     <input type="password" class="form-control form-control-user"
-                                                           id="password2" name="password" placeholder="Şifre Giriniz">
+                                                           id="password2" name="password" placeholder="Şifre Giriniz - Password">
                                                 </div>
                                                 <div class="form-group">
                                                     <input type="password" class="form-control form-control-user"
                                                            id="checkPassword" name="checkPassword"
-                                                           placeholder="Şifreyi Tekrar Giriniz">
+                                                           placeholder="Şifreyi Tekrar Giriniz- Confirm Your Password">
                                                 </div>
                                                 <section class="consent">
                                                     <div class="form-check">
                                                         <input class="form-check-input kvkk-checked" type="checkbox" value=""
                                                                id="flexCheckChecked"  >
                                                     </div>
-                                                    <a id="show-tag"><span id="kvvk-span" style="font-weight: bold; color: #4e73de; ">K.V.K.K</span> metnini okudum onayladim</a>
+                                                    <a id="show-tag"><span id="kvvk-span" style="font-weight: bold; color: #4e73de; ">K.V.K.K</span> metnini okudum onayladim -
+                                                        I have read and confirmed  <span id="kvvk-span-en" style="font-weight: bold; color: #4e73de; ">GDPR</span> </a>
                                                 </section>
                                                 <button type="submit" name="login-submit" id="login-submit2"
                                                         class="btn btn-primary btn-user btn-block"
                                                         style="background-color: #4e73de!important;">
-                                                    Yeni Kullanıcı Oluştur Ve QR Code İle Hesabı Bağla
+                                                    Yeni Kullanıcı Oluştur Ve QR Code İle Hesabı Bağla - Create New User And Link Account With QR Code
                                                 </button>
 
                                             </form>
@@ -632,7 +632,6 @@
         }
         // registration
         $("#form-registration-data").submit(function (event) {
-            debugger
             event.preventDefault();
             const id = $("#id-text").text();
             let pw = $("#password2").val()

@@ -78,7 +78,15 @@ public class UserRegistrationController {
 					" Başka bir kullanıcı ismi giriniz." +
 					" Var olan bir hesabınızı bağlamak istiyorsanız normal giriş yapınız!!");
 			return data;
-		}else{
+		}
+		else if (userRepository.findByEmail(email) != null) {
+			data.put("isError", true);
+			data.put("errorMessage", "Girilen email zaten mevcut." +
+					" Başka bir email giriniz." +
+					" Var olan bir hesabınızı bağlamak istiyorsanız normal giriş yapınız!!");
+			return data;
+		}
+		else{
 			if(!password.equals(checkPassword)){
 				data.put("isError", true);
 				data.put("errorMessage", "Girilen şifreler birbiriyle uyuşmamaktadır.");

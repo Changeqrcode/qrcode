@@ -33,7 +33,7 @@
 <body style="    background-color: #d8d7d5;">
 <div class="container text-center mt-3" style="width: 100%;">
     <form method="post" th:action="@{/user/logout/{id}(id = ${qr.id})}">
-        <button class="btn btn-primary" type="submit">Hesaptan Çıkış</button>
+        <button class="btn btn-primary" type="submit">Hesaptan Çıkış - Logout</button>
     </form>
 </div>
 <div class="container text-center">
@@ -62,10 +62,10 @@
       <div class="row mt-2">
           <h2>LİNKLER/LINKS</h2>
           <div class="input-group mb-3">
-              <input id="link-content" type="text" class="form-control" placeholder="Lütfen link giriniz." aria-describedby="button-addon2">
+              <input id="link-content" type="text" class="form-control" placeholder="Lütfen link giriniz. - Please add link" aria-describedby="button-addon2">
               <input id="upload-links" type="hidden" name="uploadLinks">
               <span th:text="${links}" style="display: none;" id="saved-links"></span>
-              <button class="btn btn-primary" type="button" id="button-addon2" onclick="addLink()">Ekle</button>
+              <button class="btn btn-primary" type="button" id="button-addon2" onclick="addLink()">Ekle-Add</button>
           </div>
 
           <ul id="link-list" class="list-group myLinks">
@@ -98,7 +98,7 @@
 
       <div class="row justify-content-center mt-2 mb-3">
           <div class="col">
-              <button type="submit" class="btn btn btn-primary mt-2" style="width: 50%;">Kaydet</button>
+              <button type="submit" class="btn btn btn-primary mt-2" style="width: 50%;">Kaydet-Save</button>
           </div>
       </div>
   </form>
@@ -122,7 +122,7 @@
         allowedFileCount = 6,
         allowedSizePerFile = 204800,
         isNumberOfFileExceedError = false,
-        numberOfFileExceedErrorMesage = "<p> Sadece 6 tane resim yükleyebilirsiniz.</p> <p>Lütfen başka resimler yükleyebilmek için yüklenen resimlerden bazılarını siliniz.</p>",
+        numberOfFileExceedErrorMesage = "<p> Sadece 6 tane resim yükleyebilirsiniz.- You can upload max 6 image </p> <p>Lütfen başka resimler yükleyebilmek için yüklenen resimlerden bazılarını siliniz. - Please delete some of the other images to upload new ones</p>",
         errorFileNames = "",
         errorMesage = "",
         savedLinks = $("#saved-links").text(),
