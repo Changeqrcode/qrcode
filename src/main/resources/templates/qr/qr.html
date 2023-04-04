@@ -23,6 +23,30 @@
     .myLinks{
       padding-left: calc(var(--bs-gutter-x) * .5);
     }
+    @media ( max-width: 1200px){
+      .logo{
+        width: 20% !important;
+      }
+      h2{
+        font-size: 2rem;
+        width: 100%;
+      }
+      h3{
+        font-size: 1.75rem;
+        width: 100%;
+      }
+    }
+    @media ( max-width: 768px) {
+      .logo {
+        width: 40% !important;
+      }
+
+      h2, h3 {
+        font-size: 1rem;
+        width: 100%;
+      }
+    }
+
   </style>
 </head>
 
@@ -34,9 +58,10 @@
 </div>
 <div class="container text-center">
   <div class="row text-center mt-5 justify-content-center" style="border-radius: 1rem;
-                                            border: 5px solid white;
-                                            background-color: white;">
-      <img src="/img/mainQRPageLogo.jpg" style="height: auto;
+                                            border: 5px solid #d8d7d5;
+                                            background-color: #d8d7d5;
+                                            opacity: 0.8;">
+      <img class="logo" src="/img/mainQRPageLogoRmBG.png" style="height: auto;
                                                  width: 15%;">
   </div>
   <form method="post" th:action="@{/uploadData/{id}(id = ${qr.id})}" enctype="multipart/form-data">

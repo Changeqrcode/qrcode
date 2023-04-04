@@ -27,6 +27,37 @@
         .myLinks{
             padding-left: calc(var(--bs-gutter-x) * .5);
         }
+        /*.logo{*/
+        /*    height: auto;*/
+        /*    width: 15%;*/
+        /*}*/
+        @media ( max-width: 1200px){
+            .logo{
+                width: 20% !important;
+            }
+            h2{
+                font-size: 2rem;
+                width: 100%;
+            }
+            h3{
+                font-size: 1.75rem;
+                width: 100%;
+            }
+        }
+        @media ( max-width: 768px){
+            .logo{
+                width: 40% !important;
+            }
+            h2,h3{
+                font-size: 1rem;
+                width: 100%;
+            }
+            .server-message{
+                padding: 2px;
+            }
+
+        }
+
     </style>
 </head>
 
@@ -41,7 +72,7 @@
                                             border: 5px solid #d8d7d5;
                                             background-color: #d8d7d5;
                                             opacity: 0.8">
-        <img src="/img/mainQRPageLogoRmBg.png" style="height: auto;
+        <img  class="logo" src="/img/mainQRPageLogoRmBg.png" style="height: auto;
                                                  width: 15%;">
     </div>
   <form id="upload-form" method="post" th:action="@{/user/uploadData/{id}(id = ${qr.id})}" enctype="multipart/form-data">
@@ -61,7 +92,7 @@
 
       </div>
       <div class="row mt-2">
-          <h2>LİNKLER/LINKS</h2>
+          <h2 class="link-header">LİNKLER/LINKS</h2>
           <div class="input-group mb-3">
               <input id="link-content" type="text" class="form-control" placeholder="link giriniz. - Add link" aria-describedby="button-addon2">
               <input id="upload-links" type="hidden" name="uploadLinks">
