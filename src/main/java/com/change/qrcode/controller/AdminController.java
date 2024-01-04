@@ -42,11 +42,8 @@ public class AdminController {
         this.authenticationProvider = authenticationProvider;
         this.roleRepository = roleRepository;
     }
-    @GetMapping("/login")
-    public String getRedirectPage(HttpServletRequest httpServletRequest) throws ServletException {
-        return "admin/redirect";
-    }
-    @GetMapping("")
+
+    @GetMapping("login")
     public String login(HttpServletRequest httpServletRequest) throws ServletException {
         return "admin/login";
     }
