@@ -72,8 +72,11 @@
                                             border: 5px solid #d8d7d5;
                                             background-color: #d8d7d5;
                                             opacity: 0.8">
-        <img  class="logo" src="/img/mainQRPageLogoRmBg.png" style="height: auto;
-                                                 width: 15%;">
+                                            
+   <!-- Java tarafından gelen logo değeri varsa -->
+   <img class="logo" th:if="${logo}" th:src="${logo}" style="height: auto; width: 15%;">
+   <!-- Java tarafından gelen logo değeri yoksa -->
+   <img class="logo" th:unless="${logo}" src="/img/mainQRPageLogoRmBg.png" style="height: auto; width: 15%;">
     </div>
   <form id="upload-form" method="post" th:action="@{/user/uploadData/{id}(id = ${qr.id})}" enctype="multipart/form-data">
       <div class="row mt-2">

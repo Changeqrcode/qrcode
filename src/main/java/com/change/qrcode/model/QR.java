@@ -31,6 +31,10 @@ public class QR {
     @JoinColumn(name="user_id")
     private User user;
 
+    @ManyToOne
+    @JoinColumn(name="logo_id")
+    private UploadImage logo;
+
     @OneToMany(mappedBy= "QR")
     private Set<UploadImage> images;
 }

@@ -111,6 +111,7 @@ public class UserController {
                          RedirectAttributes redirectAttributes,
                          @PathVariable UUID id) throws ServletException {
         List<String> encodeds = new ArrayList<>();
+        String encodedLogo = "";
         QR p = QRRepository.findById(id).orElseThrow();
 
         if(!p.getUser().getUsername().equals(SecurityContextHolder.getContext().getAuthentication().getName()) ){
@@ -126,6 +127,12 @@ public class UserController {
             }
         }
 
+        UploadImage logo = uploadImageRepository.findById(p.getLogo().getId()).get();
+
+        if(logo != null ){
+            encodedLogo= "data:image/png;base64," + Base64.getEncoder().encodeToString(logo.getImageData());          
+        }
+
         if(p.getLinks() == null || p.getLinks().isEmpty()){
             p.setLinks("Deneme Linki - Sample Link");
         }
@@ -137,6 +144,7 @@ public class UserController {
         model.addAttribute("qr", p);
         model.addAttribute("images", encodeds);
         model.addAttribute("links", p.getLinks());
+        model.addAttribute("logo", encodedLogo);
 
         return "user/edit/qr";
     }

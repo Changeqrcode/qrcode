@@ -36,17 +36,25 @@
   <div class="row mt-2">
 
     <div class="col">
-      <h3 style="color: #4e73de;">Üretilen Qr Code - Generated QR Code</h3>
-      <p style="color: #4e73de;">Url : <span th:text="${url}"></span></p>
-      <img class="img-fluid img-thumbnail" th:src="${qrcode}" alt="" height="250" width="250">
-
-    </div>
-
-    <div class="col">
-      <form th:action="@{/admin/generateQRCode}" method="post" class="user" >
+      <form th:action="@{/admin/generateQRCode}" method="post" enctype="multipart/form-data" class="user" >
+        <label for="image">Dosya Seçin:</label>
+       <input type="file" id="image" name="image" accept="image/*">
+       <label for="qrCount">QR Sayısı:</label>
+        <input type="number" id="qrCount" name="qrCount" min="1" placeholder="QR Code Sayısı">
         <button type="submit" class="btn btn btn-primary" style="width: 100%;color: whitesmoke;">QR Code Üret-Generate QR Code</button>
       </form>
     </div>
+    
+    <div class="col">
+      <h3 style="color: #4e73de;">Oluşturulan QR Code'lar - Generated QR Codes</h3>
+      <textarea id="urlList" rows="10" style="width: 100%;" th:if="${#lists.size(qrCodeUrls) > 0}">
+        <span th:each="url : ${qrCodeUrls}" th:text="${url + '&#10;'}"></span>
+      </textarea>
+    </div>
+    
+    
+    
+
 
   </div>
 
@@ -55,5 +63,13 @@
 
 
 </body>
+<script>
+  var urlList = document.getElementById('urlList');
+  var doc = new DOMParser().parseFromString(urlList.value, 'text/html');
+  var plainText = doc.body.textContent || "";
+
+  urlList.value = plainText.replace(/\n\s*\n/g, '\n').trim();
+</script>
+
 
 </html>

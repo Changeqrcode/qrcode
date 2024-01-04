@@ -1,11 +1,16 @@
 package com.change.qrcode.controller;
 
 import com.change.qrcode.model.QR;
+import com.change.qrcode.model.UploadImage;
 import com.change.qrcode.model.User;
 import com.change.qrcode.repository.QRRepository;
 import com.change.qrcode.repository.RoleRepository;
+import com.change.qrcode.repository.UploadImageRepository;
 import com.change.qrcode.repository.UserRepository;
 import com.change.qrcode.util.QRCodeGenerator;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -17,12 +22,17 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 
 @Controller
@@ -31,16 +41,17 @@ public class AdminController {
     QRRepository QRRepository;
     private UserRepository userRepository;
     private BCryptPasswordEncoder passwordEncoder;
-
+    private UploadImageRepository uploadImageRepository;
     private AuthenticationProvider authenticationProvider;
     private RoleRepository roleRepository;
 
-    public AdminController(com.change.qrcode.repository.QRRepository QRRepository, UserRepository userRepository, BCryptPasswordEncoder passwordEncoder, AuthenticationProvider authenticationProvider, RoleRepository roleRepository) {
+    public AdminController(com.change.qrcode.repository.QRRepository QRRepository, UserRepository userRepository, BCryptPasswordEncoder passwordEncoder, AuthenticationProvider authenticationProvider, RoleRepository roleRepository,UploadImageRepository uploadImageRepository) {
         this.QRRepository = QRRepository;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.authenticationProvider = authenticationProvider;
         this.roleRepository = roleRepository;
+        this.uploadImageRepository = uploadImageRepository;
     }
 
     @GetMapping("login")
@@ -88,43 +99,43 @@ public class AdminController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public String home(Model model) {
         String url="Üretilme Bekleniyor...";
-        String qrcode = "/img/wait.png";
-
-        model.addAttribute("url", url);
-        model.addAttribute("qrcode", qrcode);
-
+        List<String> qrCodeUrls = new ArrayList<>();
+        qrCodeUrls.add(url);
+        model.addAttribute("qrCodeUrls", qrCodeUrls);
         return "admin/home";
     }
 
     @PostMapping("/generateQRCode")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public String generateQRCode(Model model){
-        String url="http://changeqr.com/qr/";
-
-        QR newQR = new QR();
-
-        newQR.setIsRecorded(Boolean.FALSE);
-        newQR.setTextContent("");
-        newQR.setUser(null);
-
-        byte[] image = new byte[0];
+    public String generateMultipleQRCodes(@RequestParam(name = "qrCount") int qrCount,
+                              @RequestParam("image") MultipartFile file, Model model) {
+        List<String> qrCodeUrls = new ArrayList<>();
+            UploadImage image = new UploadImage();
         try {
-            QR savedQR = QRRepository.saveAndFlush(newQR);
-            url += savedQR.getId();
-
-            // Generate and Return Qr Code in Byte Array
-            image = QRCodeGenerator.getQRCodeImage(url,250,250);
-
-        } catch (Exception e) {
-            e.printStackTrace();
+         
+            image.setImageData(file.getBytes());
+            image = uploadImageRepository.saveAndFlush(image);           
+        } catch (IOException e) {
+            e.printStackTrace();            
         }
-        // Convert Byte Array into Base64 Encode String
-        String qrcode = Base64.getEncoder().encodeToString(image);
-        qrcode = "data:image/png;base64," + qrcode;
 
-        model.addAttribute("url",url);
-        model.addAttribute("qrcode",qrcode);
+        for (int i = 0; i < qrCount; i++) {
+            String url = "http://changeqr.com/qr/";
+            QR newQR = new QR();
+            newQR.setIsRecorded(Boolean.FALSE);
+            newQR.setTextContent("test");
+            newQR.setUser(null);
+            newQR.setLogo(image);
+            try {
+                QR savedQR = QRRepository.saveAndFlush(newQR);
+                url += savedQR.getId();
+                qrCodeUrls.add(url);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
 
+        model.addAttribute("qrCodeUrls", qrCodeUrls);
         return "admin/home";
     }
 }
