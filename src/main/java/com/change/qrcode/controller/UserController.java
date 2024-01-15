@@ -240,8 +240,9 @@ public class UserController {
         return "user/payment";
     }
     
-    @GetMapping("/resultPackages")
-    public String  resultPackages(HttpServletRequest httpServletRequest,
+    @PostMapping("/resultPackages")
+    @ResponseBody
+    public ResponseEntity<String>  resultPackages(HttpServletRequest httpServletRequest,
                                     @RequestParam("merchant_oid") String merchantOid,
                                     @RequestParam("status") String status,
                                     @RequestParam("total_amount") String totalAmount,
@@ -257,25 +258,21 @@ public class UserController {
             String combined = merchantOid + merchantSalt + status + totalAmount;
             String generatedHash = generateHmacSha256(combined, merchantKey);
 
-            // Oluşturulan hash'i, paytr'dan gelen post içindeki hash ile karşılaştır
-            if (!hash.equals(generatedHash)) {
-                return "PAYTR notification failed: bad hash";
-            }
-
             // BURADA YAPILMASI GEREKENLER
             // 1) Siparişin durumunu merchantOid değerini kullanarak veri tabanınızdan sorgulayın.
             // 2) Eğer sipariş zaten daha önceden onaylandıysa veya iptal edildiyse "OK" dönerek işlemi sonlandırın.
             model.addAttribute("merchantOid", merchantOid);
             model.addAttribute("status", status);
             model.addAttribute("totalAmount", totalAmount);
+
             if ("success".equals(status)) { // Ödeme Onaylandı
                 // Bildirimin alındığını PayTR sistemine bildir.
-                return "user/resultPackages";
+                return ResponseEntity.ok("OK");
                 // BURADA YAPILMASI GEREKENLER ONAY İŞLEMLERİDİR.
                 // Diğer işlemleri ekleyin
             } else { // Ödemeye Onay Verilmedi
                 // Bildirimin alındığını PayTR sistemine bildir.
-                return "user/resultPackages";
+                return ResponseEntity.ok("OK");
                 // BURADA YAPILMASI GEREKENLER
                 // Diğer işlemleri ekleyin
             }
