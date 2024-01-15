@@ -175,10 +175,10 @@ public class UserController {
         String merchant_ok_url = "https://www.changeqr.com/user/resultPackages";
         String merchant_fail_url = "https://www.changeqr.com/user/resultPackages";
         String user_basket = Base64.getEncoder().encodeToString("[{\"product\":\"Premium Paket\",\"amount\":\"100.00\",\"quantity\":1}]".getBytes()); 
-        String userIp = "176.232.63.43";
+        String userIp = "188.119.23.87";
         String timeout_limit = "30";    
         int debug_on = 1;   
-        int test_mode = 0;   
+        int test_mode = 0;      
         int no_installment = 0; 
         int max_installment = 0; 
         String currency = "TL";          
@@ -258,12 +258,17 @@ public class UserController {
             String combined = merchantOid + merchantSalt + status + totalAmount;
             String generatedHash = generateHmacSha256(combined, merchantKey);
 
+            // Oluşturulan hash'i, paytr'dan gelen post içindeki hash ile karşılaştır
+            if (!hash.equals(generatedHash)) {
+                return ResponseEntity.ok("PAYTR notification failed: bad hash");
+            }
+
             // BURADA YAPILMASI GEREKENLER
             // 1) Siparişin durumunu merchantOid değerini kullanarak veri tabanınızdan sorgulayın.
             // 2) Eğer sipariş zaten daha önceden onaylandıysa veya iptal edildiyse "OK" dönerek işlemi sonlandırın.
-            model.addAttribute("merchantOid", merchantOid);
-            model.addAttribute("status", status);
-            model.addAttribute("totalAmount", totalAmount);
+            // model.addAttribute("merchantOid", merchantOid);
+            // model.addAttribute("status", status);
+            // model.addAttribute("totalAmount", totalAmount);
 
             if ("success".equals(status)) { // Ödeme Onaylandı
                 // Bildirimin alındığını PayTR sistemine bildir.
