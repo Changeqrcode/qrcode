@@ -172,8 +172,8 @@ public class UserController {
         String user_name = "qrcode@gmail.com";
         String user_address = "Antalya";
         String user_phone = "5554443322";
-        String merchant_ok_url = "https://www.changeqrcode.com/user/resultPackages";
-        String merchant_fail_url = "https://www.changeqrcode.com/user/resultPackages";
+        String merchant_ok_url = "https://www.changeqr.com/user/resultPackages";
+        String merchant_fail_url = "https://www.changeqr.com/user/resultPackages";
         String user_basket = Base64.getEncoder().encodeToString("[{\"product\":\"Premium Paket\",\"amount\":\"100.00\",\"quantity\":1}]".getBytes()); 
         String userIp = "176.232.63.43";
         String timeout_limit = "30";    
@@ -240,7 +240,7 @@ public class UserController {
         return "user/payment";
     }
     
-    @GetMapping("/resultPackages")
+    @PostMapping("/resultPackages")
     public String  resultPackages(HttpServletRequest httpServletRequest,
                                     @RequestParam("merchant_oid") String merchantOid,
                                     @RequestParam("status") String status,
