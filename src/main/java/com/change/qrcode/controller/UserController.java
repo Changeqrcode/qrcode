@@ -241,7 +241,6 @@ public class UserController {
     }
     
     @PostMapping("/resultPackages")
-    @ResponseBody
     public String  resultPackages(HttpServletRequest httpServletRequest,
                                     @RequestParam("merchant_oid") String merchantOid,
                                     @RequestParam("status") String status,
