@@ -3,6 +3,7 @@ package com.change.qrcode.controller;
 import com.change.qrcode.dto.UserRegistrationDto;
 import com.change.qrcode.model.QR;
 import com.change.qrcode.model.User;
+import com.change.qrcode.repository.PackagesRepository;
 import com.change.qrcode.repository.QRRepository;
 import com.change.qrcode.repository.RoleRepository;
 import com.change.qrcode.repository.UserRepository;
@@ -29,19 +30,21 @@ public class UserRegistrationController {
 	private QRRepository QRRepository;
 
 	private UserRepository userRepository;
+	private PackagesRepository packagesRepository;
 
 	private BCryptPasswordEncoder passwordEncoder;
 
 	private AuthenticationProvider authenticationProvider;
 	private RoleRepository roleRepository;
 
-	public UserRegistrationController(UserService userService, com.change.qrcode.repository.QRRepository QRRepository, UserRepository userRepository, BCryptPasswordEncoder passwordEncoder, AuthenticationProvider authenticationProvider, RoleRepository roleRepository) {
+	public UserRegistrationController(UserService userService, com.change.qrcode.repository.QRRepository QRRepository, UserRepository userRepository, BCryptPasswordEncoder passwordEncoder, AuthenticationProvider authenticationProvider, RoleRepository roleRepository, PackagesRepository packagesRepository) {
 		this.userService = userService;
 		this.QRRepository = QRRepository;
 		this.userRepository = userRepository;
 		this.passwordEncoder = passwordEncoder;
 		this.authenticationProvider = authenticationProvider;
 		this.roleRepository = roleRepository;
+		this.packagesRepository = packagesRepository;
 	}
 
 	@GetMapping("/{id}")
@@ -98,6 +101,7 @@ public class UserRegistrationController {
 			newUser.setPassword(passwordEncoder.encode(password));
 			newUser.setRoles(Arrays.asList(roleRepository.findByName("ROLE_USER")));
 			newUser.setEmail(email);
+			newUser.setPackages(packagesRepository.findByName("Free"));
 			User u = userService.save(newUser);
 
 			entity.setUser(u);

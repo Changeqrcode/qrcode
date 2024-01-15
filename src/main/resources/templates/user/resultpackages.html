@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Packages</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+
+    <script src="https://www.paytr.com/js/iframeResizer.min.js"></script>
+</head>
+<body>
+
+    <h1>Ödeme Sonucu</h1>
+
+    <p>Merchant OID: ${merchantOid}</p>
+    <p>Durum: ${status}</p>
+    <p>Toplam Tutar: ${totalAmount}</p>
+
+    <hr>
+
+    <h2>Sonuç:</h2>
+    
+    <!-- Ödeme başarılıysa -->
+    <c:if test="${status eq 'success'}">
+        <p style="color: green;">Ödeme başarıyla tamamlandı. Teşekkür ederiz!</p>
+    </c:if>
+
+    <!-- Ödeme başarısız veya onay verilmediyse -->
+    <c:if test="${status ne 'success'}">
+        <p style="color: red;">Ödeme başarısız veya onay verilmedi. Lütfen tekrar deneyin.</p>
+    </c:if>
+
+</body>
+</html>

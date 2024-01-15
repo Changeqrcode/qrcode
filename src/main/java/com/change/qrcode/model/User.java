@@ -6,6 +6,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.Optional;
 import java.util.Set;
 
 @Entity
@@ -20,6 +21,11 @@ public class User {
 
     private String username;
 
+    
+    @ManyToOne
+    @JoinColumn(name="package_id")
+    private Packages packages;
+    
     private String password;
 
     private String email;
@@ -52,6 +58,7 @@ public class User {
         this.resetPasswordToken = resetPasswordToken;
         this.roles = roles;
     }
+
 
 
 }
