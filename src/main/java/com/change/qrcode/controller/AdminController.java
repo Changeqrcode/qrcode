@@ -1,8 +1,10 @@
 package com.change.qrcode.controller;
 
+import com.change.qrcode.model.Packages;
 import com.change.qrcode.model.QR;
 import com.change.qrcode.model.UploadImage;
 import com.change.qrcode.model.User;
+import com.change.qrcode.repository.PackagesRepository;
 import com.change.qrcode.repository.QRRepository;
 import com.change.qrcode.repository.RoleRepository;
 import com.change.qrcode.repository.UploadImageRepository;
@@ -32,6 +34,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 
@@ -44,14 +47,16 @@ public class AdminController {
     private UploadImageRepository uploadImageRepository;
     private AuthenticationProvider authenticationProvider;
     private RoleRepository roleRepository;
+	private PackagesRepository packagesRepository;
 
-    public AdminController(com.change.qrcode.repository.QRRepository QRRepository, UserRepository userRepository, BCryptPasswordEncoder passwordEncoder, AuthenticationProvider authenticationProvider, RoleRepository roleRepository,UploadImageRepository uploadImageRepository) {
+    public AdminController(com.change.qrcode.repository.QRRepository QRRepository, UserRepository userRepository, BCryptPasswordEncoder passwordEncoder, AuthenticationProvider authenticationProvider, RoleRepository roleRepository,UploadImageRepository uploadImageRepository, PackagesRepository packagesRepository) {
         this.QRRepository = QRRepository;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.authenticationProvider = authenticationProvider;
         this.roleRepository = roleRepository;
         this.uploadImageRepository = uploadImageRepository;
+        this.packagesRepository = packagesRepository;
     }
 
     @GetMapping("login")
@@ -101,6 +106,9 @@ public class AdminController {
         String url="Üretilme Bekleniyor...";
         List<String> qrCodeUrls = new ArrayList<>();
         qrCodeUrls.add(url);
+        List<Packages> packagesList = packagesRepository.findAll();
+        packagesList.sort(Comparator.comparing(Packages::getId));
+        model.addAttribute("packages", packagesList);
         model.addAttribute("qrCodeUrls", qrCodeUrls);
         return "admin/home";
     }
@@ -137,5 +145,26 @@ public class AdminController {
 
         model.addAttribute("qrCodeUrls", qrCodeUrls);
         return "admin/home";
+    }
+
+    @PostMapping("/updatePackage")
+    public String updatePackage(@ModelAttribute Packages updatedPackage) {
+        Packages existingPackage = packagesRepository.findById(updatedPackage.getId()).orElse(null);
+
+        if (existingPackage != null) {
+            // Sadece güncellenmesini istediğiniz alanları güncelle
+            existingPackage.setName(updatedPackage.getName());
+            existingPackage.setCharacterLimit(updatedPackage.getCharacterLimit());
+            existingPackage.setLinkLimit(updatedPackage.getLinkLimit());
+            existingPackage.setImageLimit(updatedPackage.getImageLimit());
+            existingPackage.setLogoAllowed(updatedPackage.getLogoAllowed());
+            existingPackage.setLocationAllowed(updatedPackage.getLogoAllowed());
+            existingPackage.setPrice(updatedPackage.getPrice());
+
+            packagesRepository.save(existingPackage);
+        }
+
+        // İlgili sayfaya yönlendirme, örneğin paket düzenleme sayfasına
+        return "redirect:/admin/home";
     }
 }

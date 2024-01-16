@@ -133,6 +133,21 @@ public class UserController {
         return "redirect:/qr/" + id;
     }
 
+    @PostMapping("/leaveqr/{id}")
+    public String leaveqr(HttpServletRequest httpServletRequest, @PathVariable UUID id) throws ServletException {
+        QR p = QRRepository.findById(id).orElseThrow();
+        p.setUser(null);
+        p.setIsRecorded(false);
+        p.setImages(null);
+        p.setLinks(null);
+        p.setLogo(null);
+        p.setTextContent(null);
+        QRRepository.saveAndFlush(p);
+        httpServletRequest.logout();
+        return "redirect:/qr/" + id;
+    }
+
+
     @GetMapping("/packages/{id}")
     public String showPackages(HttpServletRequest httpServletRequest,
                          Model model,
@@ -309,12 +324,19 @@ public class UserController {
             }
         }
 
-        UploadImage logo = uploadImageRepository.findById(p.getLogo().getId()).get();
-
-        if(logo != null ){
-            encodedLogo= "data:image/png;base64," + Base64.getEncoder().encodeToString(logo.getImageData());          
+        try {
+            UploadImage logo = uploadImageRepository.findById(p.getLogo().getId()).get();
+            if(logo != null ){
+                encodedLogo= "data:image/png;base64," + Base64.getEncoder().encodeToString(logo.getImageData());      
+                model.addAttribute("logo", encodedLogo);    
+            }
+    
+        } catch (Exception e) {
+           
         }
+        
 
+    
         if(p.getLinks() == null || p.getLinks().isEmpty()){
             p.setLinks("Deneme Linki - Sample Link");
         }
@@ -326,7 +348,7 @@ public class UserController {
         model.addAttribute("qr", p);
         model.addAttribute("images", encodeds);
         model.addAttribute("links", p.getLinks());
-        model.addAttribute("logo", encodedLogo);
+       
 
         return "user/edit/qr";
     }

@@ -6,11 +6,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Change QR Code</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
-          integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
-          crossorigin="anonymous"></script>
+    integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+    crossorigin="anonymous"></script>
 
   <!-- Custom styles for this template-->
   <link href="../css/sb-admin-2.min.css" rel="stylesheet">
@@ -18,47 +18,86 @@
 </head>
 
 <body style="background-color: #d8d7d5;">
-<div class="container text-center mt-3" style="width: 100%;">
-  <form method="post" th:action="@{/admin/logout}">
-    <button class="btn btn-primary" type="submit">Hesaptan Çıkış - Logout</button>
-  </form>
-</div>
-<div class="container text-center">
-  <div class="row text-center mt-5 ">
-    <h1 class="text-center shadow-sm p-3" style="color: whitesmoke;
+  <div class="container text-center mt-3" style="width: 100%;">
+    <form method="post" th:action="@{/admin/logout}">
+      <button class="btn btn-primary" type="submit">Hesaptan Çıkış - Logout</button>
+    </form>
+  </div>
+  <div class="container text-center">
+    <div class="row text-center mt-5 ">
+      <h1 class="text-center shadow-sm p-3" style="color: whitesmoke;
                 border-radius: 1rem;
                 border: 5px solid white;
                 background-color: #4e73de">
-      Change QR Code Admin Panel
-    </h1>
-  </div>
-
-  <div class="row mt-2">
-
-    <div class="col">
-      <form th:action="@{/admin/generateQRCode}" method="post" enctype="multipart/form-data" class="user" >
-        <label for="image">Dosya Seçin:</label>
-       <input type="file" id="image" name="image" accept="image/*">
-       <label for="qrCount">QR Sayısı:</label>
-        <input type="number" id="qrCount" name="qrCount" min="1" placeholder="QR Code Sayısı">
-        <button type="submit" class="btn btn btn-primary" style="width: 100%;color: whitesmoke;">QR Code Üret-Generate QR Code</button>
-      </form>
+        Change QR Code Admin Panel
+      </h1>
     </div>
-    
-    <div class="col">
-      <h3 style="color: #4e73de;">Oluşturulan QR Code'lar - Generated QR Codes</h3>
-      <textarea id="urlList" rows="10" style="width: 100%;" th:if="${#lists.size(qrCodeUrls) > 0}">
+
+    <div class="row mt-2">
+
+      <div class="col">
+        <form th:action="@{/admin/generateQRCode}" method="post" enctype="multipart/form-data" class="user">
+          <label for="image">Dosya Seçin:</label>
+          <input type="file" id="image" name="image" accept="image/*"> </br>
+          <label for="qrCount">QR Sayısı:</label>
+          <input type="number" id="qrCount" name="qrCount" min="1" placeholder="QR Code Sayısı">
+          <button type="submit" class="btn btn btn-primary mt-3" style="width: 100%;color: whitesmoke;">QR Code Üret-Generate
+            QR Code</button>
+        </form>
+      </div>
+
+      <div class="col">
+        <h3 style="color: #4e73de;">Oluşturulan QR Code'lar - Generated QR Codes</h3>
+        <textarea id="urlList" rows="10" style="width: 100%;" th:if="${#lists.size(qrCodeUrls) > 0}">
         <span th:each="url : ${qrCodeUrls}" th:text="${url + '&#10;'}"></span>
       </textarea>
+      </div>
+
+
+
+
+
     </div>
+    <div class="row mt-2">
+
+      <h3 style="color: #4e73de;">Paketleri Düzenle - Edit Packages</h3>
+  
+      <form th:each="package : ${packages}" th:action="@{/admin/updatePackage}" th:object="${package}" method="post" class="col">
     
+        
+        <label for="name" th:text="${'İsim: ' + package.name}"></label>
+        <input type="text" id="name" name="name" th:value="${package.name}" />
+
+        <input type="hidden" name="id" th:value="${package.id}" />
     
+        <label for="characterLimit" th:text="${'Character Limit: ' + package.characterLimit}"></label>
+        <input type="number" id="characterLimit" name="characterLimit" th:value="${package.characterLimit}" />
+    
+        <label for="linkLimit" th:text="${'Link Limit: ' + package.linkLimit}"></label>
+        <input type="number" id="linkLimit" name="linkLimit" th:value="${package.linkLimit}" />
+    
+        <label for="imageLimit" th:text="${'Image Limit: ' + package.imageLimit}"></label>
+        <input type="number" id="imageLimit" name="imageLimit" th:value="${package.imageLimit}" />
+    
+        <label for="logoAllowed" th:text="${'Logo Allowed: ' + package.logoAllowed}"></label>
+        <input type="checkbox" id="logoAllowed" name="logoAllowed" th:checked="${package.logoAllowed}" />
+    
+        <label for="locationAllowed" th:text="${'Location Allowed: ' + package.locationAllowed}"></label>
+        <input type="checkbox" id="locationAllowed" name="locationAllowed" th:checked="${package.locationAllowed}" />
+    
+        <label for="price" th:text="${'Price: ' + package.price}"></label>
+        <input type="number" id="price" name="price" th:value="${package.price}" />
+    
+        <button type="submit" class="btn btn-primary mt-3">Güncelle - Update</button>
+ 
+   
+    </form>
     
 
-
+  
   </div>
 
-</div>
+  </div>
 
 
 

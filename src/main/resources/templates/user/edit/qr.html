@@ -66,6 +66,9 @@
     <form method="post" th:action="@{/user/logout/{id}(id = ${qr.id})}">
         <button class="btn btn-primary mt-4" type="submit">Çıkış - Logout</button>
     </form>
+    <form method="post" th:action="@{/user/leaveqr/{id}(id = ${qr.id})}">
+        <button class="btn btn-primary mt-4" type="submit">Kodu Bırak</button>
+    </form>
 </div>
 <div class="container text-center">
     <div class="row text-center mt-2 justify-content-center" style="border-radius: 1rem;
