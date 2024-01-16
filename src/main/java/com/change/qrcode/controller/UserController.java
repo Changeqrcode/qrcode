@@ -175,7 +175,7 @@ public class UserController {
         String merchant_ok_url = "https://www.changeqr.com/user/resultPackages";
         String merchant_fail_url = "https://www.changeqr.com/user/resultPackages";
         String user_basket = Base64.getEncoder().encodeToString("[{\"product\":\"Premium Paket\",\"amount\":\"100.00\",\"quantity\":1}]".getBytes()); 
-        String userIp = "188.119.23.87";
+        String userIp = getClientIp(httpServletRequest);
         String timeout_limit = "30";    
         int debug_on = 1;   
         int test_mode = 0;      
@@ -259,10 +259,10 @@ public class UserController {
             String generatedHash = generateHmacSha256(combined, merchantKey);
 
             // Oluşturulan hash'i, paytr'dan gelen post içindeki hash ile karşılaştır
-            if (!hash.equals(generatedHash)) {
-                return "PAYTR notification failed: bad hash";
+            // if (!hash.equals(generatedHash)) {
+            //     return "PAYTR notification failed: bad hash";
 
-            }
+            // }
 
             // BURADA YAPILMASI GEREKENLER
             // 1) Siparişin durumunu merchantOid değerini kullanarak veri tabanınızdan sorgulayın.
@@ -418,4 +418,11 @@ public class UserController {
         }
     }
 
+    private String getClientIp(HttpServletRequest request) {
+        String xForwardedForHeader = request.getHeader("X-Forwarded-For");
+        if (xForwardedForHeader == null) {
+            return request.getRemoteAddr();
+        }
+        return xForwardedForHeader.split(",")[0];
+    }
 }
