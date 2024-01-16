@@ -187,8 +187,8 @@ public class UserController {
         String user_name = "qrcode@gmail.com";
         String user_address = "Antalya";
         String user_phone = "5554443322";
-        String merchant_ok_url = "https://www.changeqr.com/user/resultPackages";
-        String merchant_fail_url = "https://www.changeqr.com/user/resultPackages";
+        String merchant_ok_url = "https://www.changeqr.com/payment/result";
+        String merchant_fail_url = "https://www.changeqr.com/payment/result";
         String user_basket = Base64.getEncoder().encodeToString("[{\"product\":\"Premium Paket\",\"amount\":\"100.00\",\"quantity\":1}]".getBytes()); 
         String userIp = getClientIp(httpServletRequest);
         String timeout_limit = "30";    
@@ -257,7 +257,7 @@ public class UserController {
     
     @PostMapping("/resultPackages")
     @ResponseBody
-    public String  resultPackages(HttpServletRequest httpServletRequest,
+    public ResponseEntity<String>  resultPackages(HttpServletRequest httpServletRequest,
                                     @RequestParam("merchant_oid") String merchantOid,
                                     @RequestParam("status") String status,
                                     @RequestParam("total_amount") String totalAmount,
@@ -288,12 +288,12 @@ public class UserController {
 
             if ("success".equals(status)) { // Ödeme Onaylandı
                 // Bildirimin alındığını PayTR sistemine bildir.
-                return "OK";
+                return ResponseEntity.ok("OK");
                 // BURADA YAPILMASI GEREKENLER ONAY İŞLEMLERİDİR.
                 // Diğer işlemleri ekleyin
             } else { // Ödemeye Onay Verilmedi
                 // Bildirimin alındığını PayTR sistemine bildir.
-                return "OK";
+                return ResponseEntity.ok("OK");
                 // BURADA YAPILMASI GEREKENLER
                 // Diğer işlemleri ekleyin
             }
