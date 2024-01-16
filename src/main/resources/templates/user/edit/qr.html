@@ -2,407 +2,424 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Change QR Code</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Change QR Code</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
         crossorigin="anonymous"></script>
 
-  <!-- Custom styles for this template-->
+    <!-- Custom styles for this template-->
     <link rel="stylesheet" href="/css/styles.css">
     <link href="/css/sb-admin-2.min.css" rel="stylesheet">
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
     <script src="https://kit.fontawesome.com/3188dfded8.js" crossorigin="anonymous"></script>
     <style>
-        .deleteLink{
+        .deleteLink {
             color: red;
-            float:right;
+            float: right;
         }
 
-        .myLinks{
+        .myLinks {
             padding-left: calc(var(--bs-gutter-x) * .5);
         }
+
         /*.logo{*/
         /*    height: auto;*/
         /*    width: 15%;*/
         /*}*/
-        @media ( max-width: 1200px){
-            .logo{
+        @media (max-width: 1200px) {
+            .logo {
                 width: 20% !important;
             }
-            h2{
+
+            h2 {
                 font-size: 2rem;
                 width: 100%;
             }
-            h3{
+
+            h3 {
                 font-size: 1.75rem;
                 width: 100%;
             }
         }
-        @media ( max-width: 768px){
-            .logo{
+
+        @media (max-width: 768px) {
+            .logo {
                 width: 40% !important;
             }
-            h2,h3{
+
+            h2,
+            h3 {
                 font-size: 1rem;
                 width: 100%;
             }
-            .server-message{
+
+            .server-message {
                 padding: 2px;
             }
 
         }
-
     </style>
 </head>
 
 <body style="    background-color: #d8d7d5;">
-<div class="container text-center mt-3" style="width: 100%;">
-    <form method="post" th:action="@{/user/logout/{id}(id = ${qr.id})}">
-        <button class="btn btn-primary mt-4" type="submit">Çıkış - Logout</button>
-    </form>
-    <form method="post" th:action="@{/user/leaveqr/{id}(id = ${qr.id})}">
-        <button class="btn btn-primary mt-4" type="submit">Kodu Bırak</button>
-    </form>
-</div>
-<div class="container text-center">
-    <div class="row text-center mt-2 justify-content-center" style="border-radius: 1rem;
+    <div class="container text-center mt-3" style="width: 100%;">
+        <div class="row">
+            <div class="col-md-4">
+                <a class="btn btn-primary mt-4" th:href="@{/user/packages/{id}(id = ${qr.id})}">Premium</a>
+            </div>
+            <form method="post" th:action="@{/user/leaveqr/{id}(id = ${qr.id})}" class="col-md-4">
+                <button class="btn btn-primary mt-4" type="submit">Kodu Bırak</button>
+            </form>
+          
+            <form method="post" th:action="@{/user/logout/{id}(id = ${qr.id})}" class="col-md-4">
+                <button class="btn btn-primary mt-4" type="submit">Çıkış - Logout</button>
+            </form>
+     
+        </div>
+    </div>
+    <div class="container text-center">
+        <div class="row text-center mt-2 justify-content-center" style="border-radius: 1rem;
                                             border: 5px solid #d8d7d5;
                                             background-color: #d8d7d5;
                                             opacity: 0.8">
-                                            
-   <!-- Java tarafından gelen logo değeri varsa -->
-   <img class="logo" th:if="${logo}" th:src="${logo}" style="height: auto; width: 15%;">
-   <!-- Java tarafından gelen logo değeri yoksa -->
-   <img class="logo" th:unless="${logo}" src="/img/mainQRPageLogoRmBg.png" style="height: auto; width: 15%;">
-    </div>
-     <!-- error message -->
-     <div th:if="${error != null && !error.isEmpty()}">
-        <div class="alert alert-danger" th:text="${error}"></div>
-        <div th:if="${redirectLink != null && !redirectLink.isEmpty()}">
-            <p><a th:href="${redirectLink}">Buraya tıklayarak devam edebilirsiniz.</a></p>
-        </div>
-    </div>
-    
-  <form id="upload-form" method="post" th:action="@{/user/uploadData/{id}(id = ${qr.id})}" enctype="multipart/form-data">
-      <div class="row mt-2">
 
-          <div class="col">
-            <div class="form-floating">
-                          <textarea class="form-control" placeholder="Bu alana mail, telefon numarası gibi kişisel bilgiler girilebilir..." id="floatingTextarea"
-                                    style="height: 400px; color: black; font-size: 1.5rem;" name="content"
-                                    th:text="${qr.textContent}">
+            <!-- Java tarafından gelen logo değeri varsa -->
+            <img class="logo" th:if="${logo}" th:src="${logo}" style="height: auto; width: 15%;">
+            <!-- Java tarafından gelen logo değeri yoksa -->
+            <img class="logo" th:unless="${logo}" src="/img/mainQRPageLogoRmBg.png" style="height: auto; width: 15%;">
+        </div>
+        <!-- error message -->
+        <div th:if="${error != null && !error.isEmpty()}">
+            <div class="alert alert-danger" th:text="${error}"></div>
+            <div th:if="${redirectLink != null && !redirectLink.isEmpty()}">
+                <p><a th:href="${redirectLink}">Buraya tıklayarak devam edebilirsiniz.</a></p>
+            </div>
+        </div>
+
+        <form id="upload-form" method="post" th:action="@{/user/uploadData/{id}(id = ${qr.id})}"
+            enctype="multipart/form-data">
+            <div class="row mt-2">
+
+                <div class="col">
+                    <div class="form-floating">
+                        <textarea class="form-control"
+                            placeholder="Bu alana mail, telefon numarası gibi kişisel bilgiler girilebilir..."
+                            id="floatingTextarea" style="height: 400px; color: black; font-size: 1.5rem;" name="content"
+                            th:text="${qr.textContent}">
                           </textarea>
 
-              <label for="floatingTextarea">BİLGİLER/INFO</label>
+                        <label for="floatingTextarea">BİLGİLER/INFO</label>
+                    </div>
+                </div>
+
+
             </div>
-          </div>
+            <div class="row mt-2">
+                <h2 class="link-header">LİNKLER/LINKS</h2>
+                <div class="input-group mb-3">
+                    <input id="link-content" type="text" class="form-control" placeholder="link giriniz. - Add link"
+                        aria-describedby="button-addon2">
+                    <input id="upload-links" type="hidden" name="uploadLinks">
+                    <span th:text="${links}" style="display: none;" id="saved-links"></span>
+                    <button class="btn btn-primary" type="button" id="button-addon2"
+                        onclick="addLink()">Ekle-Add</button>
+                </div>
 
+                <ul id="link-list" class="list-group myLinks">
+                    <li class="list-group-item">
+                    </li>
+                </ul>
 
-      </div>
-      <div class="row mt-2">
-          <h2 class="link-header">LİNKLER/LINKS</h2>
-          <div class="input-group mb-3">
-              <input id="link-content" type="text" class="form-control" placeholder="link giriniz. - Add link" aria-describedby="button-addon2">
-              <input id="upload-links" type="hidden" name="uploadLinks">
-              <span th:text="${links}" style="display: none;" id="saved-links"></span>
-              <button class="btn btn-primary" type="button" id="button-addon2" onclick="addLink()">Ekle-Add</button>
-          </div>
+            </div>
+            <div class="row mt-2">
+                <div class="app mb-3">
+                    <div class="header">
+                        <h2>Resim Yükle/ Upload Image</h2>
+                    </div>
+                    <div class="server-message"></div>
 
-          <ul id="link-list" class="list-group myLinks">
-              <li class="list-group-item">
-              </li>
-          </ul>
+                    <div class="input-div">
+                        <p>Resim Eklemek İçin Tıklayınız / Click To Add Images</p>
+                        <input type="file" name="images" class="file" multiple="multiple" accept="image/*">
+                    </div>
 
-      </div>
-      <div class="row mt-2">
-          <div class="app mb-3">
-              <div class="header">
-                  <h2>Resim Yükle/ Upload Image</h2>
-              </div>
-              <div class="server-message"></div>
+                    <div id="queued-form" class="mt-2">
+                        <div class="header">
+                            <h3>Yüklenmeye Hazır Resimler / Ready To Upload</h3>
+                        </div>
+                        <div class="queued-div">
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-              <div class="input-div">
-                  <p>Resim Eklemek İçin Tıklayınız / Click To Add Images</p>
-                  <input type="file" name="images" class="file" multiple="multiple" accept="image/*">
-              </div>
+            <div class="row justify-content-center mt-2 mb-3">
+                <div class="col">
+                    <button type="submit" class="btn btn btn-primary mt-2" style="width: 50%;">Kaydet-Save</button>
+                </div>
+            </div>
+        </form>
 
-              <div id="queued-form" class="mt-2">
-                  <div class="header">
-                      <h3>Yüklenmeye Hazır Resimler / Ready To Upload</h3>
-                  </div>
-                  <div class="queued-div">
-                  </div>
-              </div>
-          </div>
-      </div>
-
-      <div class="row justify-content-center mt-2 mb-3">
-          <div class="col">
-              <button type="submit" class="btn btn btn-primary mt-2" style="width: 50%;">Kaydet-Save</button>
-          </div>
-      </div>
-  </form>
-
-</div>
+    </div>
 
 
 
-<script th:inline="javascript">
-    /*<![CDATA[*/
+    <script th:inline="javascript">
+        /*<![CDATA[*/
 
-    var serverImages = [[${images}]];
+        var serverImages = [[${ images }]];
 
-    /*]]>*/
-    let imagesArray = [],
-        uploadForm = document.querySelector("#upload-form"),
-        queuedDiv = document.querySelector(".queued-div"),
-        inputDiv = document.querySelector(".input-div"),
-        input = document.querySelector(".input-div input"),
-        serverMessage = document.querySelector(".server-message"),
-        allowedFileCount = 6,
-        allowedSizePerFile = 204800,
-        isNumberOfFileExceedError = false,
-        numberOfFileExceedErrorMesage = "<p> Sadece 6 tane resim yükleyebilirsiniz.- You can upload max 6 image </p> <p>Lütfen başka resimler yükleyebilmek için yüklenen resimlerden bazılarını siliniz. - Please delete some of the other images to upload new ones</p>",
-        errorFileNames = "",
-        errorMesage = "",
-        savedLinks = $("#saved-links").text(),
-        linksArray = savedLinks.split(","),
-        uploadLinks = savedLinks;
+        /*]]>*/
+        let imagesArray = [],
+            uploadForm = document.querySelector("#upload-form"),
+            queuedDiv = document.querySelector(".queued-div"),
+            inputDiv = document.querySelector(".input-div"),
+            input = document.querySelector(".input-div input"),
+            serverMessage = document.querySelector(".server-message"),
+            allowedFileCount = 6,
+            allowedSizePerFile = 204800,
+            isNumberOfFileExceedError = false,
+            numberOfFileExceedErrorMesage = "<p> Sadece 6 tane resim yükleyebilirsiniz.- You can upload max 6 image </p> <p>Lütfen başka resimler yükleyebilmek için yüklenen resimlerden bazılarını siliniz. - Please delete some of the other images to upload new ones</p>",
+            errorFileNames = "",
+            errorMesage = "",
+            savedLinks = $("#saved-links").text(),
+            linksArray = savedLinks.split(","),
+            uploadLinks = savedLinks;
 
-    $("#upload-links").val(uploadLinks)
+        $("#upload-links").val(uploadLinks)
 
-    displaySavedLinks()
+        displaySavedLinks()
 
-    for(let i=0; i<serverImages.length; i++){
-        urltoFile( 'server-encoded-image'+i+'.png','image/png',serverImages[i])
-            .then(function(file){
-                imagesArray.push(file)
-                displayImages()
-            });
-    }
+        for (let i = 0; i < serverImages.length; i++) {
+            urltoFile('server-encoded-image' + i + '.png', 'image/png', serverImages[i])
+                .then(function (file) {
+                    imagesArray.push(file)
+                    displayImages()
+                });
+        }
 
-    var maxHeight = 1000; // Set the desired maximum size
+        var maxHeight = 1000; // Set the desired maximum size
 
-    input.addEventListener("change", async () => {
-        const files = input.files
-        serverMessage.innerHTML = ""
-        isNumberOfFileExceedError = false
-        errorFileNames = ""
-        errorMesage = ""
+        input.addEventListener("change", async () => {
+            const files = input.files
+            serverMessage.innerHTML = ""
+            isNumberOfFileExceedError = false
+            errorFileNames = ""
+            errorMesage = ""
 
-        if(allowedFileCount < (files.length + imagesArray.length)){
-            isNumberOfFileExceedError = true;
-            errorMesage = "<div>" + numberOfFileExceedErrorMesage + "</div>";
-            serverMessage.innerHTML = errorMesage;
-        }else{
-            for(let i=0; i<files.length; i++){
+            if (allowedFileCount < (files.length + imagesArray.length)) {
+                isNumberOfFileExceedError = true;
+                errorMesage = "<div>" + numberOfFileExceedErrorMesage + "</div>";
+                serverMessage.innerHTML = errorMesage;
+            } else {
+                for (let i = 0; i < files.length; i++) {
 
-                if(files[i].size > allowedSizePerFile){
+                    if (files[i].size > allowedSizePerFile) {
 
-                    let tempImage = new Image();
-                    tempImage.src = await fileToDataUri(files[i]);
+                        let tempImage = new Image();
+                        tempImage.src = await fileToDataUri(files[i]);
 
-                    // compressing the uplodaded image
-                    tempImage.addEventListener("load", async () => {
-                        await reduceSizeOfImage(tempImage, i)
-                    });
-                }else{
-                    imagesArray.push(files[i]);
+                        // compressing the uplodaded image
+                        tempImage.addEventListener("load", async () => {
+                            await reduceSizeOfImage(tempImage, i)
+                        });
+                    } else {
+                        imagesArray.push(files[i]);
+                    }
                 }
             }
-        }
-        displayImages()
-    })
+            displayImages()
+        })
 
-    inputDiv.addEventListener("drop", async (e) => {
-        e.preventDefault();
-        const files = e.dataTransfer.files
+        inputDiv.addEventListener("drop", async (e) => {
+            e.preventDefault();
+            const files = e.dataTransfer.files
 
-        serverMessage.innerHTML = ""
-        isNumberOfFileExceedError = false
-        errorFileNames = ""
-        errorMesage = ""
+            serverMessage.innerHTML = ""
+            isNumberOfFileExceedError = false
+            errorFileNames = ""
+            errorMesage = ""
 
-        if(allowedFileCount < (files.length + imagesArray.length)){
-            isNumberOfFileExceedError = true;
-            errorMesage = "<div>" + numberOfFileExceedErrorMesage + "</div>";
-            serverMessage.innerHTML = errorMesage;
-        }else{
-            for(let i=0; i<files.length; i++){
+            if (allowedFileCount < (files.length + imagesArray.length)) {
+                isNumberOfFileExceedError = true;
+                errorMesage = "<div>" + numberOfFileExceedErrorMesage + "</div>";
+                serverMessage.innerHTML = errorMesage;
+            } else {
+                for (let i = 0; i < files.length; i++) {
 
-                if(files[i].size > allowedSizePerFile){
+                    if (files[i].size > allowedSizePerFile) {
 
-                    let tempImage = new Image();
-                    tempImage.src = await fileToDataUri(files[i]);
+                        let tempImage = new Image();
+                        tempImage.src = await fileToDataUri(files[i]);
 
-                    // compressing the uplodaded image
-                    tempImage.addEventListener("load", async () => {
-                        await reduceSizeOfImage(tempImage, i)
-                    });
-                }else{
-                    imagesArray.push(files[i]);
+                        // compressing the uplodaded image
+                        tempImage.addEventListener("load", async () => {
+                            await reduceSizeOfImage(tempImage, i)
+                        });
+                    } else {
+                        imagesArray.push(files[i]);
+                    }
                 }
             }
-        }
-        displayImages()
-    })
+            displayImages()
+        })
 
-    function displayImages() {
-        let images = ""
-        imagesArray.forEach((image, index) => {
-            images += `<div class="image">
+        function displayImages() {
+            let images = ""
+            imagesArray.forEach((image, index) => {
+                images += `<div class="image">
                             <img src="${URL.createObjectURL(image)}" alt="image">
                             <span onclick="deleteImage(${index})">&times;</span>
                         </div>`
-        })
-        queuedDiv.innerHTML = images
-    }
+            })
+            queuedDiv.innerHTML = images
+        }
 
-    function deleteImage(index) {
-        imagesArray.splice(index, 1)
-        displayImages()
-    }
+        function deleteImage(index) {
+            imagesArray.splice(index, 1)
+            displayImages()
+        }
 
-    function urltoFile(filename, mimeType, url){
-        return (fetch(url)
-                .then(function(res){return res.arrayBuffer();})
-                .then(function(buf){
-                    const file = new File([buf], filename,{type:mimeType})
+        function urltoFile(filename, mimeType, url) {
+            return (fetch(url)
+                .then(function (res) { return res.arrayBuffer(); })
+                .then(function (buf) {
+                    const file = new File([buf], filename, { type: mimeType })
                     return file;
                 })
-        );
-    }
-
-    function setFiles(input, files){
-        const dataTransfer = new DataTransfer()
-        for(const file of files)
-            dataTransfer.items.add(file)
-        input.files = dataTransfer.files
-    }
-
-
-    uploadForm.addEventListener("submit", () => {
-        try{
-            setFiles(input, imagesArray)
-        }catch (error){
-            console.log(error)
+            );
         }
 
-        return true;
-    })
-
-    function fileToDataUri(file) {
-        return new Promise((resolve) => {
-            const reader = new FileReader();
-            reader.addEventListener("load", () => {
-                resolve(reader.result);
-            });
-            reader.readAsDataURL(file);
-        });
-    }
-
-    async function reduceSizeOfImage(tempImage, index){
-        // Set the desired quality
-        let qualityFactor = 1;
-
-        // Get the original image size
-        let originalWidth = tempImage.width;
-        let originalHeight = tempImage.height;
-
-
-        // Calculate the new size
-        let newHeight = (maxHeight > originalHeight) ? originalHeight : maxHeight;
-        let newWidth = (newHeight * originalWidth) / originalHeight;
-
-        var canvas = document.createElement('canvas');
-        var ctx = canvas.getContext('2d');
-
-        // Resize the canvas
-        canvas.width = newWidth;
-        canvas.height = newHeight;
-
-        // Draw the image on the canvas
-        ctx.drawImage(tempImage, 0, 0, newWidth, newHeight);
-
-        let dataURL = canvas.toDataURL('image/jpeg', qualityFactor);
-        let editedFile = await urltoFile( 'client-encoded-image'+index+'.jpeg','image/jpeg', dataURL);
-
-
-        while(editedFile.size > allowedSizePerFile){
-            qualityFactor -= 0.1
-            dataURL = canvas.toDataURL('image/jpeg', qualityFactor);
-            editedFile = await urltoFile( 'client-encoded-image'+index+'.jpeg','image/jpeg', dataURL);
-
+        function setFiles(input, files) {
+            const dataTransfer = new DataTransfer()
+            for (const file of files)
+                dataTransfer.items.add(file)
+            input.files = dataTransfer.files
         }
 
-        imagesArray.push(editedFile)
-        displayImages()
-    }
 
-    function addLink() {
-        let linksDiv = document.querySelector("#link-list");
-        let li = document.createElement('li');
-        let linkContent = document.querySelector("#link-content");
-        li.className = 'list-group-item'
-
-        if(linkContent.value === ''){
-            alert("Boş link giremezsiniz.")
-        }else{
-            let href = linkContent.value
-            if(linkContent.value.includes('@')){
-                href = 'mailto:' + href;
+        uploadForm.addEventListener("submit", () => {
+            try {
+                setFiles(input, imagesArray)
+            } catch (error) {
+                console.log(error)
             }
 
-            let newLink = `<a href="${href}">
+            return true;
+        })
+
+        function fileToDataUri(file) {
+            return new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.addEventListener("load", () => {
+                    resolve(reader.result);
+                });
+                reader.readAsDataURL(file);
+            });
+        }
+
+        async function reduceSizeOfImage(tempImage, index) {
+            // Set the desired quality
+            let qualityFactor = 1;
+
+            // Get the original image size
+            let originalWidth = tempImage.width;
+            let originalHeight = tempImage.height;
+
+
+            // Calculate the new size
+            let newHeight = (maxHeight > originalHeight) ? originalHeight : maxHeight;
+            let newWidth = (newHeight * originalWidth) / originalHeight;
+
+            var canvas = document.createElement('canvas');
+            var ctx = canvas.getContext('2d');
+
+            // Resize the canvas
+            canvas.width = newWidth;
+            canvas.height = newHeight;
+
+            // Draw the image on the canvas
+            ctx.drawImage(tempImage, 0, 0, newWidth, newHeight);
+
+            let dataURL = canvas.toDataURL('image/jpeg', qualityFactor);
+            let editedFile = await urltoFile('client-encoded-image' + index + '.jpeg', 'image/jpeg', dataURL);
+
+
+            while (editedFile.size > allowedSizePerFile) {
+                qualityFactor -= 0.1
+                dataURL = canvas.toDataURL('image/jpeg', qualityFactor);
+                editedFile = await urltoFile('client-encoded-image' + index + '.jpeg', 'image/jpeg', dataURL);
+
+            }
+
+            imagesArray.push(editedFile)
+            displayImages()
+        }
+
+        function addLink() {
+            let linksDiv = document.querySelector("#link-list");
+            let li = document.createElement('li');
+            let linkContent = document.querySelector("#link-content");
+            li.className = 'list-group-item'
+
+            if (linkContent.value === '') {
+                alert("Boş link giremezsiniz.")
+            } else {
+                let href = linkContent.value
+                if (linkContent.value.includes('@')) {
+                    href = 'mailto:' + href;
+                }
+
+                let newLink = `<a href="${href}">
                     ${linkContent.value}
                   </a>
                   <i class="fa-sharp fa-solid fa-xmark deleteLink" onclick="deleteLink(${linksArray.length})"></i>`
-            linksArray.push(linkContent.value)
-            uploadLinks = linksArray.toString()
-            $("#upload-links").val(uploadLinks)
-            li.innerHTML = newLink
-            linksDiv.appendChild(li);
+                linksArray.push(linkContent.value)
+                uploadLinks = linksArray.toString()
+                $("#upload-links").val(uploadLinks)
+                li.innerHTML = newLink
+                linksDiv.appendChild(li);
+            }
+
+
         }
 
+        function displaySavedLinks() {
+            let linksDiv = document.querySelector("#link-list");
+            let displayLinks = '';
 
-    }
-
-    function displaySavedLinks() {
-        let linksDiv = document.querySelector("#link-list");
-        let displayLinks= '';
-
-        for(let i=0; i<linksArray.length; i++){
-            let linkContent = linksArray[i]
-            let href = linkContent
-            if(linkContent.includes('@')){
-                href = 'mailto:' + href;
-            }
-            displayLinks += `<li class="list-group-item">
+            for (let i = 0; i < linksArray.length; i++) {
+                let linkContent = linksArray[i]
+                let href = linkContent
+                if (linkContent.includes('@')) {
+                    href = 'mailto:' + href;
+                }
+                displayLinks += `<li class="list-group-item">
                           <a href="${href}">
                             ${linkContent}
                           </a>
                           <i class="fa-sharp fa-solid fa-xmark deleteLink" onclick="deleteLink(${i})"></i>
                        </li>`
+            }
+            linksDiv.innerHTML = displayLinks;
         }
-        linksDiv.innerHTML = displayLinks;
-    }
 
 
-    function deleteLink(index) {
-        linksArray.splice(index, 1)
-        uploadLinks = linksArray.toString()
-        $("#upload-links").val(uploadLinks)
-        displaySavedLinks()
-    }
+        function deleteLink(index) {
+            linksArray.splice(index, 1)
+            uploadLinks = linksArray.toString()
+            $("#upload-links").val(uploadLinks)
+            displaySavedLinks()
+        }
 
 
-</script>
+    </script>
 
 </body>
 

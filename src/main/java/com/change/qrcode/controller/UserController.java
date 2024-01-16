@@ -175,21 +175,37 @@ public class UserController {
                          @PathVariable int packageId,
                          @PathVariable int amount) throws ServletException {
 
-       // Bu bilgileri kendi Paytr hesabınıza göre güncelleyin
+        List<Packages> packagesList = packagesRepository.findAll();
+        Packages packageToUse;
+        var selectedPackage = packagesList.stream()
+        .filter(p -> p.getId() == packageId)
+        .findFirst();
+
+        if (selectedPackage.isPresent()) {
+            packageToUse = selectedPackage.get();
+
+        } else {
+            return "error";
+        }
+        String productName = packageToUse.getName();
+        Integer productAmount = packageToUse.getPrice();
+        String basketString = "[{\"product\":\"" + productName + "\",\"amount\":\"" + productAmount + ".00\",\"quantity\":1}]";
+        byte[] basketBytes = basketString.getBytes();
+
         String merchantId = "420534";
         String merchantKey = "pSP1odrTZQaZcP2j";
         String merchantSalt = "pM1gGwJxu97z5JK8";
         String apiUrl = "https://www.paytr.com/odeme/api/get-token";
 
         String email = "qrcode@gmail.com";
-        String paymentAmount = String.valueOf(amount); // 9.99 için 9.99 * 100 = 999 gönderilmelidir.
+        String paymentAmount = String.valueOf(productAmount*100); // 9.99 için 9.99 * 100 = 999 gönderilmelidir.
         String merchantOid = generateUniqueMerchantOid(); // Benzersiz olmalıdır
         String user_name = "qrcode@gmail.com";
         String user_address = "Antalya";
         String user_phone = "5554443322";
         String merchant_ok_url = "https://www.changeqr.com/payment/result";
         String merchant_fail_url = "https://www.changeqr.com/payment/result";
-        String user_basket = Base64.getEncoder().encodeToString("[{\"product\":\"Premium Paket\",\"amount\":\"100.00\",\"quantity\":1}]".getBytes()); 
+        String user_basket = Base64.getEncoder().encodeToString(basketBytes);
         String userIp = getClientIp(httpServletRequest);
         String timeout_limit = "30";    
         int debug_on = 1;   
@@ -255,52 +271,6 @@ public class UserController {
         return "user/payment";
     }
     
-    @PostMapping("/resultPackages")
-    @ResponseBody
-    public ResponseEntity<String>  resultPackages(HttpServletRequest httpServletRequest,
-                                    @RequestParam("merchant_oid") String merchantOid,
-                                    @RequestParam("status") String status,
-                                    @RequestParam("total_amount") String totalAmount,
-                                    @RequestParam("hash") String hash,
-                                    Model model,
-                                    RedirectAttributes redirectAttributes) throws ServletException  {
-
-            // Ödeme bildirimi POST parametrelerini al
-            // API Entegrasyon Bilgileri - Mağaza paneline giriş yaparak BİLGİ sayfasından alabilirsiniz.
-            String merchantKey = "pSP1odrTZQaZcP2j";
-            String merchantSalt = "pM1gGwJxu97z5JK8";
-
-            String combined = merchantOid + merchantSalt + status + totalAmount;
-            String generatedHash = generateHmacSha256(combined, merchantKey);
-
-            // Oluşturulan hash'i, paytr'dan gelen post içindeki hash ile karşılaştır
-            // if (!hash.equals(generatedHash)) {
-            //     return "PAYTR notification failed: bad hash";
-
-            // }
-
-            // BURADA YAPILMASI GEREKENLER
-            // 1) Siparişin durumunu merchantOid değerini kullanarak veri tabanınızdan sorgulayın.
-            // 2) Eğer sipariş zaten daha önceden onaylandıysa veya iptal edildiyse "OK" dönerek işlemi sonlandırın.
-            // model.addAttribute("merchantOid", merchantOid);
-            // model.addAttribute("status", status);
-            // model.addAttribute("totalAmount", totalAmount);
-
-            if ("success".equals(status)) { // Ödeme Onaylandı
-                // Bildirimin alındığını PayTR sistemine bildir.
-                return ResponseEntity.ok("OK");
-                // BURADA YAPILMASI GEREKENLER ONAY İŞLEMLERİDİR.
-                // Diğer işlemleri ekleyin
-            } else { // Ödemeye Onay Verilmedi
-                // Bildirimin alındığını PayTR sistemine bildir.
-                return ResponseEntity.ok("OK");
-                // BURADA YAPILMASI GEREKENLER
-                // Diğer işlemleri ekleyin
-            }
-            // Bildirimin alındığını PayTR sistemine bildir.
-       
-    }
-
     @GetMapping("/edit/qr/{id}")
     public String qrEdit(HttpServletRequest httpServletRequest,
                          Model model,
@@ -428,17 +398,6 @@ public class UserController {
         return Base64.getEncoder().encodeToString(hash);
     }
 
-    private String generateHmacSha256(String data, String key) {
-        try {
-            Mac sha256Hmac = Mac.getInstance("HmacSHA256");
-            SecretKeySpec secretKey = new SecretKeySpec(key.getBytes(StandardCharsets.UTF_8), "HmacSHA256");
-            sha256Hmac.init(secretKey);
-            byte[] hashBytes = sha256Hmac.doFinal(data.getBytes(StandardCharsets.UTF_8));
-            return Base64.getEncoder().encodeToString(hashBytes);
-        } catch (Exception e) {
-            throw new RuntimeException("Error generating hash: " + e.getMessage());
-        }
-    }
 
     private String getClientIp(HttpServletRequest request) {
         String xForwardedForHeader = request.getHeader("X-Forwarded-For");
