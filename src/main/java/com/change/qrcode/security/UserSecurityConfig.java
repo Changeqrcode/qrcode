@@ -19,10 +19,12 @@ public class UserSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
-        http.authorizeRequests()
-        .antMatchers("/user/login/qr/**", "/user/logout/qr/**", "/user/resultPackages").permitAll()
-        .antMatchers("/user/**").hasRole("USER")
-        .and()
-        .exceptionHandling().accessDeniedHandler(accessDeniedHandler);
+        http.authorizeRequests().antMatchers("/user/login/qr/**",
+                "/user/logout/qr/**","/user/resultPackages").permitAll();
+
+        http.antMatcher("/user/**")
+                .authorizeRequests().anyRequest().hasRole("USER")
+                .and()
+                .exceptionHandling().accessDeniedHandler(accessDeniedHandler);
     }
 }
