@@ -242,7 +242,7 @@ public class UserController {
     
     @PostMapping("/resultPackages")
     @ResponseBody
-    public ResponseEntity<String>  resultPackages(HttpServletRequest httpServletRequest,
+    public String  resultPackages(HttpServletRequest httpServletRequest,
                                     @RequestParam("merchant_oid") String merchantOid,
                                     @RequestParam("status") String status,
                                     @RequestParam("total_amount") String totalAmount,
@@ -260,7 +260,8 @@ public class UserController {
 
             // Oluşturulan hash'i, paytr'dan gelen post içindeki hash ile karşılaştır
             if (!hash.equals(generatedHash)) {
-                return ResponseEntity.ok("PAYTR notification failed: bad hash");
+                return "PAYTR notification failed: bad hash";
+
             }
 
             // BURADA YAPILMASI GEREKENLER
@@ -272,12 +273,12 @@ public class UserController {
 
             if ("success".equals(status)) { // Ödeme Onaylandı
                 // Bildirimin alındığını PayTR sistemine bildir.
-                return ResponseEntity.ok("OK");
+                return "OK";
                 // BURADA YAPILMASI GEREKENLER ONAY İŞLEMLERİDİR.
                 // Diğer işlemleri ekleyin
             } else { // Ödemeye Onay Verilmedi
                 // Bildirimin alındığını PayTR sistemine bildir.
-                return ResponseEntity.ok("OK");
+                return "OK";
                 // BURADA YAPILMASI GEREKENLER
                 // Diğer işlemleri ekleyin
             }
