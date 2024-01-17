@@ -103,6 +103,15 @@ public class UserController {
         User u = userRepository.findByUsername(username);
         if(u != null && passwordEncoder.matches(password, u.getPassword())){
 
+            if(u.getPackageEndDate() == null && u.getPackages().getId() != 1){
+                List<Packages> packagesList = packagesRepository.findAll();
+
+                var freePackage = packagesList.stream()
+                        .filter(fp -> fp.getId() == 1L)
+                        .findFirst().get();
+                u.setPackages(freePackage);
+                userRepository.saveAndFlush(u);
+            }
             if(!p.getUser().getUsername().equals(username)){
 
                 redirectAttributes.addFlashAttribute("loginError", "Girilen kullanıcı adı veya şifre hatalı.");
@@ -194,6 +203,8 @@ public class UserController {
         }
 
         User u = QRRepository.findById(qrid).orElseThrow().getUser();
+        u.setPackages(packageToUse);
+        userRepository.saveAndFlush(u);
 
         String productName = packageToUse.getName();
         Integer productAmount = packageToUse.getPrice();
@@ -208,10 +219,6 @@ public class UserController {
         String email = "qrcode@gmail.com";
         String paymentAmount = String.valueOf(productAmount*100); // 9.99 için 9.99 * 100 = 999 gönderilmelidir.
         String merchantOid = generateUniqueMerchantOid(); // Benzersiz olmalıdır
-
-        HttpSession session = httpServletRequest.getSession(true);
-        session.setAttribute("merchantOid", merchantOid);
-        session.setAttribute("packageId", packageId);
 
         String user_name = "qrcode@gmail.com";
         String user_address = "Antalya";
