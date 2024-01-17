@@ -11,7 +11,7 @@ import com.change.qrcode.repository.UserRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
+import java.time.LocalDate;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -102,16 +102,25 @@ public class UserController {
 
         User u = userRepository.findByUsername(username);
         if(u != null && passwordEncoder.matches(password, u.getPassword())){
+            List<Packages> packagesList = packagesRepository.findAll();
 
+            var freePackage = packagesList.stream()
+                                        .filter(fp -> fp.getId() == 1L)
+                                        .findFirst().get();
             if(u.getPackageEndDate() == null && u.getPackages().getId() != 1){
-                List<Packages> packagesList = packagesRepository.findAll();
-
-                var freePackage = packagesList.stream()
-                        .filter(fp -> fp.getId() == 1L)
-                        .findFirst().get();
+                
                 u.setPackages(freePackage);
                 userRepository.saveAndFlush(u);
             }
+            
+            Date today = java.sql.Date.valueOf(LocalDate.now());
+            Date packageEndDate = u.getPackageEndDate(); // Senin metodunun çıktısını burada kullan
+            if (packageEndDate.before(today)) {
+                u.setPackageEndDate(null);
+                u.setPackages(freePackage);
+            }
+
+
             if(!p.getUser().getUsername().equals(username)){
 
                 redirectAttributes.addFlashAttribute("loginError", "Girilen kullanıcı adı veya şifre hatalı.");

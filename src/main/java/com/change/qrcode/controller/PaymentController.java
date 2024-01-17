@@ -10,10 +10,9 @@ import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
-import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,7 +28,6 @@ import com.change.qrcode.model.QR;
 import com.change.qrcode.model.User;
 import com.change.qrcode.repository.PackagesRepository;
 import com.change.qrcode.repository.QRRepository;
-import com.change.qrcode.repository.UploadImageRepository;
 import com.change.qrcode.repository.UserRepository;
 
 
