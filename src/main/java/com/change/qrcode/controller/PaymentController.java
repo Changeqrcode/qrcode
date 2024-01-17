@@ -3,8 +3,8 @@ package com.change.qrcode.controller;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.util.Base64;
-import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
@@ -12,22 +12,45 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.change.qrcode.model.Packages;
+import com.change.qrcode.model.QR;
+import com.change.qrcode.model.User;
+import com.change.qrcode.repository.PackagesRepository;
+import com.change.qrcode.repository.QRRepository;
+import com.change.qrcode.repository.UploadImageRepository;
+import com.change.qrcode.repository.UserRepository;
+
 
 @Controller
 @RequestMapping("/payment")
 public class PaymentController {
+
+    private QRRepository QRRepository;
+
+	private PackagesRepository packagesRepository;
+
+
+    private UserRepository userRepository;
+
+    public PaymentController(QRRepository QRRepository,
+                          UserRepository userRepository, 
+                          PackagesRepository packagesRepository) {
+        this.QRRepository = QRRepository;
+        this.userRepository = userRepository;
+        this.packagesRepository = packagesRepository;
+    }
 
 
     @PostMapping("/result")
@@ -52,6 +75,57 @@ public class PaymentController {
         }
 
     }
+
+    @GetMapping("/savepackage/{id}")
+    public String savePackage(HttpServletRequest httpServletRequest,
+            Model model,
+            RedirectAttributes redirectAttributes,
+            @PathVariable UUID id) throws ServletException {
+
+        HttpSession session = httpServletRequest.getSession(false);
+
+        List<Packages> packagesList = packagesRepository.findAll();
+
+        var packageIdSaved = (Integer) session.getAttribute("packageId");
+        var selectedPackage = packagesList.stream()
+                .filter(p -> p.getId() == packageIdSaved)
+                .findFirst().get();
+
+
+        QR p = QRRepository.findById(id).orElseThrow();
+        User u = p.getUser();
+
+        u.setPackageEndDate(java.sql.Date.valueOf(LocalDate.now().plusYears(1)));
+        u.setPackages(selectedPackage);
+        userRepository.saveAndFlush(u);
+        return "payment/savepackage";
+
+    }
+
+    @GetMapping("/failpackage/{id}")
+    public String failPackage(HttpServletRequest httpServletRequest,
+            Model model,
+            RedirectAttributes redirectAttributes,
+            @PathVariable UUID id) throws ServletException {
+
+        List<Packages> packagesList = packagesRepository.findAll();
+
+        var freePackage = packagesList.stream()
+                .filter(p -> p.getId() == 1L)
+                .findFirst().get();
+
+
+        QR p = QRRepository.findById(id).orElseThrow();
+        User u = p.getUser();
+
+        u.setPackageEndDate(null);
+        u.setPackages(freePackage);
+        userRepository.saveAndFlush(u);
+        return "payment/failpackage";
+
+    }
+
+
 
     private String generateHmacSha256(String data, String key) {
         try {

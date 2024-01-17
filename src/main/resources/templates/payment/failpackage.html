@@ -13,25 +13,8 @@
 </head>
 <body>
 
-    <h1>Ödeme Sonucu</h1>
 
-    <p>Merchant OID: ${merchantOid}</p>
-    <p>Durum: ${status}</p>
-    <p>Toplam Tutar: ${totalAmount}</p>
-
-    <hr>
-
-    <h2>Sonuç:</h2>
-    
-    <!-- Ödeme başarılıysa -->
-    <c:if test="${status eq 'success'}">
-        <p style="color: green;">Ödeme başarıyla tamamlandı. Teşekkür ederiz!</p>
-    </c:if>
-
-    <!-- Ödeme başarısız veya onay verilmediyse -->
-    <c:if test="${status ne 'success'}">
         <p style="color: red;">Ödeme başarısız veya onay verilmedi. Lütfen tekrar deneyin.</p>
-    </c:if>
 
 </body>
 </html>
