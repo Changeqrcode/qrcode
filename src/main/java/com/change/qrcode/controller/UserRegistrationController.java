@@ -1,6 +1,7 @@
 package com.change.qrcode.controller;
 
 import com.change.qrcode.dto.UserRegistrationDto;
+import com.change.qrcode.model.Packages;
 import com.change.qrcode.model.QR;
 import com.change.qrcode.model.User;
 import com.change.qrcode.repository.PackagesRepository;
@@ -95,13 +96,18 @@ public class UserRegistrationController {
 				data.put("errorMessage", "Girilen şifreler birbiriyle uyuşmamaktadır.");
 				return data;
 			}
+			        List<Packages> packagesList = packagesRepository.findAll();
+					var freePackage = packagesList.stream()
+							.filter(p -> p.getId() == 1L)
+							.findFirst().get();
+
 
 			User newUser = new User();
 			newUser.setUsername(username);
 			newUser.setPassword(passwordEncoder.encode(password));
 			newUser.setRoles(Arrays.asList(roleRepository.findByName("ROLE_USER")));
 			newUser.setEmail(email);
-			newUser.setPackages(packagesRepository.findByName("Free"));
+			newUser.setPackages(freePackage);
 			User u = userService.save(newUser);
 
 			entity.setUser(u);

@@ -105,7 +105,7 @@ public class UserController {
             if(!p.getUser().getUsername().equals(username)){
 
                 redirectAttributes.addFlashAttribute("loginError", "Girilen kullanıcı adı veya şifre hatalı.");
-                return "redirect:/qr/" + id;
+                return "redirect:/qr/login/" + id;
             }
 
             UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(username, password);
@@ -163,23 +163,27 @@ public class UserController {
         // İlk elemanı kaldır ve listenin sonuna ekle
         Packages firstPackage = packagesList.remove(0);
         packagesList.add(firstPackage);
+        model.addAttribute("qrid", id);
         model.addAttribute("packages", packagesList);
         model.addAttribute("currPackage", pckg.getId());
         return "user/packages";
     }
 
-    @GetMapping("/makePayment/{packageId}/{amount}")
+    @GetMapping("/makePayment/{packageId}/{amount}/{qrid}")
     public String  makePayment(HttpServletRequest httpServletRequest,
                          Model model,
                          RedirectAttributes redirectAttributes,
                          @PathVariable int packageId,
-                         @PathVariable int amount) throws ServletException {
+                         @PathVariable int amount,
+                         @PathVariable UUID qrid) throws ServletException {
 
         List<Packages> packagesList = packagesRepository.findAll();
         Packages packageToUse;
         var selectedPackage = packagesList.stream()
         .filter(p -> p.getId() == packageId)
         .findFirst();
+        
+       
 
         if (selectedPackage.isPresent()) {
             packageToUse = selectedPackage.get();
@@ -187,6 +191,9 @@ public class UserController {
         } else {
             return "error";
         }
+
+        User u = QRRepository.findById(qrid).orElseThrow().getUser();
+        
         String productName = packageToUse.getName();
         Integer productAmount = packageToUse.getPrice();
         String basketString = "[{\"product\":\"" + productName + "\",\"amount\":\"" + productAmount + ".00\",\"quantity\":1}]";
@@ -200,6 +207,11 @@ public class UserController {
         String email = "qrcode@gmail.com";
         String paymentAmount = String.valueOf(productAmount*100); // 9.99 için 9.99 * 100 = 999 gönderilmelidir.
         String merchantOid = generateUniqueMerchantOid(); // Benzersiz olmalıdır
+
+        HttpSession session = httpServletRequest.getSession(true);
+        session.setAttribute("merchantOid", merchantOid);
+        session.setAttribute("packageId", packageId);
+
         String user_name = "qrcode@gmail.com";
         String user_address = "Antalya";
         String user_phone = "5554443322";
@@ -209,7 +221,7 @@ public class UserController {
         String userIp = getClientIp(httpServletRequest);
         String timeout_limit = "30";    
         int debug_on = 1;   
-        int test_mode = 0;      
+        int test_mode = 1;      
         int no_installment = 0; 
         int max_installment = 0; 
         String currency = "TL";          

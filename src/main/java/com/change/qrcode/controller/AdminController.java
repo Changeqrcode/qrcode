@@ -142,7 +142,9 @@ public class AdminController {
                 e.printStackTrace();
             }
         }
-
+        List<Packages> packagesList = packagesRepository.findAll();
+        packagesList.sort(Comparator.comparing(Packages::getId));
+        model.addAttribute("packages", packagesList);
         model.addAttribute("qrCodeUrls", qrCodeUrls);
         return "admin/home";
     }

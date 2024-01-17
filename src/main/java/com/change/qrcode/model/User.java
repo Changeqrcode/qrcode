@@ -5,6 +5,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+
+import java.sql.Date;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.Set;
@@ -33,6 +35,9 @@ public class User {
     private Set<QR> QRS;
     @Column(name="resetPasswordToken")
     private String resetPasswordToken;
+
+    @Column(name="package_enddate")
+    private Date packageEndDate;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(
