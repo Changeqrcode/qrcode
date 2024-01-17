@@ -40,6 +40,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Comparator;
@@ -193,7 +194,7 @@ public class UserController {
         }
 
         User u = QRRepository.findById(qrid).orElseThrow().getUser();
-        
+
         String productName = packageToUse.getName();
         Integer productAmount = packageToUse.getPrice();
         String basketString = "[{\"product\":\"" + productName + "\",\"amount\":\"" + productAmount + ".00\",\"quantity\":1}]";
@@ -215,8 +216,8 @@ public class UserController {
         String user_name = "qrcode@gmail.com";
         String user_address = "Antalya";
         String user_phone = "5554443322";
-        String merchant_ok_url = "https://www.changeqr.com/payment/result";
-        String merchant_fail_url = "https://www.changeqr.com/payment/result";
+        String merchant_ok_url = "https://www.changeqr.com/user/savepackage/" + qrid;
+        String merchant_fail_url = "https://www.changeqr.com/user/failpackage/"+ qrid;
         String user_basket = Base64.getEncoder().encodeToString(basketBytes);
         String userIp = getClientIp(httpServletRequest);
         String timeout_limit = "30";    
@@ -283,6 +284,57 @@ public class UserController {
         return "user/payment";
     }
     
+    @GetMapping("/savepackage/{id}")
+    public String savePackage(HttpServletRequest httpServletRequest,
+            Model model,
+            RedirectAttributes redirectAttributes,
+            @PathVariable UUID id) throws ServletException {
+
+        HttpSession session = httpServletRequest.getSession(false);
+
+        List<Packages> packagesList = packagesRepository.findAll();
+
+        var packageIdSaved = (Integer) session.getAttribute("packageId");
+        var selectedPackage = packagesList.stream()
+                .filter(p -> p.getId() == packageIdSaved)
+                .findFirst().get();
+
+
+        QR p = QRRepository.findById(id).orElseThrow();
+        User u = p.getUser();
+
+        u.setPackageEndDate(java.sql.Date.valueOf(LocalDate.now().plusYears(1)));
+        u.setPackages(selectedPackage);
+        userRepository.saveAndFlush(u);
+        return "user/savepackage";
+
+    }
+
+    @GetMapping("/failpackage/{id}")
+    public String failPackage(HttpServletRequest httpServletRequest,
+            Model model,
+            RedirectAttributes redirectAttributes,
+            @PathVariable UUID id) throws ServletException {
+
+        List<Packages> packagesList = packagesRepository.findAll();
+
+        var freePackage = packagesList.stream()
+                .filter(p -> p.getId() == 1L)
+                .findFirst().get();
+
+
+        QR p = QRRepository.findById(id).orElseThrow();
+        User u = p.getUser();
+
+        u.setPackageEndDate(null);
+        u.setPackages(freePackage);
+        userRepository.saveAndFlush(u);
+        return "user/savepackage";
+
+    }
+
+
+
     @GetMapping("/edit/qr/{id}")
     public String qrEdit(HttpServletRequest httpServletRequest,
                          Model model,
