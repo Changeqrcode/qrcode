@@ -85,9 +85,6 @@ public class PaymentController {
 
         List<Packages> packagesList = packagesRepository.findAll();
 
-        var packageIdSaved = (Integer) session.getAttribute("packageId");
-
-
         QR p = QRRepository.findById(id).orElseThrow();
         User u = p.getUser();
 
