@@ -15,105 +15,75 @@
 
   <!-- Custom styles for this template-->
   <link rel="stylesheet" href="/css/styles.css">
-  <link href="../css/sb-admin-2.min.css" rel="stylesheet">
+  <link href="/css/qrpage.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
 
-  <style>
-    .myLinks{
-      padding-left: calc(var(--bs-gutter-x) * .5);
-    }
-    @media ( max-width: 1200px){
-      .logo{
-        width: 20% !important;
-      }
-      h2{
-        font-size: 2rem;
-        width: 100%;
-      }
-      h3{
-        font-size: 1.75rem;
-        width: 100%;
-      }
-    }
-    @media ( max-width: 768px) {
-      .logo {
-        width: 40% !important;
-      }
-
-      h2, h3 {
-        font-size: 1rem;
-        width: 100%;
-      }
-    }
-    .pac-container, .pac-item { width: 100px !important;}
-  </style>
 </head>
 
-<body style="    background-color: #d8d7d5;">
-<div class="container text-center mt-3" style="width: 100%;">
-  <form method="get" th:action="@{/user/login/qr/{id}(id = ${qr.id})}">
-    <button class="btn btn-primary"  s type="submit">Kullanıcı Girişi - User Login</button>
-  </form>
-</div>
-<div class="container text-center">
-  <div class="row text-center mt-5 justify-content-center" style="border-radius: 1rem;
-                                            border: 5px solid #d8d7d5;
-                                            background-color: #d8d7d5;
-                                            opacity: 0.8;">
-      <img class="logo" src="/img/mainQRPageLogoRmBg.png" style="height: auto;
-                                                 width: 15%;">
-   <div id="google_translate_element"></div>
-  </div>
-  <form method="post" th:action="@{/uploadData/{id}(id = ${qr.id})}" enctype="multipart/form-data">
-    <div class="row mt-2">
-        <!-- error message -->
-        <div th:if="${error != null && !error.isEmpty()}">
-          <div class="alert alert-danger" th:text="${error}"></div>
-        </div>
+<body>
 
-        <div class="col">
-          <div class="form-floating">
-            <text class="form-control" id="floatingTextarea"
-                      style="height: 400px; background-color: white; color: black; font-size: 1.5rem;text-align: left;" name="content" disabled
-                      th:text="${qr.textContent}">
-          </text>
-            <label for="floatingTextarea">BİLGİLER/INFO</label>
-          </div>
-        </div>
-
+  <header>
+    <div class="link-menu">
+      <form id="submitLoginForm" method="get" th:action="@{/user/login/qr/{id}(id = ${qr.id})}"></form>
+      </form>
+      <span class="item 1" id="submitLogin"><i class="fas fa-door-open"></i> GİRİŞ</span>
+      <div id="google_translate_element"></div>
     </div>
-    <div class="row mt-2" th:if="${links != null && links != ''}">
-      <h2>LİNKLER/LINKS</h2>
-
-      <span th:text="${links}" style="display: none;" id="saved-links"></span>
-      <ul id="link-list" class="list-group myLinks">
-        <li class="list-group-item">
-        </li>
-      </ul>
-
+    <div class="logo">
+                  <!-- Java tarafından gelen logo değeri varsa -->
+                  <img class="logo" th:if="${logo}" th:src="${logo}" style="height: auto; width: 15%;">
+                  <!-- Java tarafından gelen logo değeri yoksa -->
+                  <img class="logo" th:unless="${logo}" src="/img/mainQRPageLogoRmBg.png" style="height: auto; width: 15%;">
     </div>
+    
+</header>
+<form method="post" th:action="@{/uploadData/{id}(id = ${qr.id})}" enctype="multipart/form-data"></form>
+<div class="body-content">
+     <!-- error message -->
+     <div th:if="${error != null && !error.isEmpty()}">
+      <div class="alert alert-danger" th:text="${error}"></div>
+    </div>
+  <div class="containerb info">
 
-    <div class="row mt-2">
-      <div class="col">
-        <div class="app mb-3">
-          <div id="queued-form" class="mt-2">
-            <div class="header">
-              <h3>RESİMLER/IMAGES</h3>
-            </div>
-            <div class="queued-div">
-              <div th:each="image: ${images}" class="image">
-                <img th:src="${image}" alt="image">
-              </div>
-            </div>
-          </div>
-        </div>
+      <div class="info-section">
+        <h2>Bilgiler / Info</h2>
+        <text class="form-control" id="floatingTextarea"
+                            style="height: 400px; background-color: white; color: black; font-size: 1.5rem;text-align: left;" name="content" disabled
+                            th:text="${qr.textContent}">
+                </text>
       </div>
-    </div>
-  </form>
 
+
+      <div class="links-section">
+        <h2>Linkler / Links</h2>
+          <span th:text="${links}" style="display: none;" id="saved-links"></span>
+          <ul id="link-list" class="list-group myLinks">
+            <li class="list-group-item">
+            </li>
+          </ul>
+      </div>
+
+  </div>
+  <div class="upload-section">
+        <div id="queued-form" class="mt-2">
+          <div class="header">
+            <h3>RESİMLER/IMAGES</h3>
+          </div>
+          <div class="queued-div">
+            <div th:each="image: ${images}" class="image">
+              <img th:src="${image}" alt="image">
+            </div>
+          </div>
+        </div>
+  </div>
+</div>
 </div>
 
-
+</form>
 
 <script>
   let savedLinks = $("#saved-links").text(),
@@ -147,8 +117,14 @@
   function googleTranslateElementInit() {
     new google.translate.TranslateElement({pageLanguage: 'tr'}, 'google_translate_element');
   }
+  
   </script>
   
+  <script>
+    document.getElementById('submitLogin').addEventListener('click', function() {
+        document.getElementById('submitLoginForm').submit();
+    });
+</script>
 
   <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 

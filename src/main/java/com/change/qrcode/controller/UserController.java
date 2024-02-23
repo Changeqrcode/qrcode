@@ -374,15 +374,24 @@ public class UserController {
 
         Packages pckg = p.getUser().getPackages();
         String[] linkArray = links.split(",");
+        int linklen = linkArray.length;
+        int filelen = files.length;
+        var filename = files[0].getOriginalFilename();
+        if(links.equals("")){    
+            linklen = 0;
+        }
+        if(files.length == 1 && filename.equals("")){    
+            filelen = 0;
+        }
         if (text.length() > pckg.getCharacterLimit()) {
             redirectAttributes.addFlashAttribute("error", "Text limiti aşıldı. Daha fazlası için lütfen yüksek bir pakete geçiş yapınız.");
             redirectAttributes.addFlashAttribute("redirectLink", "/user/packages/" + id);
             return "redirect:/user/edit/qr/" + p.getId();
-        } else if (linkArray.length > pckg.getLinkLimit()) {
+        } else if (linklen > pckg.getLinkLimit()) {
             redirectAttributes.addFlashAttribute("error", "Link limiti aşıldı. Daha fazlası için lütfen yüksek bir pakete geçiş yapınız.");
             redirectAttributes.addFlashAttribute("redirectLink", "/user/packages/" + id);
             return "redirect:/user/edit/qr/" + p.getId();
-        } else if (files.length > pckg.getImageLimit()) {
+        } else if (filelen > pckg.getImageLimit()) {
             redirectAttributes.addFlashAttribute("error", "Fotoğraf limiti aşıldı. ");
             redirectAttributes.addFlashAttribute("redirectLink", "/user/packages/" + id);
             return "redirect:/user/edit/qr/" + p.getId();

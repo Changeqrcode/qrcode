@@ -13,7 +13,7 @@ public class MainController {
 	
 	@GetMapping("/")
 	public String home() {
-		return "redirect:admin/login";
+		return "redirect:http://www.changeqrcode.com";
 	}
 
 	@GetMapping("/accessDenied")
