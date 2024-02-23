@@ -115,13 +115,21 @@ public class UserController {
             
             Date today = java.sql.Date.valueOf(LocalDate.now());
             Date packageEndDate = u.getPackageEndDate(); // Senin metodunun çıktısını burada kullan
-            if (packageEndDate.before(today)) {
-                u.setPackageEndDate(null);
+            if(packageEndDate == null){
                 u.setPackages(freePackage);
+                
+            }
+            else{
+                if (packageEndDate.before(today)) {
+                    u.setPackageEndDate(null);
+                    u.setPackages(freePackage);
+                }
             }
 
 
             if(!p.getUser().getUsername().equals(username)){
+
+                var test = p.getUser().getUsername();
 
                 redirectAttributes.addFlashAttribute("loginError", "Girilen kullanıcı adı veya şifre hatalı.");
                 return "redirect:/qr/login/" + id;
