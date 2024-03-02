@@ -346,10 +346,6 @@ public class UserController {
         
 
     
-        if(p.getLinks() == null || p.getLinks().isEmpty()){
-            p.setLinks("Deneme Linki - Sample Link");
-        }
-
         if (p.getTextContent() == null){
             p.setTextContent("");
         }

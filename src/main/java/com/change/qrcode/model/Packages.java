@@ -38,4 +38,7 @@ public class Packages {
     @Column(name = "price")
     private Integer price;
 
+    @Column(name = "year")
+    private Integer year;
+
 }

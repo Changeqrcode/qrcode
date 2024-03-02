@@ -159,8 +159,8 @@ public class AdminController {
             existingPackage.setCharacterLimit(updatedPackage.getCharacterLimit());
             existingPackage.setLinkLimit(updatedPackage.getLinkLimit());
             existingPackage.setImageLimit(updatedPackage.getImageLimit());
-            existingPackage.setLogoAllowed(updatedPackage.getLogoAllowed());
-            existingPackage.setLocationAllowed(updatedPackage.getLogoAllowed());
+            existingPackage.setLogoAllowed(updatedPackage.getLogoAllowed() != null ? updatedPackage.getLogoAllowed() : false);
+            existingPackage.setLocationAllowed(updatedPackage.getLocationAllowed() != null ? updatedPackage.getLocationAllowed() : false);    
             existingPackage.setPrice(updatedPackage.getPrice());
 
             packagesRepository.save(existingPackage);

@@ -87,6 +87,9 @@
     
         <label for="price" th:text="${'Price: ' + package.price}"></label>
         <input type="number" id="price" name="price" th:value="${package.price}" />
+
+        <label for="year" th:text="${'Year: ' + package.year}"></label>
+        <input type="number" id="year" name="year" th:value="${package.year}" />
     
         <button type="submit" class="btn btn-primary mt-3">Güncelle - Update</button>
  

@@ -80,13 +80,19 @@ public class PaymentController {
             RedirectAttributes redirectAttributes,
             @PathVariable UUID id) throws ServletException {
 
-
-        List<Packages> packagesList = packagesRepository.findAll();
-
         QR p = QRRepository.findById(id).orElseThrow();
         User u = p.getUser();
 
-        u.setPackageEndDate(java.sql.Date.valueOf(LocalDate.now().plusYears(1)));
+        List<Packages> packagesList = packagesRepository.findAll();
+
+        var userPackage = packagesList.stream()
+        .filter(pa -> pa.getId() == u.getPackages().getId())
+        .findFirst().get().getYear();
+
+
+        
+        
+        u.setPackageEndDate(java.sql.Date.valueOf(LocalDate.now().plusYears(userPackage)));
         userRepository.saveAndFlush(u);
         return "payment/savepackage";
 
