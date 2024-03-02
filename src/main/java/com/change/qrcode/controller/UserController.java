@@ -246,7 +246,7 @@ public class UserController {
         String userIp = getClientIp(httpServletRequest);
         String timeout_limit = "30";    
         int debug_on = 1;   
-        int test_mode = 1;      
+        int test_mode = 0;      
         int no_installment = 0; 
         int max_installment = 0; 
         String currency = "TL";          
