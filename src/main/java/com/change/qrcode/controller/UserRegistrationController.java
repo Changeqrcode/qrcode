@@ -107,7 +107,6 @@ public class UserRegistrationController {
 			newUser.setPassword(passwordEncoder.encode(password));
 			newUser.setRoles(Arrays.asList(roleRepository.findByName("ROLE_USER")));
 			newUser.setEmail(email);
-			newUser.setPackages(freePackage);
 			User u = userService.save(newUser);
 
 			entity.setUser(u);

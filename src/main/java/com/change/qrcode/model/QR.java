@@ -5,6 +5,7 @@ import lombok.Setter;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
+import java.sql.Date;
 import java.util.Set;
 import java.util.UUID;
 
@@ -37,4 +38,11 @@ public class QR {
 
     @OneToMany(mappedBy= "QR")
     private Set<UploadImage> images;
+
+    @ManyToOne
+    @JoinColumn(name="package_id")
+    private Packages packages;
+
+    @Column(name="package_enddate")
+    private Date packageEndDate;
 }

@@ -88,8 +88,14 @@
         <label for="price" th:text="${'Price: ' + package.price}"></label>
         <input type="number" id="price" name="price" th:value="${package.price}" />
 
+        <label for="day" th:text="${'Day: ' + package.day}"></label>
+        <input type="number" id="day" name="day" th:value="${package.day}" />
+
         <label for="year" th:text="${'Year: ' + package.year}"></label>
         <input type="number" id="year" name="year" th:value="${package.year}" />
+
+        <label for="packageValue" th:text="${'Package Value' }"></label>
+        <input type="text" id="packageValue" name="packageValue" th:value="${package.packageValue}" />
     
         <button type="submit" class="btn btn-primary mt-3">Güncelle - Update</button>
  

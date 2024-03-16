@@ -11,11 +11,8 @@ import com.change.qrcode.repository.UserRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.time.LocalDate;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -38,17 +35,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 
 @Controller
@@ -102,30 +90,6 @@ public class UserController {
 
         User u = userRepository.findByUsername(username);
         if(u != null && passwordEncoder.matches(password, u.getPassword())){
-            List<Packages> packagesList = packagesRepository.findAll();
-
-            var freePackage = packagesList.stream()
-                                        .filter(fp -> fp.getId() == 1L)
-                                        .findFirst().get();
-            if(u.getPackageEndDate() == null && u.getPackages().getId() != 1){
-                
-                u.setPackages(freePackage);
-                userRepository.saveAndFlush(u);
-            }
-            
-            Date today = java.sql.Date.valueOf(LocalDate.now());
-            Date packageEndDate = u.getPackageEndDate(); // Senin metodunun çıktısını burada kullan
-            if(packageEndDate == null){
-                u.setPackages(freePackage);
-                
-            }
-            else{
-                if (packageEndDate.before(today)) {
-                    u.setPackageEndDate(null);
-                    u.setPackages(freePackage);
-                }
-            }
-
 
             if(!p.getUser().getUsername().equals(username)){
 
@@ -165,11 +129,20 @@ public class UserController {
         QR p = QRRepository.findById(id).orElseThrow();
         p.setUser(null);
         p.setIsRecorded(false);
-        p.setImages(null);
         p.setLinks(null);
         p.setLogo(null);
         p.setTextContent(null);
+        uploadImageRepository.deleteAllByQRId(p.getId());
+
+        UploadImage logo = p.getLogo();
+        p.setLogo(null);
+
         QRRepository.saveAndFlush(p);
+
+        if(Objects.nonNull(logo)){
+            uploadImageRepository.delete(logo);
+        }
+
         httpServletRequest.logout();
         return "redirect:/qr/" + id;
     }
@@ -181,15 +154,24 @@ public class UserController {
                          RedirectAttributes redirectAttributes,
                          @PathVariable UUID id) throws ServletException  {
         QR p = QRRepository.findById(id).orElseThrow();
-        Packages pckg = p.getUser().getPackages();
+        Packages pckg = p.getPackages();
 
         List<Packages> packagesList = packagesRepository.findAll();
         // Gelen paketleri ID'lerine göre küçükten büyüğe sırala
         packagesList.sort(Comparator.comparing(Packages::getId));
 
-        // İlk elemanı kaldır ve listenin sonuna ekle
-        Packages firstPackage = packagesList.remove(0);
+        // Free olan paketi en sona ekle
+        Packages firstPackage = null;
+
+        for(Packages pack:packagesList){
+            if(pack.getPackageValue().equals(AdminController.FREE_PACKAGE_VALUE)){
+                firstPackage = pack;
+            }
+        }
+
+        packagesList.remove(firstPackage);
         packagesList.add(firstPackage);
+
         model.addAttribute("qrid", id);
         model.addAttribute("packages", packagesList);
         model.addAttribute("currPackage", pckg.getId());
@@ -207,10 +189,8 @@ public class UserController {
         List<Packages> packagesList = packagesRepository.findAll();
         Packages packageToUse;
         var selectedPackage = packagesList.stream()
-        .filter(p -> p.getId() == packageId)
-        .findFirst();
-        
-       
+            .filter(p -> p.getId() == packageId)
+            .findFirst();
 
         if (selectedPackage.isPresent()) {
             packageToUse = selectedPackage.get();
@@ -219,9 +199,9 @@ public class UserController {
             return "error";
         }
 
-        User u = QRRepository.findById(qrid).orElseThrow().getUser();
-        u.setPackages(packageToUse);
-        userRepository.saveAndFlush(u);
+        QR qr = QRRepository.findById(qrid).orElseThrow();
+        qr.setPackages(packageToUse);
+        QRRepository.saveAndFlush(qr);
 
         String productName = packageToUse.getName();
         Integer productAmount = packageToUse.getPrice();
@@ -323,8 +303,7 @@ public class UserController {
             redirectAttributes.addFlashAttribute("loginError", "Girilen kullanıcı bu qr kodun sahibi değildir.");
             return "redirect:/qr/" + id;
         }
-        
-        Packages pckg = p.getUser().getPackages();
+
         List<UploadImage> images = uploadImageRepository.findByQRId(p.getId());
 
         if(images != null && images.size() > 0){
@@ -368,7 +347,7 @@ public class UserController {
                               @PathVariable UUID id) throws IOException, ServletException {
         QR p = QRRepository.findById(id).orElseThrow();
 
-        Packages pckg = p.getUser().getPackages();
+        Packages pckg = p.getPackages();
         String[] linkArray = links.split(",");
         int linklen = linkArray.length;
         int filelen = files.length;

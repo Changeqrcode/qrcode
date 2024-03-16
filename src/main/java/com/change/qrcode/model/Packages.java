@@ -41,4 +41,10 @@ public class Packages {
     @Column(name = "year")
     private Integer year;
 
+    @Column(name = "day")
+    private Integer day;
+
+    @Column(name = "package_value")
+    private String packageValue;
+
 }

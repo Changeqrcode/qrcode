@@ -1,7 +1,9 @@
 package com.change.qrcode.controller;
 
+import com.change.qrcode.model.Packages;
 import com.change.qrcode.model.QR;
 import com.change.qrcode.model.UploadImage;
+import com.change.qrcode.repository.PackagesRepository;
 import com.change.qrcode.repository.QRRepository;
 import com.change.qrcode.repository.UploadImageRepository;
 import org.springframework.stereotype.Controller;
@@ -13,10 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.List;
-import java.util.UUID;
+import java.time.LocalDate;
+import java.util.*;
 
 @Controller
 @RequestMapping("/qr")
@@ -24,10 +24,13 @@ public class QRController {
 
     QRRepository QRRepository;
     UploadImageRepository uploadImageRepository;
+    PackagesRepository packagesRepository;
 
-    public QRController(QRRepository QRRepository, UploadImageRepository uploadImageRepository) {
+    public QRController(QRRepository QRRepository, UploadImageRepository uploadImageRepository
+            , PackagesRepository packagesRepository) {
         this.QRRepository = QRRepository;
         this.uploadImageRepository = uploadImageRepository;
+        this.packagesRepository = packagesRepository;
     }
 
     @GetMapping("/{id}")
@@ -38,6 +41,30 @@ public class QRController {
 
         List<String> encodeds = new ArrayList<>();
         QR p = QRRepository.findById(id).orElseThrow();
+        Packages pack = p.getPackages();
+
+        List<Packages> packagesList = packagesRepository.findAll();
+        Packages freePackage = packagesList.stream()
+                .filter(fp -> fp.getPackageValue().equals(AdminController.FREE_PACKAGE_VALUE))
+                .findFirst().get();
+
+        Date today = java.sql.Date.valueOf(LocalDate.now());
+        if(!pack.getPackageValue().equals(AdminController.FREE_PACKAGE_VALUE) && p.getPackageEndDate().before(today)){
+            p.setPackageEndDate(null);
+            p.setPackages(freePackage);
+            p.setLinks(null);
+            p.setTextContent(null);
+
+            UploadImage logo = p.getLogo();
+            p.setLogo(null);
+            uploadImageRepository.deleteAllByQRId(p.getId());
+
+            QRRepository.saveAndFlush(p);
+
+            if(Objects.nonNull(logo)){
+                uploadImageRepository.delete(logo);
+            }
+        }
 
         model.addAttribute("error", "");
 

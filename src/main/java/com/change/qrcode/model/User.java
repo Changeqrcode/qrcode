@@ -5,10 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-
-import java.sql.Date;
 import java.util.Collection;
-import java.util.Optional;
 import java.util.Set;
 
 @Entity
@@ -23,11 +20,6 @@ public class User {
 
     private String username;
 
-    
-    @ManyToOne
-    @JoinColumn(name="package_id")
-    private Packages packages;
-    
     private String password;
 
     private String email;
@@ -35,9 +27,6 @@ public class User {
     private Set<QR> QRS;
     @Column(name="resetPasswordToken")
     private String resetPasswordToken;
-
-    @Column(name="package_enddate")
-    private Date packageEndDate;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(

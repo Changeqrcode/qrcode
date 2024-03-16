@@ -1,34 +1,25 @@
 package com.change.qrcode.controller;
 
-import java.nio.charset.StandardCharsets;
-import java.time.LocalDate;
-import java.util.Base64;
-import java.util.List;
-import java.util.UUID;
-
-import javax.crypto.Mac;
-import javax.crypto.spec.SecretKeySpec;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-
-
-
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
 import com.change.qrcode.model.Packages;
 import com.change.qrcode.model.QR;
 import com.change.qrcode.model.User;
 import com.change.qrcode.repository.PackagesRepository;
 import com.change.qrcode.repository.QRRepository;
 import com.change.qrcode.repository.UserRepository;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
+import java.util.Base64;
+import java.util.List;
+import java.util.UUID;
 
 
 @Controller
@@ -85,14 +76,12 @@ public class PaymentController {
 
         List<Packages> packagesList = packagesRepository.findAll();
 
-        var userPackage = packagesList.stream()
-        .filter(pa -> pa.getId() == u.getPackages().getId())
-        .findFirst().get().getYear();
+        Packages userPackage = packagesList.stream()
+        .filter(pa -> pa.getId() == p.getPackages().getId())
+        .findFirst().get();
 
-
-        
-        
-        u.setPackageEndDate(java.sql.Date.valueOf(LocalDate.now().plusYears(userPackage)));
+        p.setPackageEndDate(java.sql.Date.valueOf(LocalDate.now().plusYears(userPackage.getYear())
+                .plusDays(userPackage.getDay())));
         userRepository.saveAndFlush(u);
         return "payment/savepackage";
 
@@ -106,16 +95,15 @@ public class PaymentController {
 
         List<Packages> packagesList = packagesRepository.findAll();
 
-        var freePackage = packagesList.stream()
-                .filter(p -> p.getId() == 1L)
+        Packages freePackage = packagesList.stream()
+                .filter(fp -> fp.getPackageValue().equals(AdminController.FREE_PACKAGE_VALUE))
                 .findFirst().get();
-
 
         QR p = QRRepository.findById(id).orElseThrow();
         User u = p.getUser();
 
-        u.setPackageEndDate(null);
-        u.setPackages(freePackage);
+        p.setPackageEndDate(null);
+        p.setPackages(freePackage);
         userRepository.saveAndFlush(u);
         return "payment/failpackage";
 

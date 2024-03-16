@@ -4,20 +4,11 @@ import com.change.qrcode.model.Packages;
 import com.change.qrcode.model.QR;
 import com.change.qrcode.model.UploadImage;
 import com.change.qrcode.model.User;
-import com.change.qrcode.repository.PackagesRepository;
-import com.change.qrcode.repository.QRRepository;
-import com.change.qrcode.repository.RoleRepository;
-import com.change.qrcode.repository.UploadImageRepository;
-import com.change.qrcode.repository.UserRepository;
-import com.change.qrcode.util.QRCodeGenerator;
-
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import com.change.qrcode.repository.*;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -29,14 +20,10 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Base64;
-import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
-import java.util.UUID;
 
 @Controller
 @RequestMapping("/admin")
@@ -48,6 +35,7 @@ public class AdminController {
     private AuthenticationProvider authenticationProvider;
     private RoleRepository roleRepository;
 	private PackagesRepository packagesRepository;
+    public static final String FREE_PACKAGE_VALUE = "free";
 
     public AdminController(com.change.qrcode.repository.QRRepository QRRepository, UserRepository userRepository, BCryptPasswordEncoder passwordEncoder, AuthenticationProvider authenticationProvider, RoleRepository roleRepository,UploadImageRepository uploadImageRepository, PackagesRepository packagesRepository) {
         this.QRRepository = QRRepository;
@@ -127,6 +115,13 @@ public class AdminController {
             e.printStackTrace();            
         }
 
+
+        List<Packages> packagesList = packagesRepository.findAll();
+
+        Packages freePackage = packagesList.stream()
+                .filter(fp -> fp.getPackageValue().equals(FREE_PACKAGE_VALUE))
+                .findFirst().get();
+
         for (int i = 0; i < qrCount; i++) {
             String url = "http://changeqr.com/qr/";
             QR newQR = new QR();
@@ -134,6 +129,8 @@ public class AdminController {
             newQR.setTextContent("test");
             newQR.setUser(null);
             newQR.setLogo(image);
+            newQR.setPackages(freePackage);
+
             try {
                 QR savedQR = QRRepository.saveAndFlush(newQR);
                 url += savedQR.getId();
@@ -142,7 +139,7 @@ public class AdminController {
                 e.printStackTrace();
             }
         }
-        List<Packages> packagesList = packagesRepository.findAll();
+
         packagesList.sort(Comparator.comparing(Packages::getId));
         model.addAttribute("packages", packagesList);
         model.addAttribute("qrCodeUrls", qrCodeUrls);
@@ -162,6 +159,9 @@ public class AdminController {
             existingPackage.setLogoAllowed(updatedPackage.getLogoAllowed() != null ? updatedPackage.getLogoAllowed() : false);
             existingPackage.setLocationAllowed(updatedPackage.getLocationAllowed() != null ? updatedPackage.getLocationAllowed() : false);    
             existingPackage.setPrice(updatedPackage.getPrice());
+            existingPackage.setPackageValue(updatedPackage.getPackageValue());
+            existingPackage.setDay(updatedPackage.getDay());
+            existingPackage.setYear(updatedPackage.getYear());
 
             packagesRepository.save(existingPackage);
         }

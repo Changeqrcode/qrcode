@@ -30,7 +30,7 @@
             <div class="item 1"><a style="color:#f0f0f0;" th:href="@{/user/packages/{id}(id = ${qr.id})}">PREMIUM</a></div>
             <form id="submitleaveForm" method="post" th:action="@{/user/leaveqr/{id}(id = ${qr.id})}"></form>
             
-            <span class="item 2" id="submitLeave"> KODU BIRAK / LEAVE CODE</span>    
+            <span class="item 2" id="submitLeave"> KODU SIFIRLA / RESET CODE</span>
             <form id="submitlogoutForm" method="post" th:action="@{/user/logout/{id}(id = ${qr.id})}"></form>
        
             <span class="item 3" id="submitLogout"><i class="fas fa-door-open"></i> ÇIKIŞ / EXIT</span>
