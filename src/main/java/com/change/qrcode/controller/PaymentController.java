@@ -2,7 +2,6 @@ package com.change.qrcode.controller;
 
 import com.change.qrcode.model.Packages;
 import com.change.qrcode.model.QR;
-import com.change.qrcode.model.User;
 import com.change.qrcode.repository.PackagesRepository;
 import com.change.qrcode.repository.QRRepository;
 import com.change.qrcode.repository.UserRepository;
@@ -16,7 +15,6 @@ import javax.crypto.spec.SecretKeySpec;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import java.nio.charset.StandardCharsets;
-import java.time.LocalDate;
 import java.util.Base64;
 import java.util.List;
 import java.util.UUID;
@@ -65,28 +63,6 @@ public class PaymentController {
 
     }
 
-    @GetMapping("/savepackage/{id}")
-    public String savePackage(HttpServletRequest httpServletRequest,
-            Model model,
-            RedirectAttributes redirectAttributes,
-            @PathVariable UUID id) throws ServletException {
-
-        QR p = QRRepository.findById(id).orElseThrow();
-        User u = p.getUser();
-
-        List<Packages> packagesList = packagesRepository.findAll();
-
-        Packages userPackage = packagesList.stream()
-        .filter(pa -> pa.getId() == p.getPackages().getId())
-        .findFirst().get();
-
-        p.setPackageEndDate(java.sql.Date.valueOf(LocalDate.now().plusYears(userPackage.getYear())
-                .plusDays(userPackage.getDay())));
-        userRepository.saveAndFlush(u);
-        return "payment/savepackage";
-
-    }
-
     @GetMapping("/failpackage/{id}")
     public String failPackage(HttpServletRequest httpServletRequest,
             Model model,
@@ -100,13 +76,11 @@ public class PaymentController {
                 .findFirst().get();
 
         QR p = QRRepository.findById(id).orElseThrow();
-        User u = p.getUser();
 
         p.setPackageEndDate(null);
         p.setPackages(freePackage);
-        userRepository.saveAndFlush(u);
-        return "payment/failpackage";
-
+        QRRepository.saveAndFlush(p);
+        return "redirect:https://www.changeqr.com/qr/" + id;
     }
 
 

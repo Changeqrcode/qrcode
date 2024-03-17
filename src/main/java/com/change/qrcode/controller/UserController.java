@@ -36,6 +36,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.*;
 
 
@@ -201,6 +202,8 @@ public class UserController {
 
         QR qr = QRRepository.findById(qrid).orElseThrow();
         qr.setPackages(packageToUse);
+        qr.setPackageEndDate(java.sql.Date.valueOf(LocalDate.now().plusYears(packageToUse.getYear())
+                .plusDays(packageToUse.getDay())));
         QRRepository.saveAndFlush(qr);
 
         String productName = packageToUse.getName();
@@ -220,7 +223,7 @@ public class UserController {
         String user_name = "qrcode@gmail.com";
         String user_address = "Antalya";
         String user_phone = "5554443322";
-        String merchant_ok_url = "https://www.changeqr.com/payment/savepackage/" + qrid;
+        String merchant_ok_url = "https://www.changeqr.com/qr/" + qrid;
         String merchant_fail_url = "https://www.changeqr.com/payment/failpackage/"+ qrid;
         String user_basket = Base64.getEncoder().encodeToString(basketBytes);
         String userIp = getClientIp(httpServletRequest);
