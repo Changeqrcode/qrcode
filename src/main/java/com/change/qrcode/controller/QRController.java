@@ -93,6 +93,10 @@ public class QRController {
             model.addAttribute("error", loginError);
         }
 
+        if(p.getUser() != null){
+            model.addAttribute("username", p.getUser().getUsername());
+        }
+
         model.addAttribute("qr", p);
         model.addAttribute("images", encodeds);
         model.addAttribute("links", p.getLinks());

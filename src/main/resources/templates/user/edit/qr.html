@@ -28,16 +28,17 @@
     <header>
         <div class="link-menu" style="width: 30%">
             <div class="item 1">
-                <span style="color:#f0f0f0;">Kullanıcı Adı / User Name: </span>
+                <span style="color:#f0f0f0;">Kullanıcı Adı: </span>
                 <span style="color:#f0f0f0;" th:text="${username}"></span>
             </div>
-            <div class="item 1"><a style="color:#f0f0f0;" th:href="@{/user/packages/{id}(id = ${qr.id})}">PREMIUM AL</a></div>
+            <br>
+            <div class="item 2"><a style="color:#f0f0f0;" th:href="@{/user/packages/{id}(id = ${qr.id})}">PREMIUM AL</a></div>
             <form id="submitleaveForm" method="post" th:action="@{/user/leaveqr/{id}(id = ${qr.id})}"></form>
             
-            <span class="item 2" id="submitLeave"> KODU SIFIRLA / RESET CODE</span>
+            <span class="item 3" id="submitLeave"> KODU SIFIRLA</span>
             <form id="submitlogoutForm" method="post" th:action="@{/user/logout/{id}(id = ${qr.id})}"></form>
        
-            <span class="item 3" id="submitLogout"><i class="fas fa-door-open"></i> ÇIKIŞ / EXIT</span>
+            <span class="item 3" id="submitLogout"><i class="fas fa-door-open"></i> ÇIKIŞ </span>
             <div class="item 4" id="google_translate_element"></div>
         </div>
         <div class="logo">
@@ -61,7 +62,7 @@
 
             <div class="containerb info">
                 <div class="info-section">
-                    <h2>Bilgiler / Info</h2>
+                    <h2>Bilgiler</h2>
                     <textarea class="form-control"
                     placeholder="Bu alana mail, telefon numarası gibi kişisel bilgiler girilebilir..."
                     id="floatingTextarea" style="height: 400px; color: black; font-size: 1.5rem;" name="content"
@@ -70,7 +71,7 @@
                 </div>
         
                 <div class="links-section">
-                    <h2>Linkler / Links</h2>
+                    <h2>Linkler</h2>
                     <div class="row">
                     <div class="col-md-9">
                         <input id="link-content" type="text" class="form-control" placeholder="link giriniz. - Add link"
@@ -80,7 +81,7 @@
                     </div>
                     <div class="col-md-3">
                         <button class="btn btn-primary" type="button" id="button-addon2"
-                        onclick="addLink()">Ekle-Add</button>
+                        onclick="addLink()">Ekle</button>
                     </div>
                 </div>
 
@@ -95,18 +96,18 @@
 
             <div class="upload-section">
                     <div class="header">
-                        <h2>Resim Yükle/ Upload Image</h2>
+                        <h2>Resim Yükle</h2>
                     </div>
                     <div class="server-message"></div>
 
                     <div class="input-div">
-                        <p>Resim Eklemek İçin Tıklayınız / Click To Add Images</p>
+                        <p>Resim Eklemek İçin Tıklayınız</p>
                         <input type="file" name="images" class="file" multiple="multiple" accept="image/*">
                     </div>
 
                     <div id="queued-form" class="mt-2">
                         <div class="header">
-                            <h3>Yüklenmeye Hazır Resimler / Ready To Upload</h3>
+                            <h3>Yüklenmeye Hazır Resimler</h3>
                         </div>
                         <div class="queued-div">
                         </div>
@@ -116,7 +117,7 @@
 
             <div class="row justify-content-center mt-2 mb-3">
                 <div class="col">
-                    <button type="submit" class="btn btn btn-primary mt-2" style="width: 50%;">Kaydet-Save</button>
+                    <button type="submit" class="btn btn btn-primary mt-2" style="width: 50%;">Kaydet</button>
                 </div>
             </div>
         </form>

@@ -27,10 +27,15 @@
 <body>
 
   <header>
-    <div class="link-menu">
+    <div class="link-menu" style="width: 30%">
+      <div class="item 1" th:if="${username}">
+          <span style="color:#f0f0f0;">QR Kod Sahibi: </span>
+          <span style="color:#f0f0f0;" th:text="${username}"></span>
+      </div>
+      <br>
       <form id="submitLoginForm" method="get" th:action="@{/user/login/qr/{id}(id = ${qr.id})}"></form>
       </form>
-      <span class="item 1" id="submitLogin"><i class="fas fa-door-open"></i> GİRİŞ</span>
+      <span class="item 2" id="submitLogin"><i class="fas fa-door-open"></i> GİRİŞ </span>
       <div id="google_translate_element" style="text-align: center;"></div>
     </div>
     <div class="logo">
@@ -50,7 +55,7 @@
   <div class="containerb info">
 
       <div class="info-section">
-        <h2>Bilgiler / Info</h2>
+        <h2>Bilgiler</h2>
         <text class="form-control" id="floatingTextarea"
                             style="height: 400px; background-color: white; color: black; font-size: 1.5rem;text-align: left;" name="content" disabled
                             th:text="${qr.textContent}">
@@ -59,7 +64,7 @@
 
 
       <div class="links-section">
-        <h2>Linkler / Links</h2>
+        <h2>Linkler</h2>
           <span th:text="${links}" style="display: none;" id="saved-links"></span>
           <ul id="link-list" class="list-group myLinks">
             <li class="list-group-item">
@@ -71,7 +76,7 @@
   <div class="upload-section">
         <div id="queued-form" class="mt-2">
           <div class="header">
-            <h3>RESİMLER/IMAGES</h3>
+            <h3>RESİMLER</h3>
           </div>
           <div class="queued-div">
             <div th:each="image: ${images}" class="image">
