@@ -431,6 +431,16 @@ body{background-color:#eee;}
         <div id="generic_price_table">
             <section>
                 <div class="container">
+                    <div class="row">
+                        <form th:action="@{/user/edit/qr/{id}(id = ${qrid})}">
+                            <button type="submit" name="login-submit" id="login-submit" class="btn btn-primary btn-user btn-block" style="background-color: #4e73de!important;">
+                                QR'a Dön / Return To QR
+                            </button>
+                        </form>
+                    </div>
+
+                    <br>
+                    <br>
                     <!--BLOCK ROW START-->
                     <div class="row">
                         <div th:each="package : ${packages}" th:classappend="${packageStat.last} ? 'col-md-12' : 'col-md-3'">
