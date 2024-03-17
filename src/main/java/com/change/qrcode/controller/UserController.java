@@ -335,7 +335,7 @@ public class UserController {
         model.addAttribute("qr", p);
         model.addAttribute("images", encodeds);
         model.addAttribute("links", p.getLinks());
-       
+        model.addAttribute("username", p.getUser().getUsername());
 
         return "user/edit/qr";
     }
