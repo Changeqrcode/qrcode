@@ -32,7 +32,7 @@
           <span style="color:#f0f0f0;">QR Kod Sahibi: </span>
           <span style="color:#f0f0f0;" th:text="${username}"></span>
       </div>
-      <br>
+<!--        <br> kameray -->
       <form id="submitLoginForm" method="get" th:action="@{/user/login/qr/{id}(id = ${qr.id})}"></form>
       </form>
       <span class="item 2" id="submitLogin"><i class="fas fa-door-open"></i> GİRİŞ </span>
